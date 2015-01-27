@@ -54,7 +54,7 @@ public class FixedFreqSine {
       //Each sample is spaced 1/SAMPLING_RATE apart in time
       while (ctSamplesTotal>0) {
          double fCycleInc = fFreq/SAMPLING_RATE;  // Fraction of cycle between samples
-
+         System.out.println(fCycleInc);
          cBuf.clear();                            // Discard samples from previous pass
 
       	  // Figure out how many samples we can add

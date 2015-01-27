@@ -4,12 +4,26 @@ public abstract class Module {
 
 	private short inputSample;
 	private short outputSample;
-
-	public void setInputSample(short inputSample)
-	{
-		this.inputSample = inputSample;
-	}
 	
-	public abstract short handleSample();
+	private Wire inputWire;
+	private Wire outputWire;
+	
+	public abstract void run();
+
+	public Wire getInputWire() {
+		return inputWire;
+	}
+
+	public void setInputWire(Wire inputWire) {
+		this.inputWire = inputWire;
+	}
+
+	public Wire getOutputWire() {
+		return outputWire;
+	}
+
+	public void setOutputWire(Wire outputWire) {
+		this.outputWire = outputWire;
+	}
 	
 }
