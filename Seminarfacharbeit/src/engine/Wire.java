@@ -6,6 +6,12 @@ public class Wire {
 	private Module outputModule;
 	
 	private short value;
+	
+	public Wire(Module inputModule, Module outputModule)
+	{
+		this.inputModule = inputModule;
+		this.outputModule = outputModule;
+	}
 
 	public Module getInputModule() {
 		return inputModule;

@@ -4,36 +4,41 @@ import engine.Module;
 
 public class Oscillator extends Module {
 	
-	private int frequency;
-	private int phase;
-	private int pulseWidth;
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-	}
-
-	public int getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(int frequency) {
+	private double frequency;
+	private double phase;
+	private double pulseWidth;
+	
+	public Oscillator(double frequency, double pulseWidth, double phase)
+	{
 		this.frequency = frequency;
-	}
-
-	public int getPhase() {
-		return phase;
-	}
-
-	public void setPhase(int phase) {
+		this.pulseWidth = pulseWidth;
 		this.phase = phase;
 	}
 
-	public int getPulseWidth() {
+	public void run(double sample) {
+	}
+
+	public double getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(double frequency) {
+		this.frequency = frequency;
+	}
+
+	public double getPhase() {
+		return phase;
+	}
+
+	public void setPhase(double phase) {
+		this.phase = phase;
+	}
+
+	public double getPulseWidth() {
 		return pulseWidth;
 	}
 
-	public void setPulseWidth(int pulseWidth) {
+	public void setPulseWidth(double pulseWidth) {
 		this.pulseWidth = pulseWidth;
 	}
 

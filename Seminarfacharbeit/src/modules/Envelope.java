@@ -52,7 +52,7 @@ public class Envelope extends Module {
 	}
 
 	@Override
-	public void run() {
+	public void run(double sample) {
 		// TODO Auto-generated method stub
 	}
 

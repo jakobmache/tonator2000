@@ -8,7 +8,7 @@ public abstract class Module {
 	private Wire inputWire;
 	private Wire outputWire;
 	
-	public abstract void run();
+	public abstract void run(double sample);
 
 	public Wire getInputWire() {
 		return inputWire;

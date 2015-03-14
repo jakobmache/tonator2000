@@ -24,7 +24,7 @@ public class LowpassFilter extends Module {
 	}
 
 	@Override
-	public void run() {
+	public void run(double sample) {
 		// TODO Auto-generated method stub
 	}
 
