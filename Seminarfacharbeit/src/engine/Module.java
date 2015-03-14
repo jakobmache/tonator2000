@@ -8,13 +8,19 @@ public abstract class Module {
 	private Wire inputWire;
 	private Wire outputWire;
 	
-	public abstract void run(double sample);
+	private boolean isActive;
+
+	public abstract void handleEvent(Event event);
+	
+	public boolean isActive() {
+		return isActive;
+	}
 
 	public Wire getInputWire() {
 		return inputWire;
 	}
 
-	public void setInputWire(Wire inputWire) {
+	public void connectInputWire(Wire inputWire) {
 		this.inputWire = inputWire;
 	}
 
@@ -22,7 +28,7 @@ public abstract class Module {
 		return outputWire;
 	}
 
-	public void setOutputWire(Wire outputWire) {
+	public void connectOutputWire(Wire outputWire) {
 		this.outputWire = outputWire;
 	}
 	

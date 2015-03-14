@@ -6,6 +6,13 @@ public class OutputModule {
 	
 	private SourceDataLine dataLine; 
 	
+	public OutputModule()
+	{
+		
+	}
+	
+	
+	
 	
 
 }

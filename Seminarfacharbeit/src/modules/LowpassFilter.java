@@ -1,5 +1,6 @@
 package modules;
 
+import engine.Event;
 import engine.Module;
 
 public class LowpassFilter extends Module {
@@ -24,8 +25,9 @@ public class LowpassFilter extends Module {
 	}
 
 	@Override
-	public void run(double sample) {
-		// TODO Auto-generated method stub
+	public void handleEvent(Event event)
+	{
+		
 	}
 
 }

@@ -1,45 +1,42 @@
 package modules;
 
+import engine.Event;
 import engine.Module;
+import events.PlayEvent;
 
-public class Oscillator extends Module {
+public abstract class Oscillator extends Module {
 	
-	private double frequency;
-	private double phase;
-	private double pulseWidth;
+	protected float frequency;
+	protected float phase;
+	protected float pulseWidth;
+	protected float duration;
 	
-	public Oscillator(double frequency, double pulseWidth, double phase)
+	public Oscillator()
 	{
-		this.frequency = frequency;
-		this.pulseWidth = pulseWidth;
-		this.phase = phase;
 	}
 
-	public void run(double sample) {
-	}
+	public abstract void handleEvent(Event event);
+
+	public abstract void startPlaying(PlayEvent event);
+
+	public abstract void stopPlaying(Event event);
 
 	public double getFrequency() {
 		return frequency;
-	}
-
-	public void setFrequency(double frequency) {
-		this.frequency = frequency;
 	}
 
 	public double getPhase() {
 		return phase;
 	}
 
-	public void setPhase(double phase) {
-		this.phase = phase;
-	}
-
 	public double getPulseWidth() {
 		return pulseWidth;
 	}
-
-	public void setPulseWidth(double pulseWidth) {
-		this.pulseWidth = pulseWidth;
+	
+	public float getDuration() {
+		return duration;
 	}
+	
+	
 
 }

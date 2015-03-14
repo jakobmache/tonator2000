@@ -12,6 +12,8 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
 import midi.MidiManager;
+import modules.Oscillator;
+import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 public class MainTest {
 
@@ -59,5 +61,6 @@ public class MainTest {
 
 
 	}
+	
 
 }

@@ -17,7 +17,7 @@ public class Wire {
 		return inputModule;
 	}
 
-	public void setInputModule(Module inputModule) {
+	public void connectInputModule(Module inputModule) {
 		this.inputModule = inputModule;
 	}
 
@@ -25,16 +25,13 @@ public class Wire {
 		return outputModule;
 	}
 
-	public void setOutputModule(Module outputModule) {
+	public void connectOutputModule(Module outputModule) {
 		this.outputModule = outputModule;
 	}
 
-	public short getValue() {
-		return value;
-	}
-
-	public void setValue(short value) {
-		this.value = value;
+	public void sendEvent(Event event)
+	{
+		outputModule.handleEvent(event);
 	}
 
 

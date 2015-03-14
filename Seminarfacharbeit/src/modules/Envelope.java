@@ -1,5 +1,6 @@
 package modules;
 
+import engine.Event;
 import engine.Module;
 
 public class Envelope extends Module {
@@ -52,8 +53,9 @@ public class Envelope extends Module {
 	}
 
 	@Override
-	public void run(double sample) {
-		// TODO Auto-generated method stub
+	public void handleEvent(Event event)
+	{
+		
 	}
 
 }
