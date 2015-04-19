@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package test;
 
 // Test von Quelle: http://www.wolinlabs.com/blog/java.sine.wave.html
@@ -12,12 +15,23 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FixedFreqSine.
+ */
 public class FixedFreqSine {
 
    //This is just an example - you would want to handle LineUnavailable properly...
+   /**
+    * The main method.
+    *
+    * @param args the arguments
+    * @throws Exception the exception
+    */
    public static void main(String[] args) throws Exception
    {
 	   String path = "C:\\Users\\Jakob\\Documents\\ausgabe.txt";
+	   
 	   
       final int SAMPLING_RATE = 44100;            // Audio sampling rate
       final int SAMPLE_SIZE = 2;                  // Audio sample size in bytes
@@ -52,9 +66,9 @@ public class FixedFreqSine {
       //On each pass main loop fills the available free space in the audio buffer
       //Main loop creates audio samples for sine wave, runs until we tell the thread to exit
       //Each sample is spaced 1/SAMPLING_RATE apart in time
+      long time1 = System.currentTimeMillis();
       while (ctSamplesTotal>0) {
          double fCycleInc = fFreq/SAMPLING_RATE;  // Fraction of cycle between samples
-         System.out.println(fCycleInc);
          cBuf.clear();                            // Discard samples from previous pass
 
       	  // Figure out how many samples we can add
@@ -62,9 +76,6 @@ public class FixedFreqSine {
          for (int i=0; i < ctSamplesThisPass; i++) {
         	 short value = (short)(Short.MAX_VALUE * Math.sin(2*Math.PI * fCyclePosition));
             cBuf.putShort(value);
-            bw.write(String.valueOf(value));
-            bw.newLine();
-            bw.flush();
 
             fCyclePosition += fCycleInc;
             if (fCyclePosition > 1)
@@ -73,6 +84,9 @@ public class FixedFreqSine {
 
          //Write sine samples to the line buffer.  If the audio buffer is full, this will 
          // block until there is room (we never write more samples than buffer will hold)
+         if (ctSamplesTotal == SAMPLING_RATE * 1)
+        	 time1 = System.currentTimeMillis();
+        	 
          line.write(cBuf.array(), 0, cBuf.position());            
          ctSamplesTotal -= ctSamplesThisPass;     // Update total number of samples written 
 
@@ -80,11 +94,16 @@ public class FixedFreqSine {
          while (line.getBufferSize()/2 < line.available())   
             Thread.sleep(1);                                             
       }
+      
 
 
       //Done playing the whole waveform, now wait until the queued samples finish 
       //playing, then clean up and exit
-      line.drain();                                         
+      line.drain();     
+      long time2 = System.currentTimeMillis();
       line.close();
+      
+      
+      System.out.println(time2 - time1);
    }
 }

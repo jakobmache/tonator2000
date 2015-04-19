@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package test;
 
 import java.util.List;
@@ -15,8 +18,19 @@ import midi.MidiManager;
 import modules.Oscillator;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class MainTest.
+ */
 public class MainTest {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws InvalidMidiDataException the invalid midi data exception
+	 */
 	public static void main(String[] args) throws InvalidMidiDataException {
 
 		List<Info> infoList = MidiManager.getAvailableInputDevices();
@@ -38,12 +52,7 @@ public class MainTest {
 			Receiver receiver = new SynthesizerEngine();
 			MidiDevice device = MidiSystem.getMidiDevice(infoList.get(choice));
 			
-			List<Transmitter> inputTransmitterList = device.getTransmitters();
-			for (Transmitter inputTransmitter:inputTransmitterList)
-			{
-				inputTransmitter.setReceiver(receiver);
-				System.out.printf("Connected %s to receiver!\n", inputTransmitter.toString());
-			}
+			MidiManager.connectTransmitterToReceiver(device, receiver);
 			
 			device.open();
 
@@ -54,6 +63,8 @@ public class MainTest {
 			
 			device.close();
 		} 
+		
+
 		catch (MidiUnavailableException e) 
 		{
 			e.printStackTrace();

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package midi;
 
 import java.util.ArrayList;
@@ -7,9 +10,20 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Transmitter;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MidiManager.
+ */
 public class MidiManager {
 
+	/**
+	 * Gets the available input devices.
+	 *
+	 * @return the available input devices
+	 */
 	public static List<Info> getAvailableInputDevices()
 	{
 		Info[] infos = MidiSystem.getMidiDeviceInfo();
@@ -34,6 +48,19 @@ public class MidiManager {
 		}
 
 		return inputDeviceInfo;
+	}
+
+	/**
+	 * Connect transmitter to receiver.
+	 *
+	 * @param device the device
+	 * @param receiver the receiver
+	 * @throws MidiUnavailableException the midi unavailable exception
+	 */
+	public static void connectTransmitterToReceiver(MidiDevice device, Receiver receiver) throws MidiUnavailableException
+	{
+		Transmitter transmitter = device.getTransmitter();
+		transmitter.setReceiver(receiver);
 	}
 
 }

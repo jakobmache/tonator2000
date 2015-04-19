@@ -1,26 +1,35 @@
+/*
+ * 
+ */
 package engine;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Event.
+ */
 public class Event{
 	
-	public static int STOP = 0; 
-	public static int START = 1;
-	
-	private int type;
-	
-	private float[] data;
+	/** The data. */
+	public float[] data;
 
-	public Event(int type, float... data)
+	/**
+	 * Instantiates a new event.
+	 *
+	 * @param data the data
+	 */
+	public Event(float... data)
 	{
-		this.type = type;
 		this.data = data;
 	}
-
-	public int getType() {
-		return type;
-	}
 	
+	/**
+	 * Gets the data.
+	 *
+	 * @return the data
+	 */
 	public float[] getData()
 	{
 		return data;
 	}
+	
 }

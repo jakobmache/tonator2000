@@ -1,26 +1,39 @@
+/*
+ * 
+ */
 package oscillators;
 
-import engine.Event;
-import events.PlayEvent;
 import modules.Oscillator;
+import engine.Event;
+import engine.ModuleContainer;
+import events.PlayEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SineOscillator.
+ */
 public class SineOscillator extends Oscillator {
 
-	public SineOscillator() 
+	/**
+	 * Instantiates a new sine oscillator.
+	 *
+	 * @param parent the parent
+	 */
+	public SineOscillator(ModuleContainer parent) 
 	{
-
+		super(parent);
 	}
 
 	@Override
-	public void handleEvent(Event event) {
-		
-		if (event instanceof PlayEvent)
-		{
-			startPlaying((PlayEvent) event);
-		}
-		
+	public float handleSample(float sampleValue) 
+	{
+		System.out.println(getOutputWire().toString());
+		return (float) 11.1;
 	}
 
+	/* (non-Javadoc)
+	 * @see modules.Oscillator#startPlaying(events.PlayEvent)
+	 */
 	@Override
 	public void startPlaying(PlayEvent event) 
 	{
@@ -42,8 +55,29 @@ public class SineOscillator extends Oscillator {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see modules.Oscillator#stopPlaying(engine.Event)
+	 */
 	@Override
 	public void stopPlaying(Event event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see modules.Oscillator#pausePlaying()
+	 */
+	@Override
+	public void pausePlaying() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see engine.Module#close()
+	 */
+	@Override
+	public void close() {
 		// TODO Auto-generated method stub
 		
 	}
