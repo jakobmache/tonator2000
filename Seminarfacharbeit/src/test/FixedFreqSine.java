@@ -30,14 +30,14 @@ public class FixedFreqSine {
     */
    public static void main(String[] args) throws Exception
    {
-	   String path = "C:\\Users\\Jakob\\Documents\\ausgabe.txt";
+	   String path = "C:\\Users\\Jakob\\Documents\\ausgabe2.txt";
 	   
 	   
       final int SAMPLING_RATE = 44100;            // Audio sampling rate
       final int SAMPLE_SIZE = 2;                  // Audio sample size in bytes
 
       SourceDataLine line;
-      double fFreq = 440;                         // Frequency of sine wave in hz
+      double fFreq = 500;                         // Frequency of sine wave in hz
 
       //Position through the sine wave as a percentage (i.e. 0 to 1 is 0 to 2*PI)
       double fCyclePosition = 0;        
@@ -61,7 +61,7 @@ public class FixedFreqSine {
       // Make our buffer size match audio system's buffer
       ByteBuffer cBuf = ByteBuffer.allocate(line.getBufferSize());   
 
-      int ctSamplesTotal = SAMPLING_RATE*1;         // Output for roughly 5 seconds
+      int ctSamplesTotal = 44100 * 1;//SAMPLING_RATE*1;         // Output for roughly 5 seconds
 
       //On each pass main loop fills the available free space in the audio buffer
       //Main loop creates audio samples for sine wave, runs until we tell the thread to exit
@@ -75,24 +75,30 @@ public class FixedFreqSine {
          int ctSamplesThisPass = line.available()/SAMPLE_SIZE;   
          for (int i=0; i < ctSamplesThisPass; i++) {
         	 short value = (short)(Short.MAX_VALUE * Math.sin(2*Math.PI * fCyclePosition));
-            cBuf.putShort(value);
+
+        	 cBuf.putShort(value);
+        	 bw.write(Short.toString(value));
+        	 bw.newLine();
+
 
             fCyclePosition += fCycleInc;
             if (fCyclePosition > 1)
                fCyclePosition -= 1;
          }
 
-         //Write sine samples to the line buffer.  If the audio buffer is full, this will 
-         // block until there is room (we never write more samples than buffer will hold)
-         if (ctSamplesTotal == SAMPLING_RATE * 1)
-        	 time1 = System.currentTimeMillis();
-        	 
-         line.write(cBuf.array(), 0, cBuf.position());            
+         long start = System.currentTimeMillis();
+         line.write(cBuf.array(), 0, cBuf.position());  
+    	 long end = System.currentTimeMillis();
+    	 System.out.println("Time" + (end - start));
          ctSamplesTotal -= ctSamplesThisPass;     // Update total number of samples written 
-
+         System.out.println(ctSamplesTotal);
          //Wait until the buffer is at least half empty  before we add more
-         while (line.getBufferSize()/2 < line.available())   
-            Thread.sleep(1);                                             
+         while (line.getBufferSize()/2 < line.available())  
+         {
+        	 System.out.println(line.getBufferSize());
+        	 System.out.println("Sleep");
+            Thread.sleep(1);  
+         }
       }
       
 

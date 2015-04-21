@@ -74,9 +74,8 @@ public class Wire {
 	 *
 	 * @param sampleValue the sample value
 	 */
-	public void sendSample(float sampleValue)
+	public void sendSample(float sampleValue) throws InterruptedException
 	{
-		System.out.printf("Send sample %f from %s to %s\n", sampleValue, inputModule.toString(), outputModule.toString());
 		outputModule.processSample(sampleValue);
 	}
 
