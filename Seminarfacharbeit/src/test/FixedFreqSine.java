@@ -1,6 +1,4 @@
-/*
- * 
- */
+
 package test;
 
 // Test von Quelle: http://www.wolinlabs.com/blog/java.sine.wave.html
@@ -15,19 +13,10 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class FixedFreqSine.
- */
+
 public class FixedFreqSine {
 
    //This is just an example - you would want to handle LineUnavailable properly...
-   /**
-    * The main method.
-    *
-    * @param args the arguments
-    * @throws Exception the exception
-    */
    public static void main(String[] args) throws Exception
    {
 	   String path = "C:\\Users\\Jakob\\Documents\\ausgabe2.txt";

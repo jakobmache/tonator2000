@@ -1,6 +1,4 @@
-/*
- * 
- */
+
 package test;
 
 import java.util.List;
@@ -18,19 +16,9 @@ import midi.MidiManager;
 import modules.Oscillator;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
-// TODO: Auto-generated Javadoc
 
-/**
- * The Class MainTest.
- */
 public class MainTest {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 * @throws InvalidMidiDataException the invalid midi data exception
-	 */
 	public static void main(String[] args) throws InvalidMidiDataException {
 
 		List<Info> infoList = MidiManager.getAvailableInputDevices();

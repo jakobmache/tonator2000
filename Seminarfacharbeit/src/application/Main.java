@@ -25,9 +25,6 @@ public class Main extends Application {
 	private Scene scene;
 
 
-	/* (non-Javadoc)
-	 * @see javafx.application.Application#start(javafx.stage.Stage)
-	 */
 	@Override
 	public void start(Stage primaryStage) throws InterruptedException{
 		try {
