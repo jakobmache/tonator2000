@@ -60,7 +60,7 @@ public class Envelope extends Module {
 	}
 
 	@Override
-	public float handleSample(float sampleValue)
+	public short handleSample(short sampleValue)
 	{
 		return sampleValue;
 		

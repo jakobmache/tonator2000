@@ -24,9 +24,9 @@ public class Amplifier extends Module {
 	}
 
 	@Override
-	public float handleSample(float sampleValue)
+	public short handleSample(short sampleValue)
 	{
-		return (float) factor * sampleValue;
+		return (short)(factor * sampleValue);
 	}
 
 	@Override

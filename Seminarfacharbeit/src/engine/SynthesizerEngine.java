@@ -14,51 +14,29 @@ import javax.sound.sampled.AudioFormat;
 import events.PlayEvent;
 import midi.MidiData;
 
-public class SynthesizerEngine implements Receiver{
-
-	
-	//=====================Audioformat=====================
-	
-	private final int BUFFER_SIZE = 1024;
+public class SynthesizerEngine implements Receiver
+{
 
 	private AudioFormat audioFormat;
 	private float samplingRate = 44100;
-	private int sampleSizeInBits = 16;
 	private int numChannels = 1;
 	private boolean signed = true;
 	private boolean bigEndian = true;
+	
+	private int sampleSizeInBits = 16;
+	private int sampleSizeInBytes = 2;
+	
+	private double bufferTime = 0.01;
+	
 	private List<ModuleContainer> containers = new ArrayList<ModuleContainer>();
 	private List<Integer> currentNotes = new ArrayList<Integer>();
 	private boolean isPlaying = false;
-	private int bufferTime = 1;
-
-	public int getBufferTime() {
-		return bufferTime;
-	}
-
-	public void setBufferTime(int bufferTime) {
-		this.bufferTime = bufferTime;
-	}
-
+	
 	public SynthesizerEngine()
 	{
 		updateAudioFormat();
 	}
 	
-	private void updateAudioFormat()
-	{
-		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
-	}
-
-	public void run()
-	{
-	}
-
-	@Override
-	public void close() 
-	{
-	}
-
 	@Override
 	public void send(MidiMessage message, long timeStamp) 
 	{	
@@ -87,12 +65,9 @@ public class SynthesizerEngine implements Receiver{
 
 	}
 
-	public boolean isPlaying() {
-		return isPlaying;
-	}
-
-	public void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
+	@Override
+	public void close() 
+	{
 	}
 	
 	private void createEvent(ShortMessage message)
@@ -110,7 +85,7 @@ public class SynthesizerEngine implements Receiver{
 		}
 		
 	}
-
+	
 	private void printMessage(ShortMessage message)
 	{	
 		String stringMessage = null;
@@ -127,26 +102,65 @@ public class SynthesizerEngine implements Receiver{
 		System.out.println(stringMessage);
 	}
 
-	public float getSamplingRate() {
-		return samplingRate;
+	private void updateAudioFormat()
+	{
+		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 	}
 
-	public void setSamplingRate(float samplingRate) {
-		this.samplingRate = samplingRate;
-		updateAudioFormat();
+	public void addContainer(ModuleContainer container)
+	{
+		containers.add(container);
+	}
+	
+	public List<ModuleContainer> getModuleContainers()
+	{
+		return containers;
+	}
+
+	public AudioFormat getAudioFormat()
+	{
+		return audioFormat;
+	}
+
+	public double getBufferTime() {
+		return bufferTime;
+	}
+
+	public int getNumChannels() {
+		return numChannels;
 	}
 
 	public int getSampleSizeInBits() {
 		return sampleSizeInBits;
 	}
+	
+	public int getSampleSizeInBytes() {
+		return sampleSizeInBytes;
+	}
 
-	public void setSampleSizeInBits(int sampleSizeInBits) {
-		this.sampleSizeInBits = sampleSizeInBits;
+	public float getSamplingRate() {
+		return samplingRate;
+	}
+
+	public boolean isBigEndian() {
+		return bigEndian;
+	}
+
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public boolean isSigned() {
+		return signed;
+	}
+
+	public void setBigEndian(boolean bigEndian) {
+		this.bigEndian = bigEndian;
 		updateAudioFormat();
 	}
 
-	public int getNumChannels() {
-		return numChannels;
+	public void setBufferTime(double bufferTime) {
+		this.bufferTime = bufferTime;
 	}
 
 	public void setNumChannels(int numChannels) {
@@ -154,12 +168,22 @@ public class SynthesizerEngine implements Receiver{
 		updateAudioFormat();
 	}
 
-	public int getBufferSize() {
-		return BUFFER_SIZE;
+	public void setPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+	
+	public void setSampleSizeInBits(int sampleSizeInBits) {
+		this.sampleSizeInBits = sampleSizeInBits;
+		updateAudioFormat();
 	}
 
-	public boolean isSigned() {
-		return signed;
+	public void setSampleSizeInBytes(int sampleSizeInBytes) {
+		this.sampleSizeInBytes = sampleSizeInBytes;
+	}
+	
+	public void setSamplingRate(float samplingRate) {
+		this.samplingRate = samplingRate;
+		updateAudioFormat();
 	}
 
 	public void setSigned(boolean signed) {
@@ -167,28 +191,5 @@ public class SynthesizerEngine implements Receiver{
 		updateAudioFormat();
 	}
 
-	public boolean isBigEndian() {
-		return bigEndian;
-	}
-
-	public void setBigEndian(boolean bigEndian) {
-		this.bigEndian = bigEndian;
-		updateAudioFormat();
-	}
-	
-	public AudioFormat getAudioFormat()
-	{
-		return audioFormat;
-	}
-
-	public List<ModuleContainer> getModuleContainers()
-	{
-		return containers;
-	}
-	
-	public void addContainer(ModuleContainer container)
-	{
-		containers.add(container);
-	}
 
 }

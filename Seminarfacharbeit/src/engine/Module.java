@@ -15,14 +15,14 @@ public abstract class Module {
 		this.parent = parent;
 	}
 	
-	public void processSample(float sampleValue) throws InterruptedException
+	public void processSample(short sampleValue) throws InterruptedException
 	{
-		float newSample = handleSample(sampleValue);
+		short newSample = handleSample(sampleValue);
 		if (outputWire != null)
 			outputWire.sendSample(newSample);
 	}
 
-	public abstract float handleSample(float sampleValue) throws InterruptedException;
+	public abstract short handleSample(short sampleValue) throws InterruptedException;
 	
 	public abstract void reset();
 	
@@ -52,6 +52,11 @@ public abstract class Module {
 
 	public ModuleContainer getParent() {
 		return parent;
+	}
+	
+	public SynthesizerEngine getEngine()
+	{
+		return parent.getEngine();
 	}
 	
 }

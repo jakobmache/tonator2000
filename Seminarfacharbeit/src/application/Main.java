@@ -64,42 +64,18 @@ public class Main extends Application {
 		SynthesizerEngine parent = new SynthesizerEngine();
 		ModuleContainer container = new StandardModuleContainer(parent);
 
-		float samplesTotal = 44100;//parent.getSamplingRate();
-		double fCyclePosition = 0;  
-
 		Oscillator osci = container.getToneModule();
-		osci.setFrequency((float) 500);
+		osci.setFrequency((float) 440);
+		osci.setAmplitude(10000);
 		
-		long starttime = System.currentTimeMillis();
-		
-		 String path = "C:\\Users\\Jakob\\Documents\\ausgabe.txt";
-	      BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
-	      
-		while (samplesTotal>0) {
-
-			double fCycleInc = container.getToneModule().getFrequency() / parent.getSamplingRate();  // Fraction of cycle between samples
-
-			short value = (short)(Short.MAX_VALUE * Math.sin(2*Math.PI * fCyclePosition));
-
-			bw.write(Short.toString(value));
-			bw.newLine();
-			
-			fCyclePosition += fCycleInc;
-			if (fCyclePosition > 1)
-				fCyclePosition -= 1;
-
-			osci.processSample((float) value);
-			samplesTotal -= 1;
-			System.out.println("Samples total:" + samplesTotal);
-			
-
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 44100; i++)
+		{
+			System.out.println("I:" + i);
+			osci.processSample((short) 1);
 		}
-		bw.close();
-		
-		long endtime = System.currentTimeMillis();
-		System.out.println(endtime - starttime);
-
-		
+		long end = System.currentTimeMillis();
+		System.out.println(end - start);
 
 	}
 

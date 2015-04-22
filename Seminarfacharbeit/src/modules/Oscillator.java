@@ -21,7 +21,7 @@ public abstract class Oscillator extends Module {
 		super(parent);
 	}
 
-	public abstract float handleSample(float sampleValue);
+	public abstract short handleSample(short sampleValue);
 
 	public abstract void startPlaying(PlayEvent event);
 

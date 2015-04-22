@@ -7,6 +7,10 @@ import engine.ModuleContainer;
 import events.PlayEvent;
 
 public class SineOscillator extends Oscillator {
+	
+	private double cycleIncrease;
+	private double cyclePosition;
+
 
 	public SineOscillator(ModuleContainer parent) 
 	{
@@ -14,9 +18,15 @@ public class SineOscillator extends Oscillator {
 	}
 
 	@Override
-	public float handleSample(float sampleValue) 
+	public short handleSample(short sampleValue) 
 	{
-		return (float) sampleValue;
+		cycleIncrease = frequency / getEngine().getSamplingRate();
+		short value = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
+		cyclePosition += cycleIncrease;
+		if (cyclePosition > 1)
+			cyclePosition -= 1;	
+		System.out.println("Value: " + value);
+		return value;
 	}
 
 	@Override
@@ -29,7 +39,8 @@ public class SineOscillator extends Oscillator {
 		
 		if (duration == -1)
 		{
-			//TODO: implement synthesizing
+			cycleIncrease = frequency / getEngine().getSamplingRate();
+			cyclePosition = 0;
 		}
 		
 		else

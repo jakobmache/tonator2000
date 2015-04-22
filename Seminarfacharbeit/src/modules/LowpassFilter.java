@@ -31,7 +31,7 @@ public class LowpassFilter extends Module {
 	}
 
 	@Override
-	public float handleSample(float sampleValue)
+	public short handleSample(short sampleValue)
 	{
 		return sampleValue;
 		

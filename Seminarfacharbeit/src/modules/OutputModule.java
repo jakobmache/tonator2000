@@ -12,41 +12,67 @@ import engine.Module;
 import engine.ModuleContainer;
 
 public class OutputModule extends Module{
-	
+
 	private SourceDataLine dataLine; 
 	private ByteBuffer buffer;
-	
+
 	private int sampleCounter = 0;
+	private int samplesPerPacket;
+	
+	private int packetSize;
 
 	public OutputModule(ModuleContainer parent) throws LineUnavailableException
 	{
 		super(parent);
+
+		packetSize = (int) (getEngine().getBufferTime() * getEngine().getSamplingRate() * getEngine().getSampleSizeInBytes());
 		
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, parent.getAudioFormat());
-	
-		System.out.println(parent.getAudioFormat().toString());
-		
+		//Der Buffer soll zwei Mal so groß wie die Paketgröße sein
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, getEngine().getAudioFormat(), packetSize * 2);
+
 		if (!AudioSystem.isLineSupported(info))
 		{
 			throw new LineUnavailableException();
 		}
 		
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
-		dataLine.open(parent.getAudioFormat());
+		dataLine.open(getEngine().getAudioFormat());
 		dataLine.start();
 		
+		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
-		System.out.println("OutputModule: " + buffer.position());
 	}
 
 	@Override
-	public float handleSample(float sampleValue) throws InterruptedException 
+	public short handleSample(short sampleValue) throws InterruptedException 
 	{
-		buffer.putFloat(sampleValue);
-		System.out.println("Handles sample: " + buffer.position());
-		System.out.println(buffer.remaining());
+		if (sampleCounter < samplesPerPacket)
+		{
+			buffer.putShort((short) sampleValue);
+			sampleCounter++;
+		}
+		else 
+		{
+			sampleCounter = 0;
+			dataLine.write(buffer.array(), 0, buffer.position());  
+			
+			
+			while (getLineSampleCount() > packetSize)  
+			{
+				Thread.sleep(1);  
+			}
+			
+			buffer.clear();
+			
+		}
+
 		
-		return (float) 0.0;
+		return 1;
+	}
+	
+	private int getLineSampleCount()
+	{
+		return dataLine.getBufferSize() - dataLine.available();
 	}
 
 	@Override
@@ -57,6 +83,6 @@ public class OutputModule extends Module{
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

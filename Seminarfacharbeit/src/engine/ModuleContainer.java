@@ -25,6 +25,11 @@ public class ModuleContainer {
 		this.parent = parent;
 	}
 	
+	public SynthesizerEngine getEngine()
+	{
+		return this.parent;
+	}
+	
 	public Oscillator getToneModule() {
 		return mainToneModule;
 	}
@@ -46,11 +51,6 @@ public class ModuleContainer {
 	public List<Module> getModules()
 	{
 		return modules;
-	}
-	
-	public int getBufferSize()
-	{
-		return parent.getBufferSize();
 	}
 
 	public void setModules(List<Module> modules)
@@ -83,11 +83,6 @@ public class ModuleContainer {
 		{
 			//Stop playing
 		}
-	}
-
-	public AudioFormat getAudioFormat()
-	{
-		return parent.getAudioFormat();
 	}
 	
 	public void connectAll()

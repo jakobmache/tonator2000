@@ -74,7 +74,7 @@ public class Wire {
 	 *
 	 * @param sampleValue the sample value
 	 */
-	public void sendSample(float sampleValue) throws InterruptedException
+	public void sendSample(short sampleValue) throws InterruptedException
 	{
 		outputModule.processSample(sampleValue);
 	}
