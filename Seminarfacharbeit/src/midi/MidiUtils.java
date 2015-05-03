@@ -12,7 +12,11 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
 
-public class MidiManager {
+public class MidiUtils {
+	
+	private static final int REFERENCE_NOTE_NUMBER = 69;
+	private static final int REFERENCE_NOTE_FREQ = 440;
+	private static final int NOTES_PER_OCTAVE = 12;
 
 	public static List<Info> getAvailableInputDevices()
 	{
@@ -26,14 +30,14 @@ public class MidiManager {
 			{
 				MidiDevice device = MidiSystem.getMidiDevice(info);
 				
-				// Wenn das Gerï¿½t einen Transmitter hat, muss es hinzugefï¿½gt werden
+				// Wenn das Gerät einen Transmitter hat, muss es hinzugefügt werden
 				device.getTransmitter();
 				inputDeviceInfo.add(info);
 			}
 
 			catch (MidiUnavailableException e)
 			{
-				// Das Gerï¿½t hat keinen Transmitter, muss also nicht hinzugefï¿½gt werden
+				// Das Gerät hat keinen Transmitter, muss also nicht hinzugefügt werden
 			}
 		}
 
@@ -44,6 +48,12 @@ public class MidiManager {
 	{
 		Transmitter transmitter = device.getTransmitter();
 		transmitter.setReceiver(receiver);
+	}
+
+	public static float midiNoteNumberToFrequency(int mnn) {
+
+		float soundOffset = (mnn - REFERENCE_NOTE_NUMBER) / (float) NOTES_PER_OCTAVE;
+		return (float) (REFERENCE_NOTE_FREQ * Math.pow(2.0, soundOffset));
 	}
 
 }

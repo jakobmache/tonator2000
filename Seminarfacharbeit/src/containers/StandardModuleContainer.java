@@ -1,48 +1,36 @@
-
 package containers;
-
-import java.util.List;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import modules.Amplifier;
 import modules.Oscillator;
 import modules.OutputModule;
-import oscillators.SineOscillator;
-import engine.Module;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
 public class StandardModuleContainer extends ModuleContainer 
 {
+	private Oscillator osci;
 
-	public StandardModuleContainer(SynthesizerEngine parent) throws Exception 
+	public StandardModuleContainer(SynthesizerEngine parent) throws LineUnavailableException 
 	{
 		super(parent);
-		addOscillator();
-		addOutput();
-		addOtherModules();
-		List<Module> modules = getModules();
-		connectAll();
+		initModules();
+		initWires();
 	}
 	
-	private void addOscillator()
+	private void initModules()
 	{
-		Oscillator osci = new SineOscillator(this);
-		setToneModule(osci);
+		osci = new Oscillator(this);
 	}
 	
-	private void addOutput() throws LineUnavailableException
+	private void initWires()
 	{
-		OutputModule module = new OutputModule(this);
-		setOutputModule(module);		
+		Wire wire = new Wire(getOutputModule(), osci);
 	}
-
-	private void addOtherModules() throws Exception
+	
+	public Oscillator getOscillator()
 	{
-		Amplifier ampli = new Amplifier(this);
-		ampli.setFactor(2);
-		addModule(ampli);
+		return osci;
 	}
 }
