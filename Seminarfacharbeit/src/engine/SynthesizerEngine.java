@@ -1,18 +1,17 @@
-
 package engine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
-import javax.sound.midi.SysexMessage;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.LineUnavailableException;
 
-import events.PlayEvent;
-import midi.MidiData;
+import midi.MidiUtils;
+import threads.PlayThread;
+import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -22,84 +21,18 @@ public class SynthesizerEngine implements Receiver
 	private int numChannels = 1;
 	private boolean signed = true;
 	private boolean bigEndian = true;
-	
+
 	private int sampleSizeInBits = 16;
 	private int sampleSizeInBytes = 2;
-	
+
 	private double bufferTime = 0.01;
 	
-	private List<ModuleContainer> containers = new ArrayList<ModuleContainer>();
-	private List<Integer> currentNotes = new ArrayList<Integer>();
-	private boolean isPlaying = false;
-	
+	private Map <Integer, ModuleContainer> currentNotes = new HashMap<Integer, ModuleContainer>();
+
 	public SynthesizerEngine()
 	{
 		updateAudioFormat();
-	}
-	
-	@Override
-	public void send(MidiMessage message, long timeStamp) 
-	{	
-		if (message instanceof ShortMessage)
-		{
-			printMessage((ShortMessage) message);
-			createEvent((ShortMessage) message);
 
-		}
-
-		else if (message instanceof SysexMessage)
-		{
-			System.out.printf("SysexMessage\n");
-		}
-
-		else if (message instanceof MetaMessage)
-		{
-			System.out.printf("MetaMessage\n");
-		}
-
-		else
-		{
-			System.out.printf("Unknows message type: %s", message.getClass());
-		}
-
-
-	}
-
-	@Override
-	public void close() 
-	{
-	}
-	
-	private void createEvent(ShortMessage message)
-	{
-		int key = message.getData1();
-		float frequency = MidiData.getFrequency(key);
-		ModuleContainer container = containers.get(0);
-		switch (message.getCommand())
-		{
-		case ShortMessage.NOTE_ON:
-			if (!currentNotes.contains(frequency))
-			{
-				//Event event = new PlayEvent(frequency, 0, container.getToneModule() , container.getToneModule());
-			}
-		}
-		
-	}
-	
-	private void printMessage(ShortMessage message)
-	{	
-		String stringMessage = null;
-		
-		switch (message.getCommand())
-		{
-		case ShortMessage.NOTE_ON:
-			stringMessage = "Note on: " + message.getData1() + " - " + message.getData2(); break;
-		
-		case ShortMessage.NOTE_OFF:
-			stringMessage = "Note off: " + message.getData1() + " - " + message.getData2(); break;
-		}
-		
-		System.out.println(stringMessage);
 	}
 
 	private void updateAudioFormat()
@@ -107,89 +40,120 @@ public class SynthesizerEngine implements Receiver
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 	}
 
-	public void addContainer(ModuleContainer container)
-	{
-		containers.add(container);
-	}
-	
-	public List<ModuleContainer> getModuleContainers()
-	{
-		return containers;
-	}
-
-	public AudioFormat getAudioFormat()
-	{
+	public AudioFormat getAudioFormat() {
 		return audioFormat;
-	}
-
-	public double getBufferTime() {
-		return bufferTime;
-	}
-
-	public int getNumChannels() {
-		return numChannels;
-	}
-
-	public int getSampleSizeInBits() {
-		return sampleSizeInBits;
-	}
-	
-	public int getSampleSizeInBytes() {
-		return sampleSizeInBytes;
 	}
 
 	public float getSamplingRate() {
 		return samplingRate;
 	}
 
-	public boolean isBigEndian() {
-		return bigEndian;
+	public void setSamplingRate(float samplingRate) {
+		this.samplingRate = samplingRate;
 	}
 
-	public boolean isPlaying() {
-		return isPlaying;
+	public int getNumChannels() {
+		return numChannels;
+	}
+
+	public void setNumChannels(int numChannels) {
+		this.numChannels = numChannels;
 	}
 
 	public boolean isSigned() {
 		return signed;
 	}
 
+	public void setSigned(boolean signed) {
+		this.signed = signed;
+	}
+
+	public boolean isBigEndian() {
+		return bigEndian;
+	}
+
 	public void setBigEndian(boolean bigEndian) {
 		this.bigEndian = bigEndian;
-		updateAudioFormat();
+	}
+
+	public int getSampleSizeInBits() {
+		return sampleSizeInBits;
+	}
+
+	public void setSampleSizeInBits(int sampleSizeInBits) {
+		this.sampleSizeInBits = sampleSizeInBits;
+	}
+
+	public int getSampleSizeInBytes() {
+		return sampleSizeInBytes;
+	}
+
+	public void setSampleSizeInBytes(int sampleSizeInBytes) {
+		this.sampleSizeInBytes = sampleSizeInBytes;
+	}
+
+	public double getBufferTime() {
+		return bufferTime;
 	}
 
 	public void setBufferTime(double bufferTime) {
 		this.bufferTime = bufferTime;
 	}
 
-	public void setNumChannels(int numChannels) {
-		this.numChannels = numChannels;
-		updateAudioFormat();
+	@Override
+	public void send(MidiMessage message, long timeStamp) 
+	{
+		if (message instanceof ShortMessage)
+		{
+			handleMessage((ShortMessage) message); 
+		}
+
 	}
 
-	public void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
+	private void handleMessage(ShortMessage message)
+	{
+
+		if (message.getCommand() == ShortMessage.NOTE_ON)
+		{
+			System.out.println("Note on! - " + message.getData1());
+			int key = message.getData1();
+			float frequency = MidiUtils.midiNoteNumberToFrequency(key);
+			
+			StandardModuleContainer container = null;
+
+			try 
+			{
+				container = new StandardModuleContainer(this);
+			} 
+			catch (LineUnavailableException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			container.getOscillator().setFrequency((double) frequency);
+			container.getOscillator().setAmplitude(Short.MAX_VALUE);
+			
+			currentNotes.put(key, container);
+
+			PlayThread thread = new PlayThread(container.getOutputModule());
+			thread.start();
+		}
+
+		else if (message.getCommand() == ShortMessage.NOTE_OFF)
+		{
+			System.out.println("Note off! - " + message.getData1());
+			StandardModuleContainer container = (StandardModuleContainer) currentNotes.get(message.getData1());
+			container.getOutputModule().stopPlaying();
+			currentNotes.remove(message.getData1());
+		}
 	}
 	
-	public void setSampleSizeInBits(int sampleSizeInBits) {
-		this.sampleSizeInBits = sampleSizeInBits;
-		updateAudioFormat();
+	public void close()
+	{
+		for (ModuleContainer container:currentNotes.values())
+		{
+			container.getOutputModule().stopPlaying();
+		}
 	}
-
-	public void setSampleSizeInBytes(int sampleSizeInBytes) {
-		this.sampleSizeInBytes = sampleSizeInBytes;
-	}
-	
-	public void setSamplingRate(float samplingRate) {
-		this.samplingRate = samplingRate;
-		updateAudioFormat();
-	}
-
-	public void setSigned(boolean signed) {
-		this.signed = signed;
-		updateAudioFormat();
-	}
-
 
 }

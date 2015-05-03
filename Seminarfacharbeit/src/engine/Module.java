@@ -1,62 +1,33 @@
-
 package engine;
 
-
-public abstract class Module {
+public abstract class Module 
+{
+	private ModuleContainer parent;
 	
-	private Wire inputWire;
-	private Wire outputWire;
+	protected Wire[] inputWires;
+	protected Wire[] outputWires;
 	
-	protected ModuleContainer parent;
-	private boolean isActive;
-	
-	public Module(ModuleContainer parent)
+	public Module(ModuleContainer parent, int numInputWires, int numOutputWires)
 	{
 		this.parent = parent;
+		this.inputWires = new Wire[numInputWires];
+		this.outputWires = new Wire[numOutputWires];
 	}
 	
-	public void processSample(short sampleValue) throws InterruptedException
+	public abstract short requestNextSample();
+	
+	public void connectInputWire(int index, Wire wire)
 	{
-		short newSample = handleSample(sampleValue);
-		if (outputWire != null)
-			outputWire.sendSample(newSample);
+		inputWires[index] = wire;
 	}
-
-	public abstract short handleSample(short sampleValue) throws InterruptedException;
 	
-	public abstract void reset();
-	
-	public abstract void close();
-	
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public Wire getInputWire() {
-		return inputWire;
-	}
-
-	public void connectInputWire(Wire inputWire) {
-		System.out.printf("\tModule %s: InputWire %s was connected\n", toString(), inputWire.toString());
-		this.inputWire = inputWire;
-	}
-
-	public Wire getOutputWire() {
-		return outputWire;
-	}
-
-	public void connectOutputWire(Wire outputWire) {
-		System.out.printf("\tModule %s: OutputWire %s was connected\n", toString(), outputWire.toString());
-		this.outputWire = outputWire;
-	}
-
-	public ModuleContainer getParent() {
-		return parent;
+	public void connectOutputWire(int index, Wire wire)
+	{
+		outputWires[index] = wire;
 	}
 	
 	public SynthesizerEngine getEngine()
 	{
 		return parent.getEngine();
 	}
-	
 }
