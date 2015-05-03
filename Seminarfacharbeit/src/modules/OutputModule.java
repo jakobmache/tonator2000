@@ -1,4 +1,3 @@
-
 package modules;
 
 import java.nio.ByteBuffer;
@@ -10,79 +9,91 @@ import javax.sound.sampled.SourceDataLine;
 
 import engine.Module;
 import engine.ModuleContainer;
+import engine.Wire;
 
-public class OutputModule extends Module{
-
+public class OutputModule extends Module
+{
 	private SourceDataLine dataLine; 
 	private ByteBuffer buffer;
 
 	private int sampleCounter = 0;
 	private int samplesPerPacket;
-	
+
 	private int packetSize;
 
-	public OutputModule(ModuleContainer parent) throws LineUnavailableException
-	{
-		super(parent);
+	private boolean stopPlaying = false;
 
+	public OutputModule(ModuleContainer parent) throws LineUnavailableException 
+	{
+		super(parent, 1, 0);
 		packetSize = (int) (getEngine().getBufferTime() * getEngine().getSamplingRate() * getEngine().getSampleSizeInBytes());
-		
-		//Der Buffer soll zwei Mal so groß wie die Paketgröße sein
+
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, getEngine().getAudioFormat(), packetSize * 2);
 
 		if (!AudioSystem.isLineSupported(info))
 		{
 			throw new LineUnavailableException();
 		}
-		
+
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
 		dataLine.open(getEngine().getAudioFormat());
-		dataLine.start();
-		
+		//dataLine.start();
+
 		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
-	@Override
-	public short handleSample(short sampleValue) throws InterruptedException 
+	public void startPlaying()
 	{
-		if (sampleCounter < samplesPerPacket)
-		{
-			buffer.putShort((short) sampleValue);
-			sampleCounter++;
-		}
-		else 
-		{
-			sampleCounter = 0;
-			dataLine.write(buffer.array(), 0, buffer.position());  
-			
-			
-			while (getLineSampleCount() > packetSize)  
-			{
-				Thread.sleep(1);  
-			}
-			
-			buffer.clear();
-			
-		}
-
+		dataLine.start();
+		stopPlaying = false;
 		
-		return 1;
+		long startTime = System.currentTimeMillis();
+		while (!stopPlaying)
+		{
+			buffer.clear();
+
+			for (int i = 0; i < samplesPerPacket; i++)
+			{
+				buffer.putShort(requestNextSample());
+			}
+
+			dataLine.write(buffer.array(), 0, buffer.position());
+
+			try 
+			{
+				while (getLineSampleCount() > packetSize)
+				{
+					Thread.sleep(1);
+				}
+			} 
+			catch (InterruptedException e) 
+			{	
+			}
+		}
+		
+		dataLine.drain();
+		dataLine.close();
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime - startTime);
 	}
-	
-	private int getLineSampleCount()
+
+
+	@Override
+	public short requestNextSample() 
+	{
+		short sampleValue = inputWires[0].getNextSample();
+		return sampleValue;
+	}
+
+	private int getLineSampleCount() 
 	{
 		return dataLine.getBufferSize() - dataLine.available();
 	}
 
-	@Override
-	public void close() {
-		dataLine.close();	
+	public void stopPlaying()
+	{
+		stopPlaying = true;
 	}
 
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-
-	}
 }
