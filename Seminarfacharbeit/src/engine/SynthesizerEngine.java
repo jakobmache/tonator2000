@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
 import midi.MidiUtils;
+import modules.Oscillator;
 import threads.PlayThread;
 import containers.StandardModuleContainer;
 
@@ -32,7 +33,6 @@ public class SynthesizerEngine implements Receiver
 	public SynthesizerEngine()
 	{
 		updateAudioFormat();
-
 	}
 
 	private void updateAudioFormat()
@@ -50,6 +50,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setSamplingRate(float samplingRate) {
 		this.samplingRate = samplingRate;
+		updateAudioFormat();
 	}
 
 	public int getNumChannels() {
@@ -58,6 +59,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setNumChannels(int numChannels) {
 		this.numChannels = numChannels;
+		updateAudioFormat();
 	}
 
 	public boolean isSigned() {
@@ -66,6 +68,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setSigned(boolean signed) {
 		this.signed = signed;
+		updateAudioFormat();
 	}
 
 	public boolean isBigEndian() {
@@ -74,6 +77,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setBigEndian(boolean bigEndian) {
 		this.bigEndian = bigEndian;
+		updateAudioFormat();
 	}
 
 	public int getSampleSizeInBits() {
@@ -82,6 +86,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setSampleSizeInBits(int sampleSizeInBits) {
 		this.sampleSizeInBits = sampleSizeInBits;
+		updateAudioFormat();
 	}
 
 	public int getSampleSizeInBytes() {
@@ -90,6 +95,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setSampleSizeInBytes(int sampleSizeInBytes) {
 		this.sampleSizeInBytes = sampleSizeInBytes;
+		updateAudioFormat();
 	}
 
 	public double getBufferTime() {
@@ -97,7 +103,7 @@ public class SynthesizerEngine implements Receiver
 	}
 
 	public void setBufferTime(double bufferTime) {
-		this.bufferTime = bufferTime;
+		this.bufferTime = bufferTime;updateAudioFormat();
 	}
 
 	@Override
@@ -112,12 +118,19 @@ public class SynthesizerEngine implements Receiver
 
 	private void handleMessage(ShortMessage message)
 	{
-
 		if (message.getCommand() == ShortMessage.NOTE_ON)
 		{
-			System.out.println("Note on! - " + message.getData1());
 			int key = message.getData1();
+			int velocity = message.getData2();
+			
+			System.out.println("Note on! - " + key + " - " + velocity);
 			float frequency = MidiUtils.midiNoteNumberToFrequency(key);
+			
+			if (currentNotes.keySet().contains(key))
+			{
+				System.out.println("Note wird schon abgespielt - Fehler!");
+				return;
+			}
 			
 			StandardModuleContainer container = null;
 
@@ -131,7 +144,8 @@ public class SynthesizerEngine implements Receiver
 			}
 			
 			container.getOscillator().setFrequency((double) frequency);
-			container.getOscillator().setAmplitude(Short.MAX_VALUE);
+			container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
+			container.getOscillator().setType(Oscillator.TYPE_SINE);
 			
 			currentNotes.put(key, container);
 
@@ -141,8 +155,15 @@ public class SynthesizerEngine implements Receiver
 
 		else if (message.getCommand() == ShortMessage.NOTE_OFF)
 		{
-			System.out.println("Note off! - " + message.getData1());
-			StandardModuleContainer container = (StandardModuleContainer) currentNotes.get(message.getData1());
+			int key = message.getData1();
+			System.out.println("Note off! - " + key);
+			
+			if (!currentNotes.containsKey(key))
+			{
+				System.out.println("Note wird nicht abgespielt - Fehler!");
+				return;
+			}
+			StandardModuleContainer container = (StandardModuleContainer) currentNotes.get(key);
 			container.getOutputModule().stopPlaying();
 			currentNotes.remove(message.getData1());
 		}

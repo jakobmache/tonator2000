@@ -3,7 +3,6 @@ package containers;
 import javax.sound.sampled.LineUnavailableException;
 
 import modules.Oscillator;
-import modules.OutputModule;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;

@@ -9,14 +9,13 @@ import javax.sound.sampled.SourceDataLine;
 
 import engine.Module;
 import engine.ModuleContainer;
-import engine.Wire;
 
+//Grundlage: http://www.wolinlabs.com/blog/java.sine.wave.html
 public class OutputModule extends Module
 {
 	private SourceDataLine dataLine; 
 	private ByteBuffer buffer;
 
-	private int sampleCounter = 0;
 	private int samplesPerPacket;
 
 	private int packetSize;
@@ -26,8 +25,10 @@ public class OutputModule extends Module
 	public OutputModule(ModuleContainer parent) throws LineUnavailableException 
 	{
 		super(parent, 1, 0);
+		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
 		packetSize = (int) (getEngine().getBufferTime() * getEngine().getSamplingRate() * getEngine().getSampleSizeInBytes());
 
+		//Buffergröße der SourceDataLine = 2 * Paketgröße
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, getEngine().getAudioFormat(), packetSize * 2);
 
 		if (!AudioSystem.isLineSupported(info))
@@ -37,22 +38,21 @@ public class OutputModule extends Module
 
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
 		dataLine.open(getEngine().getAudioFormat());
-		//dataLine.start();
 
 		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
-	public void startPlaying()
+	public void startPlaying() throws InterruptedException
 	{
 		dataLine.start();
 		stopPlaying = false;
-		
-		long startTime = System.currentTimeMillis();
+
 		while (!stopPlaying)
 		{
 			buffer.clear();
 
+			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
 				buffer.putShort(requestNextSample());
@@ -60,22 +60,16 @@ public class OutputModule extends Module
 
 			dataLine.write(buffer.array(), 0, buffer.position());
 
-			try 
+			//Solange der Buffer der SourceDataLine mehr als halbvoll ist, warten wir
+			while (getLineSampleCount() > packetSize)
 			{
-				while (getLineSampleCount() > packetSize)
-				{
-					Thread.sleep(1);
-				}
-			} 
-			catch (InterruptedException e) 
-			{	
+				Thread.sleep(1);
 			}
+
 		}
-		
+
 		dataLine.drain();
 		dataLine.close();
-		long endTime = System.currentTimeMillis();
-		System.out.println(endTime - startTime);
 	}
 
 

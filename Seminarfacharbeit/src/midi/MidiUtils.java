@@ -13,7 +13,27 @@ import javax.sound.midi.Transmitter;
 
 
 public class MidiUtils {
-	
+
+	public static int NOTE_ON_START = 144;
+	public static int NOTE_ON_END = 259;
+
+	public static int NOTE_OFF_START = 128;
+	public static int NOTE_OFF_END = 143;
+
+	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>(){{
+		for (int i = NOTE_ON_START; i <= NOTE_ON_END; i++)
+		{
+			add(i);
+		}
+	}};
+
+	public static List<Integer> NOTE_OFF_COMMANDS = new ArrayList<Integer>(){{
+		for (int i = NOTE_OFF_START; i <= NOTE_OFF_END; i++)
+		{
+			add(i);
+		}
+	}};
+
 	private static final int REFERENCE_NOTE_NUMBER = 69;
 	private static final int REFERENCE_NOTE_FREQ = 440;
 	private static final int NOTES_PER_OCTAVE = 12;
@@ -29,7 +49,7 @@ public class MidiUtils {
 			try
 			{
 				MidiDevice device = MidiSystem.getMidiDevice(info);
-				
+
 				// Wenn das Gerät einen Transmitter hat, muss es hinzugefügt werden
 				device.getTransmitter();
 				inputDeviceInfo.add(info);

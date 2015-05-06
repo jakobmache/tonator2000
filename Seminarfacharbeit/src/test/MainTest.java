@@ -4,15 +4,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.MidiDevice.Info;
 import javax.sound.sampled.LineUnavailableException;
 
 import midi.MidiUtils;
-import threads.PlayThread;
-import containers.StandardModuleContainer;
-import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class MainTest {
@@ -30,8 +27,9 @@ public class MainTest {
 		}
 
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Select Midi device: ");
+		System.out.println("Midi-Gerät auswählen: ");
 		int choice = scanner.nextInt();
+		scanner.close();
 		
 		SynthesizerEngine engine = new SynthesizerEngine();
 
@@ -44,19 +42,23 @@ public class MainTest {
 			
 			device.open();
 
-			System.out.println("Press <Enter> to stop listening!");
+			System.out.println("<Enter> zum Beenden drücken!");
 
 			scanner.nextLine();
 			scanner.nextLine();
 			
 			device.close();
-			engine.close();
 		} 
 		
 
 		catch (MidiUnavailableException e) 
 		{
 			e.printStackTrace();
+		}
+		
+		finally
+		{
+			engine.close();
 		}
 	}
 

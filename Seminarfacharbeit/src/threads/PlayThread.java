@@ -11,10 +11,18 @@ public class PlayThread extends Thread
 	{
 		outputModule = module;
 	}
-	
+
 	public void run()
 	{
-		outputModule.startPlaying();
-	}
+		try 
+		{
+			outputModule.startPlaying();
+		}
 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
 }
