@@ -3,10 +3,12 @@ package modules;
 import engine.Module;
 import engine.ModuleContainer;
 
-public class Oscillator extends engine.Module {
+//Grundlage für Sinus: http://www.wolinlabs.com/blog/java.sine.wave.html
+public class Oscillator extends Module 
+{
 
 	public static final int TYPE_SINE = 0;
-	public static final int TYPE_SAW = 1;
+	public static final int TYPE_SQUARE = 1;
 
 	private static int TYPE = Oscillator.TYPE_SINE;
 
@@ -40,14 +42,25 @@ public class Oscillator extends engine.Module {
 
 	public short requestNextSample() 
 	{
+		short value;
 		switch(TYPE)
 		{
 		case(Oscillator.TYPE_SINE):
 			cycleIncrease = frequency / getEngine().getSamplingRate();
-			short value = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
+			value = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
 				cyclePosition -= 1;	
+			return value;
+		
+		case (Oscillator.TYPE_SQUARE):
+			cycleIncrease = frequency / getEngine().getSamplingRate();
+			short sineValue = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
+			cyclePosition += cycleIncrease;
+			if (sineValue >= 0)
+				value = (short) amplitude;
+			else 
+				value = (short) (-1 * amplitude);
 			return value;
 			
 		default:
