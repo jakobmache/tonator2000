@@ -29,7 +29,6 @@ public class MainTest {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Midi-Gerät auswählen: ");
 		int choice = scanner.nextInt();
-		scanner.close();
 		
 		SynthesizerEngine engine = new SynthesizerEngine();
 
@@ -58,6 +57,7 @@ public class MainTest {
 		
 		finally
 		{
+			scanner.close();
 			engine.close();
 		}
 	}
