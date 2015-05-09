@@ -38,14 +38,14 @@ public class OutputModule extends Module
 
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
 		dataLine.open(getEngine().getAudioFormat());
-
+		dataLine.start();
+		
 		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
 	public void startPlaying() throws InterruptedException
 	{
-		dataLine.start();
 		stopPlaying = false;
 
 		while (!stopPlaying)
@@ -69,7 +69,6 @@ public class OutputModule extends Module
 		}
 
 		dataLine.drain();
-		dataLine.close();
 	}
 
 
@@ -88,6 +87,11 @@ public class OutputModule extends Module
 	public void stopPlaying()
 	{
 		stopPlaying = true;
+	}
+	
+	public void close()
+	{
+		dataLine.close();
 	}
 
 }

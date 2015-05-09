@@ -32,4 +32,8 @@ public class StandardModuleContainer extends ModuleContainer
 	{
 		return osci;
 	}
+	
+	public void close()
+	{
+	}
 }

@@ -28,7 +28,8 @@ public class SynthesizerEngine implements Receiver
 
 	private double bufferTime = 0.01;
 	
-	private Map <Integer, ModuleContainer> currentNotes = new HashMap<Integer, ModuleContainer>();
+	private Map<Integer, ModuleContainer> currentNotes = new HashMap<Integer, ModuleContainer>();
+	private Map<Integer, ModuleContainer> existingContainers = new HashMap<Integer, ModuleContainer>();
 
 	public SynthesizerEngine()
 	{
@@ -136,21 +137,31 @@ public class SynthesizerEngine implements Receiver
 
 			try 
 			{
-				container = new StandardModuleContainer(this);
+				if (!existingContainers.containsKey(key))
+				{
+					container = new StandardModuleContainer(this);
+					existingContainers.put(key, container);
+				}
+				else 
+				{
+					container = (StandardModuleContainer) existingContainers.get(key);
+				}
+				
+				container.getOscillator().setFrequency((double) frequency);
+				container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
+				container.getOscillator().setType(Oscillator.TYPE_SQUARE);
+				
+				currentNotes.put(key, container);
+
+				PlayThread thread = new PlayThread(container.getOutputModule());
+				thread.start();
 			} 
 			catch (LineUnavailableException e) 
 			{
 				e.printStackTrace();
 			}
 			
-			container.getOscillator().setFrequency((double) frequency);
-			container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-			container.getOscillator().setType(Oscillator.TYPE_SINE);
-			
-			currentNotes.put(key, container);
 
-			PlayThread thread = new PlayThread(container.getOutputModule());
-			thread.start();
 		}
 
 		else if (message.getCommand() == ShortMessage.NOTE_OFF)
@@ -171,9 +182,10 @@ public class SynthesizerEngine implements Receiver
 	
 	public void close()
 	{
-		for (ModuleContainer container:currentNotes.values())
+		for (ModuleContainer container:existingContainers.values())
 		{
 			container.getOutputModule().stopPlaying();
+			container.getOutputModule().close();
 		}
 	}
 

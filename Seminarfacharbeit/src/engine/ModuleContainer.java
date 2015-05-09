@@ -21,6 +21,8 @@ public abstract class ModuleContainer
 		addModule(outputModule);
 	}
 	
+	public abstract void close();
+	
 	public OutputModule getOutputModule() 
 	{
 		return outputModule;
