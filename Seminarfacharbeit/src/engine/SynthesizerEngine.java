@@ -9,9 +9,9 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
-import midi.MidiUtils;
-import modules.Oscillator;
-import threads.PlayThread;
+import modules.InputController;
+import modules.Mixer;
+import modules.OutputModule;
 import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
@@ -28,12 +28,54 @@ public class SynthesizerEngine implements Receiver
 
 	private double bufferTime = 0.01;
 	
-	private Map<Integer, ModuleContainer> currentNotes = new HashMap<Integer, ModuleContainer>();
-	private Map<Integer, ModuleContainer> existingContainers = new HashMap<Integer, ModuleContainer>();
+	private int startKeyNumber = 0;
+	private int endKeyNumber = 100;
+	
+	private OutputModule outputModule;
+
+	private InputController inputModule;
+	private Map<Integer, ModuleContainer> containers;
 
 	public SynthesizerEngine()
 	{
 		updateAudioFormat();
+		initContainers();
+		initModules();
+	}
+
+	private void initModules()
+	{
+		inputModule = new InputController(this);
+		try 
+		{
+			outputModule = new OutputModule(this);
+		} 
+		catch (LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		Mixer outputMixer = new Mixer(this, endKeyNumber - startKeyNumber);
+		int i = 0;
+		for (int key = startKeyNumber; key < endKeyNumber; key++)
+		{
+			Wire wire = new Wire(outputMixer, containers.get(key), 0, i);
+			i++;
+		}
+		
+		Wire mixerOutput = new Wire(outputModule, outputMixer, 0, 0);
+		
+	}
+
+	private void initContainers()
+	{
+		containers = new HashMap<Integer, ModuleContainer>();
+		for (int key = startKeyNumber; key <= endKeyNumber; key++)
+		{
+			ModuleContainer container = new StandardModuleContainer(this);
+			containers.put(key, container);
+		}
+		
 	}
 
 	private void updateAudioFormat()
@@ -41,6 +83,46 @@ public class SynthesizerEngine implements Receiver
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 	}
 
+	@Override
+	public void send(MidiMessage message, long timeStamp) 
+	{
+		if (message instanceof ShortMessage)
+		{
+			inputModule.handleMessage((ShortMessage) message);
+		}
+
+	}
+	
+	public void close()
+	{
+		outputModule.stopPlaying();
+	}
+	
+	public void run()
+	{
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() 
+			{
+				try 
+				{
+					outputModule.startPlaying();
+				} 
+				catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		thread.start();
+	}
+	
+	public Map<Integer, ModuleContainer> getModuleContainers()
+	{
+		return containers;
+	}
+	
 	public AudioFormat getAudioFormat() {
 		return audioFormat;
 	}
@@ -107,86 +189,5 @@ public class SynthesizerEngine implements Receiver
 		this.bufferTime = bufferTime;updateAudioFormat();
 	}
 
-	@Override
-	public void send(MidiMessage message, long timeStamp) 
-	{
-		if (message instanceof ShortMessage)
-		{
-			handleMessage((ShortMessage) message); 
-		}
-
-	}
-
-	private void handleMessage(ShortMessage message)
-	{
-		if (message.getCommand() == ShortMessage.NOTE_ON)
-		{
-			int key = message.getData1();
-			int velocity = message.getData2();
-			
-			System.out.println("Note on! - " + key + " - " + velocity);
-			float frequency = MidiUtils.midiNoteNumberToFrequency(key);
-			
-			if (currentNotes.keySet().contains(key))
-			{
-				System.out.println("Note wird schon abgespielt - Fehler!");
-				return;
-			}
-			
-			StandardModuleContainer container = null;
-
-			try 
-			{
-				if (!existingContainers.containsKey(key))
-				{
-					container = new StandardModuleContainer(this);
-					existingContainers.put(key, container);
-				}
-				else 
-				{
-					container = (StandardModuleContainer) existingContainers.get(key);
-				}
-				
-				container.getOscillator().setFrequency((double) frequency);
-				container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-				container.getOscillator().setType(Oscillator.TYPE_SQUARE);
-				
-				currentNotes.put(key, container);
-
-				PlayThread thread = new PlayThread(container.getOutputModule());
-				thread.start();
-			} 
-			catch (LineUnavailableException e) 
-			{
-				e.printStackTrace();
-			}
-			
-
-		}
-
-		else if (message.getCommand() == ShortMessage.NOTE_OFF)
-		{
-			int key = message.getData1();
-			System.out.println("Note off! - " + key);
-			
-			if (!currentNotes.containsKey(key))
-			{
-				System.out.println("Note wird nicht abgespielt - Fehler!");
-				return;
-			}
-			StandardModuleContainer container = (StandardModuleContainer) currentNotes.get(key);
-			container.getOutputModule().stopPlaying();
-			currentNotes.remove(message.getData1());
-		}
-	}
-	
-	public void close()
-	{
-		for (ModuleContainer container:existingContainers.values())
-		{
-			container.getOutputModule().stopPlaying();
-			container.getOutputModule().close();
-		}
-	}
 
 }

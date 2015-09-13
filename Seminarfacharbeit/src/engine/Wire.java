@@ -2,21 +2,26 @@ package engine;
 
 public class Wire 
 {
-	private Module inputModule;
 	private Module outputModule;
+	private Module inputModule;
 	
-	public Wire (Module inputModule, Module outputModule)
+	public Wire (Module outputModule, Module inputModule, int inputModuleIndex, int outputModuleIndex)
 	{
-		this.inputModule = inputModule;
-		this.outputModule = outputModule; 
+		this.outputModule = outputModule;
+		this.inputModule = inputModule; 
 		
-		outputModule.connectOutputWire(0, this);
-		inputModule.connectInputWire(0, this);
+		outputModule.connectInputWire(outputModuleIndex, this);
+		inputModule.connectOutputWire(inputModuleIndex, this);
 	}
 	
 	public short getNextSample()
 	{
-		return outputModule.requestNextSample();
+		return inputModule.requestNextSample(0);
+	}
+	
+	public String toString()
+	{
+		return "Kabel von " + inputModule + " zu " + outputModule + ", id: " + this.hashCode();
 	}
 
 }

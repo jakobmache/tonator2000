@@ -8,7 +8,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import engine.Module;
-import engine.ModuleContainer;
+import engine.SynthesizerEngine;
 
 //Grundlage: http://www.wolinlabs.com/blog/java.sine.wave.html
 public class OutputModule extends Module
@@ -22,14 +22,14 @@ public class OutputModule extends Module
 
 	private boolean stopPlaying = false;
 
-	public OutputModule(ModuleContainer parent) throws LineUnavailableException 
+	public OutputModule(SynthesizerEngine parent) throws LineUnavailableException 
 	{
 		super(parent, 1, 0);
 		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
-		packetSize = (int) (getEngine().getBufferTime() * getEngine().getSamplingRate() * getEngine().getSampleSizeInBytes());
+		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
 
 		//Buffergröße der SourceDataLine = 2 * Paketgröße
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, getEngine().getAudioFormat(), packetSize * 2);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, parent.getAudioFormat(), packetSize * 2);
 
 		if (!AudioSystem.isLineSupported(info))
 		{
@@ -37,10 +37,10 @@ public class OutputModule extends Module
 		}
 
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
-		dataLine.open(getEngine().getAudioFormat());
+		dataLine.open(parent.getAudioFormat());
 		dataLine.start();
 		
-		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
+		samplesPerPacket = packetSize / parent.getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
@@ -55,7 +55,7 @@ public class OutputModule extends Module
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
-				buffer.putShort(requestNextSample());
+				buffer.putShort(requestNextSample(0));
 			}
 
 			dataLine.write(buffer.array(), 0, buffer.position());
@@ -73,7 +73,7 @@ public class OutputModule extends Module
 
 
 	@Override
-	public short requestNextSample() 
+	public short requestNextSample(int outputWireIndex) 
 	{
 		short sampleValue = inputWires[0].getNextSample();
 		return sampleValue;

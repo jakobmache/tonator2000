@@ -42,7 +42,7 @@ public class MainTest {
 			device.open();
 
 			System.out.println("<Enter> zum Beenden drücken!");
-
+			engine.run();
 			scanner.nextLine();
 			scanner.nextLine();
 			

@@ -3,43 +3,22 @@ package engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.sampled.LineUnavailableException;
-
-import modules.OutputModule;
-
-public abstract class ModuleContainer 
+public abstract class ModuleContainer extends Module
 {
-	private OutputModule outputModule;
+	private Wire outputWire;
+	private List<Module> modules;
 	
-	private List<Module> modules = new ArrayList<Module>();
-	private SynthesizerEngine engine;
-	
-	public ModuleContainer(SynthesizerEngine parent) throws LineUnavailableException
+	public ModuleContainer(SynthesizerEngine parent)
 	{
-		engine = parent;
-		outputModule = new OutputModule(this);
-		addModule(outputModule);
-	}
-	
-	public abstract void close();
-	
-	public OutputModule getOutputModule() 
-	{
-		return outputModule;
-	}
-
-	public SynthesizerEngine getEngine()
-	{
-		return engine;
+		super(parent, 1, 1);
+		modules = new ArrayList<Module>();
 	}
 	
 	public void addModule(Module module)
 	{
 		modules.add(module);
 	}
-	
-	public Module getModule(int index)
-	{
-		return modules.get(index);
-	}
+
+	@Override
+	public abstract short requestNextSample(int outputWireIndex);
 }
