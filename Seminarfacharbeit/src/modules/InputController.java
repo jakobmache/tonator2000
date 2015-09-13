@@ -46,8 +46,8 @@ public class InputController{
 			StandardModuleContainer container = (StandardModuleContainer) parent.getModuleContainers().get(key);
 
 			container.getOscillator().setFrequency((double) frequency);
-			container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-
+			//container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
+			container.getOscillator().setAmplitude(Short.MAX_VALUE);
 			currentNotes.add(key);
 		}
 

@@ -53,6 +53,8 @@ public class Oscillator extends Module
 			cycleIncrease = frequency / parent.getSamplingRate();
 			value = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
+			if (value < Short.MAX_VALUE)
+				//System.out.println(value + " " + cyclePosition + " " + amplitude + " " + Short.MAX_VALUE);
 			if (cyclePosition > 1)
 				cyclePosition -= 1;	
 			return value;

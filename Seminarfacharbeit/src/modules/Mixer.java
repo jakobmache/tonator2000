@@ -24,20 +24,25 @@ public class Mixer extends Module{
 	
 	private short calculateSum()
 	{
-		int n = 1;
+		int n = 0;
 		int sum = 0;
+		int x = 0;
 		
 		for (Wire inputWire:inputWires)
 		{
 			short value = inputWire.getNextSample();
 			if (value != 0)
+			{
+				//System.out.println(x + ":" + value);
 				n += 1;
+			}
 			sum += value;
+			x++;
 		}
 		
-		sum = sum / n;
-		
-		
+		if (n != 0)
+			sum = sum / n;
+
 		return (short) sum;
 		
 	}

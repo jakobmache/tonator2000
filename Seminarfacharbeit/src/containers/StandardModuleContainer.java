@@ -21,11 +21,11 @@ public class StandardModuleContainer extends ModuleContainer
 	private void initModules()
 	{
 		oscillator = new Oscillator(parent);
-		Amplifier amplifier = new Amplifier(parent);
-		amplifier.setFactor(5);
-		Wire wire = new Wire(amplifier, oscillator, 0, 0);
+		//Amplifier amplifier = new Amplifier(parent);
+		//amplifier.setFactor(5);
+		//Wire wire = new Wire(amplifier, oscillator, 0, 0);
 
-		Wire wire2 = new Wire(this, amplifier, 0, 0);
+		Wire wire2 = new Wire(this, oscillator, 0, 0);
 	}
 	
 	public Oscillator getOscillator()
@@ -36,6 +36,7 @@ public class StandardModuleContainer extends ModuleContainer
 	@Override
 	public short requestNextSample(int outputWireIndex) 
 	{
-		return inputWires[0].getNextSample();
+		short value = inputWires[0].getNextSample();
+		return value;
 	}
 }
