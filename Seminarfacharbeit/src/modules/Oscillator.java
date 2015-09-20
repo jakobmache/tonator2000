@@ -1,5 +1,6 @@
 package modules;
 
+import utils.Constants;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -51,10 +52,8 @@ public class Oscillator extends Module
 		if (type == TYPE_SINE)
 		{
 			cycleIncrease = frequency / parent.getSamplingRate();
-			value = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
+			value = (short) (amplitude * Math.sin(Constants.TWOPI * cyclePosition));
 			cyclePosition += cycleIncrease;
-			if (value < Short.MAX_VALUE)
-				//System.out.println(value + " " + cyclePosition + " " + amplitude + " " + Short.MAX_VALUE);
 			if (cyclePosition > 1)
 				cyclePosition -= 1;	
 			return value;
@@ -65,6 +64,8 @@ public class Oscillator extends Module
 			cycleIncrease = frequency / parent.getSamplingRate();
 			short sineValue = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
+			if (cyclePosition > 1)
+				cyclePosition -= 1;	
 			if (sineValue >= 0)
 				value = (short) amplitude;
 			else 

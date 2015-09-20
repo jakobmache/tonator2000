@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+            <Menu fx:id="engineMenu" mnemonicParsing="false" onAction="#onEngineMenuAction" text="Engine">
+              <items>
+                  <MenuItem fx:id="changeEngineStateMenuItem" mnemonicParsing="false" onAction="#onChangeEngineStateAction" text="Starten" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="sampleRateMenuItem" mnemonicParsing="false" onAction="#onSetSampleRateMenuAction" text="Samplerate" />
+                  <MenuItem fx:id="bufferTimeMenuItem" mnemonicParsing="false" onAction="#onSetBufferTimeMenuAction" text="Pufferzeit (Latenz)" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem fx:id="monoMenuItem" mnemonicParsing="false" onAction="#onSetNumberChannelsAction" text="Mono" />
+                  <CheckMenuItem fx:id="stereoMenuItem" disable="true" mnemonicParsing="false" onAction="#onSetNumberChannelsAction" text="Stereo (funktioniert nicht)" />
+              </items>
+            </Menu>
+          <Menu fx:id="midiMenu" mnemonicParsing="false" text="MIDI">
+            <items>
+              <MenuItem fx:id="selectMidiDeviceMenuItem" mnemonicParsing="false" onAction="#onSelectMidiDeviceAction" text="Gerät auswählen" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

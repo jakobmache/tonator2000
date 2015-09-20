@@ -1,6 +1,7 @@
 package modules;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javafx.scene.chart.ValueAxis;
 import engine.Module;
@@ -9,9 +10,12 @@ import engine.Wire;
 
 public class Mixer extends Module{
 
+	private InputController inputModule;
+	
 	public Mixer(SynthesizerEngine parent, int numInputWires) 
 	{
 		super(parent, numInputWires, 1);
+		inputModule = parent.getInputController();
 		
 	}
 
@@ -26,23 +30,18 @@ public class Mixer extends Module{
 	{
 		int n = 0;
 		int sum = 0;
-		int x = 0;
 		
 		for (Wire inputWire:inputWires)
 		{
 			short value = inputWire.getNextSample();
 			if (value != 0)
-			{
-				//System.out.println(x + ":" + value);
-				n += 1;
-			}
+				n++;
 			sum += value;
-			x++;
 		}
 		
 		if (n != 0)
 			sum = sum / n;
-
+		
 		return (short) sum;
 		
 	}

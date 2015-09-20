@@ -43,11 +43,11 @@ public class InputController{
 				return;
 			}
 
-			StandardModuleContainer container = (StandardModuleContainer) parent.getModuleContainers().get(key);
+			Oscillator oscillator = parent.getOscillators().get(key);
 
-			container.getOscillator().setFrequency((double) frequency);
+			oscillator.setFrequency((double) frequency);
 			//container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-			container.getOscillator().setAmplitude(Short.MAX_VALUE);
+			oscillator.setAmplitude(Short.MAX_VALUE);
 			currentNotes.add(key);
 		}
 
@@ -62,11 +62,16 @@ public class InputController{
 				return;
 			}
 
-			StandardModuleContainer container = (StandardModuleContainer) parent.getModuleContainers().get(key);
-			container.getOscillator().setFrequency(0);
-			container.getOscillator().setAmplitude(0);
+			Oscillator oscillator = parent.getOscillators().get(key);
+			oscillator.setFrequency(0);
+			oscillator.setAmplitude(0);
 			currentNotes.remove((Integer) key);
 		}
+	}
+	
+	public List<Integer> getCurrentNotes()
+	{
+		return currentNotes;
 	}
 
 }

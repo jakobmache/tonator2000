@@ -55,7 +55,8 @@ public class OutputModule extends Module
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
-				buffer.putShort(requestNextSample(0));
+				short value = requestNextSample(0);		
+				buffer.putShort(value);
 			}
 
 			dataLine.write(buffer.array(), 0, buffer.position());
@@ -92,6 +93,29 @@ public class OutputModule extends Module
 	public void close()
 	{
 		dataLine.close();
+	}
+	
+	public void updateFormat() throws LineUnavailableException
+	{
+		stopPlaying();
+		
+		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
+		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
+
+		//Buffergröße der SourceDataLine = 2 * Paketgröße
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, parent.getAudioFormat(), packetSize * 2);
+
+		if (!AudioSystem.isLineSupported(info))
+		{
+			throw new LineUnavailableException();
+		}
+
+		dataLine = (SourceDataLine) AudioSystem.getLine(info);
+		dataLine.open(parent.getAudioFormat());
+		dataLine.start();
+		
+		samplesPerPacket = packetSize / parent.getSampleSizeInBytes();
+		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
 }

@@ -64,12 +64,6 @@ public class MidiUtils {
 		return inputDeviceInfo;
 	}
 
-	public static void connectTransmitterToReceiver(MidiDevice device, Receiver receiver) throws MidiUnavailableException
-	{
-		Transmitter transmitter = device.getTransmitter();
-		transmitter.setReceiver(receiver);
-	}
-
 	public static float midiNoteNumberToFrequency(int mnn) {
 
 		float soundOffset = (mnn - REFERENCE_NOTE_NUMBER) / (float) NOTES_PER_OCTAVE;

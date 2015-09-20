@@ -2,41 +2,42 @@ package containers;
 
 
 import modules.Amplifier;
-import modules.Oscillator;
+import modules.LowpassFilter;
+import engine.Module;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
 public class StandardModuleContainer extends ModuleContainer 
 {
-
-	private Oscillator oscillator;
 	
-	public StandardModuleContainer(SynthesizerEngine parent)
+	private Module inputModule;
+	private Amplifier amplifier;
+	private LowpassFilter filter;
+
+	public StandardModuleContainer(SynthesizerEngine parent, Module inputModule)
 	{
 		super(parent);
+		this.inputModule = inputModule;
 		initModules();
+
 	}
 	
 	private void initModules()
 	{
-		oscillator = new Oscillator(parent);
-		//Amplifier amplifier = new Amplifier(parent);
-		//amplifier.setFactor(5);
-		//Wire wire = new Wire(amplifier, oscillator, 0, 0);
-
-		Wire wire2 = new Wire(this, oscillator, 0, 0);
+		filter = new LowpassFilter(parent, 1, 1);
+		new Wire(filter, inputModule, 0, 0);
 	}
-	
-	public Oscillator getOscillator()
+
+	public LowpassFilter getLowpassFilter()
 	{
-		return oscillator;
+		return filter;
 	}
 
 	@Override
 	public short requestNextSample(int outputWireIndex) 
 	{
-		short value = inputWires[0].getNextSample();
+		short value = filter.requestNextSample(0);
 		return value;
 	}
 }

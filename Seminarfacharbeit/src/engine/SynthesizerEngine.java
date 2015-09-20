@@ -3,16 +3,20 @@ package engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
+import containers.StandardModuleContainer;
 import modules.InputController;
 import modules.Mixer;
+import modules.Oscillator;
 import modules.OutputModule;
-import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -31,16 +35,34 @@ public class SynthesizerEngine implements Receiver
 	private int startKeyNumber = 0;
 	private int endKeyNumber = 100;
 	
+	private boolean isRunning = false;
+	
+	private int oscillatorType = Oscillator.TYPE_SINE;
+	
 	private OutputModule outputModule;
 
 	private InputController inputModule;
-	private Map<Integer, ModuleContainer> containers;
+	private Map<Integer, Oscillator> oscillators;
+	private ModuleContainer container;
+	
+	private MidiDevice connectedMidiDevice;
 
-	public SynthesizerEngine()
+	public SynthesizerEngine() throws LineUnavailableException
 	{
 		updateAudioFormat();
 		initContainers();
 		initModules();
+	}
+	
+	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
+	{
+		if (connectedMidiDevice != null)
+			connectedMidiDevice.close();
+		
+		Transmitter transmitter = device.getTransmitter();
+		transmitter.setReceiver(this);
+		
+		connectedMidiDevice = device;
 	}
 
 	private void initModules()
@@ -59,28 +81,33 @@ public class SynthesizerEngine implements Receiver
 		int i = 0;
 		for (int key = startKeyNumber; key < endKeyNumber; key++)
 		{
-			Wire wire = new Wire(outputMixer, containers.get(key), 0, i);
+			oscillators.get(key).setType(oscillatorType);
+			Wire wire = new Wire(outputMixer, oscillators.get(key), 0, i);
 			i++;
 		}
 		
-		Wire mixerOutput = new Wire(outputModule, outputMixer, 0, 0);
+		container = new StandardModuleContainer(this, outputMixer);
+		new Wire(outputModule, container, 0, 0);
 		
 	}
-
+	
 	private void initContainers()
 	{
-		containers = new HashMap<Integer, ModuleContainer>();
+		oscillators = new HashMap<Integer, Oscillator>();
 		for (int key = startKeyNumber; key <= endKeyNumber; key++)
 		{
-			ModuleContainer container = new StandardModuleContainer(this);
-			containers.put(key, container);
+			Oscillator oscillator = new Oscillator(this);
+			oscillators.put(key, oscillator);
 		}
 		
 	}
 
-	private void updateAudioFormat()
+	private void updateAudioFormat() throws LineUnavailableException
 	{
+		stop();
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
+		if (outputModule != null)
+			outputModule.updateFormat();
 	}
 
 	@Override
@@ -93,9 +120,23 @@ public class SynthesizerEngine implements Receiver
 
 	}
 	
+	public void stop()
+	{
+		if (outputModule != null)
+			outputModule.stopPlaying();
+		isRunning = false;
+	}
+	
 	public void close()
 	{
-		outputModule.stopPlaying();
+		stop();
+		disconnectMidiDevice();
+	}
+	
+	public void disconnectMidiDevice()
+	{
+		if (connectedMidiDevice != null)
+			connectedMidiDevice.close();
 	}
 	
 	public void run()
@@ -116,11 +157,32 @@ public class SynthesizerEngine implements Receiver
 			}
 		});
 		thread.start();
+		isRunning = true;
 	}
 	
-	public Map<Integer, ModuleContainer> getModuleContainers()
+	public void setOscillatorType(int type)
 	{
-		return containers;
+		for (Oscillator osci:oscillators.values())
+		{
+			osci.setType(type);
+		}
+		
+		oscillatorType = type;
+	}
+	
+	public int getOscillatorType()
+	{
+		return oscillatorType;
+	}
+	
+	public ModuleContainer getContainer() 
+	{
+		return container;
+	}
+
+	public Map<Integer, Oscillator> getOscillators()
+	{
+		return oscillators;
 	}
 	
 	public AudioFormat getAudioFormat() {
@@ -131,7 +193,7 @@ public class SynthesizerEngine implements Receiver
 		return samplingRate;
 	}
 
-	public void setSamplingRate(float samplingRate) {
+	public void setSamplingRate(float samplingRate) throws LineUnavailableException {
 		this.samplingRate = samplingRate;
 		updateAudioFormat();
 	}
@@ -140,7 +202,7 @@ public class SynthesizerEngine implements Receiver
 		return numChannels;
 	}
 
-	public void setNumChannels(int numChannels) {
+	public void setNumChannels(int numChannels) throws LineUnavailableException {
 		this.numChannels = numChannels;
 		updateAudioFormat();
 	}
@@ -149,7 +211,7 @@ public class SynthesizerEngine implements Receiver
 		return signed;
 	}
 
-	public void setSigned(boolean signed) {
+	public void setSigned(boolean signed) throws LineUnavailableException {
 		this.signed = signed;
 		updateAudioFormat();
 	}
@@ -158,7 +220,7 @@ public class SynthesizerEngine implements Receiver
 		return bigEndian;
 	}
 
-	public void setBigEndian(boolean bigEndian) {
+	public void setBigEndian(boolean bigEndian) throws LineUnavailableException {
 		this.bigEndian = bigEndian;
 		updateAudioFormat();
 	}
@@ -167,7 +229,7 @@ public class SynthesizerEngine implements Receiver
 		return sampleSizeInBits;
 	}
 
-	public void setSampleSizeInBits(int sampleSizeInBits) {
+	public void setSampleSizeInBits(int sampleSizeInBits) throws LineUnavailableException {
 		this.sampleSizeInBits = sampleSizeInBits;
 		updateAudioFormat();
 	}
@@ -176,7 +238,7 @@ public class SynthesizerEngine implements Receiver
 		return sampleSizeInBytes;
 	}
 
-	public void setSampleSizeInBytes(int sampleSizeInBytes) {
+	public void setSampleSizeInBytes(int sampleSizeInBytes) throws LineUnavailableException {
 		this.sampleSizeInBytes = sampleSizeInBytes;
 		updateAudioFormat();
 	}
@@ -185,8 +247,24 @@ public class SynthesizerEngine implements Receiver
 		return bufferTime;
 	}
 
-	public void setBufferTime(double bufferTime) {
-		this.bufferTime = bufferTime;updateAudioFormat();
+	public void setBufferTime(double bufferTime) throws LineUnavailableException {
+		this.bufferTime = bufferTime;
+		updateAudioFormat();
+	}
+	
+	public InputController getInputController()
+	{
+		return inputModule;
+	}
+	
+	public MidiDevice getConnectedMidiDevice()
+	{
+		return connectedMidiDevice;
+	}
+	
+	public boolean isRunning()
+	{
+		return isRunning;
 	}
 
 

@@ -18,6 +18,7 @@ public class Amplifier extends Module
 	{
 		short inputSample = inputWires[0].getNextSample();
 		double newValue = inputSample * factor;
+		System.out.println(inputSample + " " + newValue);
 		return (short) newValue;
 	}
 	
