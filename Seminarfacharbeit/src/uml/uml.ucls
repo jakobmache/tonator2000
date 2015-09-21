@@ -57,7 +57,7 @@
   </class>  
   <association id="7">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="8" name="outputWires">        
+      <attribute id="8" name="inputWires">        
         <position height="0" width="0" x="-197" y="-80"/>      
       </attribute>      
       <multiplicity id="9" minimum="0" maximum="2147483647">        
@@ -68,15 +68,15 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="10">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="11" name="outputModule">        
-        <position height="0" width="0" x="-196" y="47"/>      
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="11" name="outputWires">        
+        <position height="0" width="0" x="-197" y="-80"/>      
       </attribute>      
-      <multiplicity id="12" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-196" y="47"/>      
+      <multiplicity id="12" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-197" y="-80"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="13">    
@@ -92,15 +92,15 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="16">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="17" name="inputWires">        
-        <position height="0" width="0" x="-197" y="-80"/>      
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="17" name="outputModule">        
+        <position height="0" width="0" x="-196" y="47"/>      
       </attribute>      
-      <multiplicity id="18" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-197" y="-80"/>      
+      <multiplicity id="18" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-196" y="47"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="19">    

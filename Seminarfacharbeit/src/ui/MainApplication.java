@@ -133,8 +133,8 @@ public class MainApplication extends Application {
     {
         try 
         {
-        	LowpassFilter filter = ((StandardModuleContainer) engine.getContainer()).getLowpassFilter();
-        	LowpassFilterController controller = new LowpassFilterController(filter);
+        	LowpassFilter filter = ((StandardModuleContainer) engine.getAllContainer()).getLowpassFilter();
+        	LowpassFilterController controller = new LowpassFilterController(engine, filter);
             
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApplication.class.getResource("fxml/LowpassFilterLayout.fxml"));

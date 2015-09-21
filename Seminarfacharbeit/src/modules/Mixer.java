@@ -11,6 +11,7 @@ import engine.Wire;
 public class Mixer extends Module{
 
 	private InputController inputModule;
+	private int numModules = 0;
 	
 	public Mixer(SynthesizerEngine parent, int numInputWires) 
 	{
@@ -29,11 +30,20 @@ public class Mixer extends Module{
 	private short calculateSum()
 	{
 		int n = 0;
+		int i = 0;
 		int sum = 0;
 		
 		for (Wire inputWire:inputWires)
 		{
-			short value = inputWire.getNextSample();
+			short value = 0;
+			
+			if (inputWire != null)
+				value = inputWire.getNextSample();
+			else 
+				continue;
+
+	
+			
 			if (value != 0)
 				n++;
 			sum += value;
@@ -46,6 +56,17 @@ public class Mixer extends Module{
 		
 	}
 	
+	@Override
+	public void connectInputWire(int index, Wire wire)
+	{
+		inputWires[index] = wire;
+		numModules++;
+	}
+	
+	public int getNumModules()
+	{
+		return numModules;
+	}
 
 
 }

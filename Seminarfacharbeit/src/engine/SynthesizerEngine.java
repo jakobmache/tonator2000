@@ -12,6 +12,7 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
+import containers.OscillatorContainer;
 import containers.StandardModuleContainer;
 import modules.InputController;
 import modules.Mixer;
@@ -42,15 +43,15 @@ public class SynthesizerEngine implements Receiver
 	private OutputModule outputModule;
 
 	private InputController inputModule;
-	private Map<Integer, Oscillator> oscillators;
-	private ModuleContainer container;
+	private Mixer outputMixer;
+	private ModuleContainer allContainer;
+	private ModuleContainer osciContainer;
 	
 	private MidiDevice connectedMidiDevice;
 
 	public SynthesizerEngine() throws LineUnavailableException
 	{
 		updateAudioFormat();
-		initContainers();
 		initModules();
 	}
 	
@@ -77,29 +78,11 @@ public class SynthesizerEngine implements Receiver
 			e.printStackTrace();
 		}
 		
-		Mixer outputMixer = new Mixer(this, endKeyNumber - startKeyNumber);
-		int i = 0;
-		for (int key = startKeyNumber; key < endKeyNumber; key++)
-		{
-			oscillators.get(key).setType(oscillatorType);
-			Wire wire = new Wire(outputMixer, oscillators.get(key), 0, i);
-			i++;
-		}
+		outputMixer = new Mixer(this, 250);
+
 		
-		container = new StandardModuleContainer(this, outputMixer);
-		new Wire(outputModule, container, 0, 0);
-		
-	}
-	
-	private void initContainers()
-	{
-		oscillators = new HashMap<Integer, Oscillator>();
-		for (int key = startKeyNumber; key <= endKeyNumber; key++)
-		{
-			Oscillator oscillator = new Oscillator(this);
-			oscillators.put(key, oscillator);
-		}
-		
+		allContainer = new StandardModuleContainer(this, outputMixer);
+		new Wire(outputModule, allContainer, 0, 0);
 	}
 
 	private void updateAudioFormat() throws LineUnavailableException
@@ -162,9 +145,10 @@ public class SynthesizerEngine implements Receiver
 	
 	public void setOscillatorType(int type)
 	{
-		for (Oscillator osci:oscillators.values())
+		for (ModuleContainer container:inputModule.getAllModules().values())
 		{
-			osci.setType(type);
+			OscillatorContainer cont = (OscillatorContainer) container;
+			cont.getOscillator().setType(type);
 		}
 		
 		oscillatorType = type;
@@ -175,14 +159,19 @@ public class SynthesizerEngine implements Receiver
 		return oscillatorType;
 	}
 	
-	public ModuleContainer getContainer() 
+	public ModuleContainer getAllContainer() 
 	{
-		return container;
+		return allContainer;
 	}
-
-	public Map<Integer, Oscillator> getOscillators()
+	
+	public ModuleContainer getOsciContainer()
 	{
-		return oscillators;
+		return osciContainer;
+	}
+	
+	public Mixer getOutputMixer()
+	{
+		return outputMixer;
 	}
 	
 	public AudioFormat getAudioFormat() {

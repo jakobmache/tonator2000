@@ -89,5 +89,10 @@ public class Oscillator extends Module
 			return 0;
 		}
 	}
+	
+	public double getFrequency()
+	{
+		return frequency;
+	}
 
 }
