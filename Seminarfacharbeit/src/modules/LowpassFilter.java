@@ -26,9 +26,8 @@ public class LowpassFilter extends Module{
 	{
 		short inputSample = inputWires[0].getNextSample();
 		double value = alpha * inputSample + (1 - alpha) * oldValue;
-		//System.out.println(inputSample + " " + value);
 		oldValue = value;
-		return (short) inputSample;
+		return (short) value;
 	}
 	
 	public void setCutoffFrequency(double newValue)
