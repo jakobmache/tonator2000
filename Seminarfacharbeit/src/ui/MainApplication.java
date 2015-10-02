@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 
 import containers.StandardModuleContainer;
+import modules.Envelope;
 import modules.LowpassFilter;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -52,6 +53,7 @@ public class MainApplication extends Application {
 
         initOscillator();
         initFilter();
+        initEnvelope();
         
         initStatusBar();
         
@@ -144,6 +146,27 @@ public class MainApplication extends Application {
             controller.init();
 
             synthesizerLayout.getChildren().add(filterView);
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void initEnvelope()
+    {
+        try 
+        {
+        	EnvelopeController controller = new EnvelopeController(engine);
+            
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApplication.class.getResource("fxml/EnvelopeLayout.fxml"));
+
+            loader.setController(controller);
+            TitledPane envelopeView = (TitledPane) loader.load();
+            controller.init();
+
+            synthesizerLayout.getChildren().add(envelopeView);
         } 
         catch (IOException e) 
         {

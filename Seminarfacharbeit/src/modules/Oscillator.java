@@ -95,4 +95,8 @@ public class Oscillator extends Module
 		return frequency;
 	}
 
+	public double getAmplitude() {
+		return amplitude;
+	}
+
 }

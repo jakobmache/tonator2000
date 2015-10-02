@@ -45,9 +45,9 @@ public class InputController{
 				System.out.println("Note wird schon abgespielt - Fehler!");
 				return;
 			}
-			
+
 			OscillatorContainer container;
-			
+
 			if (allModules.get(key) == null)
 			{
 				container = new OscillatorContainer(parent);
@@ -60,14 +60,13 @@ public class InputController{
 
 			}
 
-	
+
 			Oscillator oscillator = container.getOscillator();
 			oscillator.setType(parent.getOscillatorType());
+			container.startPlaying(frequency, Short.MAX_VALUE);
 			//container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-			oscillator.setFrequency(frequency);
-			oscillator.setAmplitude(Short.MAX_VALUE);
+
 			currentNotes.add(key);
-			System.out.println(oscillator.getFrequency());
 		}
 
 		else if (message.getCommand() == ShortMessage.NOTE_OFF)
@@ -81,21 +80,19 @@ public class InputController{
 				return;
 			}
 
-			
+
 			OscillatorContainer container = (OscillatorContainer) allModules.get(key);
-			
-			Oscillator oscillator = container.getOscillator();
-			oscillator.setFrequency(0);
-			oscillator.setAmplitude(0);
+
+			container.stopPlaying();
 			currentNotes.remove((Integer) key);
 		}
 	}
-	
+
 	public List<Integer> getCurrentNotes()
 	{
 		return currentNotes;
 	}
-	
+
 	public Map<Integer, ModuleContainer> getAllModules()
 	{
 		return allModules;
