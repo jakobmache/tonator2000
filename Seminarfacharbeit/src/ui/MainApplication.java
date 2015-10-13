@@ -54,6 +54,7 @@ public class MainApplication extends Application {
         initOscillator();
         initFilter();
         initEnvelope();
+        initPlotter();
         
         initStatusBar();
         
@@ -172,6 +173,12 @@ public class MainApplication extends Application {
         {
             e.printStackTrace();
         }
+    }
+    
+    public void initPlotter()
+    {
+    	Plotter plotter = new Plotter(engine);
+    	synthesizerLayout.getChildren().add(plotter);
     }
     
     public void updateStatusBar()

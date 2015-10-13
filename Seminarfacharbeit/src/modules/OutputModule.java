@@ -52,12 +52,14 @@ public class OutputModule extends Module
 		{
 			buffer.clear();
 
+			System.out.println(dataLine.available());
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
 				short value = requestNextSample(0);		
 				buffer.putShort(value);
 			}
+			System.out.println(dataLine.available());
 
 			dataLine.write(buffer.array(), 0, buffer.position());
 
@@ -93,6 +95,11 @@ public class OutputModule extends Module
 	public void close()
 	{
 		dataLine.close();
+	}
+	
+	public SourceDataLine getAudioLine()
+	{
+		return dataLine;
 	}
 	
 	public void updateFormat() throws LineUnavailableException

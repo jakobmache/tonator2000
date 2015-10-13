@@ -174,6 +174,11 @@ public class SynthesizerEngine implements Receiver
 		return outputMixer;
 	}
 	
+	public OutputModule getOutputModule()
+	{
+		return outputModule;
+	}
+	
 	public AudioFormat getAudioFormat() {
 		return audioFormat;
 	}

@@ -57,13 +57,13 @@ public class InputController{
 			else 
 			{
 				container = (OscillatorContainer) allModules.get(key);
-
 			}
 
 
 			Oscillator oscillator = container.getOscillator();
 			oscillator.setType(parent.getOscillatorType());
 			container.startPlaying(frequency, Short.MAX_VALUE);
+			System.out.println(container + " is playing with " + oscillator.getFrequency() + "Hz, Ampl:" + oscillator.getAmplitude());
 			//container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
 
 			currentNotes.add(key);
