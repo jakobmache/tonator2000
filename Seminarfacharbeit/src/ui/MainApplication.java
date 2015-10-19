@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 
 import containers.StandardModuleContainer;
+import modules.Constant;
 import modules.Envelope;
 import modules.LowpassFilter;
 import javafx.application.Application;
@@ -55,6 +56,7 @@ public class MainApplication extends Application {
         initFilter();
         initEnvelope();
         initPlotter();
+        initVolume();
         
         initStatusBar();
         
@@ -137,7 +139,8 @@ public class MainApplication extends Application {
         try 
         {
         	LowpassFilter filter = ((StandardModuleContainer) engine.getAllContainer()).getLowpassFilter();
-        	LowpassFilterController controller = new LowpassFilterController(engine, filter);
+        	Constant cutoffInput = ((StandardModuleContainer) engine.getAllContainer()).getCutoffFrequencyInput();
+        	LowpassFilterController controller = new LowpassFilterController(engine, filter, cutoffInput);
             
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApplication.class.getResource("fxml/LowpassFilterLayout.fxml"));
@@ -179,6 +182,27 @@ public class MainApplication extends Application {
     {
     	Plotter plotter = new Plotter(engine);
     	synthesizerLayout.getChildren().add(plotter);
+    }
+    
+    public void initVolume()
+    {
+        try 
+        {
+        	VolumeController controller = new VolumeController(engine);
+            
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApplication.class.getResource("fxml/VolumeLayout.fxml"));
+
+            loader.setController(controller);
+            TitledPane volumeView = (TitledPane) loader.load();
+            controller.init();
+
+            synthesizerLayout.getChildren().add(volumeView);
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
     }
     
     public void updateStatusBar()

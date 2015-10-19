@@ -1,23 +1,16 @@
 package modules;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javafx.scene.chart.ValueAxis;
 import engine.Module;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
 public class Mixer extends Module{
 
-	private InputController inputModule;
 	private int numModules = 0;
 	
 	public Mixer(SynthesizerEngine parent, int numInputWires) 
 	{
 		super(parent, numInputWires, 1);
-		inputModule = parent.getInputController();
-		
 	}
 
 	@Override
@@ -30,8 +23,7 @@ public class Mixer extends Module{
 	private short calculateSum()
 	{
 		int n = 0;
-		int i = 0;
-		int sum = 0;
+		long sum = 0;
 		
 		for (Wire inputWire:inputWires)
 		{
@@ -44,13 +36,15 @@ public class Mixer extends Module{
 
 	
 			
-			if (value != 0)
-				n++;
+//			if (value != 0)
+//				n++;
 			sum += value;
 		}
 		
-		if (n != 0)
-			sum = sum / n;
+//		if (n != 0)
+//			sum = sum / n;
+		
+		sum = sum / parent.getMaxPolyphony();
 		
 		return (short) sum;
 		

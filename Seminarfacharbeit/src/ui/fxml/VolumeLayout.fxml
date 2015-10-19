@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+
+<TitledPane animated="false" collapsible="false" text="Lautstärke" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <VBox alignment="CENTER">
+         <children>
+            <Slider fx:id="volumeSlider" max="6.0" min="-80.0" orientation="VERTICAL" showTickMarks="true" />
+         </children>
+      </VBox>
+   </content>
+</TitledPane>

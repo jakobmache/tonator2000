@@ -1,7 +1,5 @@
 package modules;
 
-import java.io.PrintWriter;
-
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -10,7 +8,7 @@ public class Envelope extends Module
 
 	private float attackTime = 100;
 	private float decayTime = 100;
-	private float sustainLevel = (float) 1;
+	private float sustainLevel = 1F;
 	private float releaseTime = 100;
 
 	private short maxValue = Short.MAX_VALUE;
@@ -40,8 +38,6 @@ public class Envelope extends Module
 		super(parent, 1, 1);
 		oscillator = osci;
 		updateValues();
-		
-
 	}
 
 	@Override
@@ -90,7 +86,6 @@ public class Envelope extends Module
 			}
 			else if (sampleCounter == releaseSamples)
 			{
-				oscillator.setFrequency(0);
 				oscillator.setAmplitude(0);
 			}
 			else 
@@ -118,8 +113,9 @@ public class Envelope extends Module
 		
 		if (newPhase == PHASE_RELEASE)
 		{
+			System.out.println("Ampl: " + amplitudeValue);
 			releaseSamples = (int) ((0.001 * releaseTime) * parent.getSamplingRate());
-			releaseIncrease = (float) (0 - oscillator.getAmplitude()) / releaseSamples;
+			releaseIncrease = (float) (0 - (amplitudeValue)) / releaseSamples;
 		}
 		
 		
@@ -131,7 +127,7 @@ public class Envelope extends Module
 		attackIncrease = maxValue / ((float) attackSamples);
 
 		decaySamples = (int)((0.001 * decayTime) * parent.getSamplingRate());
-		decayIncrease = ((sustainLevel * maxValue) - maxValue) / attackSamples;
+		decayIncrease = ((sustainLevel * maxValue) - maxValue) / decaySamples;
 	}
 
 	public void start()
@@ -178,6 +174,11 @@ public class Envelope extends Module
 	public void setReleaseTime(float releaseTime) {
 		this.releaseTime = releaseTime;
 		updateValues();
+	}
+	
+	public void setMaxValue(Short newValue)
+	{
+		maxValue = newValue;
 	}
 
 }

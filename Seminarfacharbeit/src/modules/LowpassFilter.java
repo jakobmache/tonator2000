@@ -4,22 +4,24 @@ import utils.Constants;
 import engine.Module;
 import engine.SynthesizerEngine;
 
-public class LowpassFilter extends Module{
+public class LowpassFilter extends Module
+{
 	
 	private double oldValue = 0;
 
 	private double alpha;
 	
-	private double cutoffFrequency = 1000;
+	private double cutoffFrequency;
 	private double resonance = 0.2;
 	
 	private double a1, a2, a3, b1, b2, c;
 	private double input1, input2, output1, output2;
 
-	public LowpassFilter(SynthesizerEngine parent, int numInputWires,
-			int numOutputWires) 
+	//Input 1 - samples
+	//Input 2 - cutoff frequency
+	public LowpassFilter(SynthesizerEngine parent) 
 	{
-		super(parent, numInputWires, numOutputWires);
+		super(parent, 2, 1);
 		
 		double timeDelta = 1 / parent.getSamplingRate();
 		alpha = (Constants.TWOPI * timeDelta * cutoffFrequency) / (Constants.TWOPI * timeDelta * cutoffFrequency + 1);
@@ -32,10 +34,10 @@ public class LowpassFilter extends Module{
 //		inputSample -= resonance * oldValue;
 //		double value = alpha * inputSample + (1 - alpha) * oldValue;
 //		oldValue = value;
-		
+		setCutoffFrequency(inputWires[1].getNextSample());
 		c = (1.0) / Math.tan(Math.PI * cutoffFrequency / parent.getSamplingRate());
 		a1 = 1.0 / ( 1.0 + resonance * c + c * c);
-		a2 = 2* a1;
+		a2 = 2 * a1;
 		a3 = a1;
 		b1 = 2.0 * ( 1.0 - c*c) * a1;
 		b2 = ( 1.0 - resonance * c + c * c) * a1;

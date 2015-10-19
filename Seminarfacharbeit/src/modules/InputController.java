@@ -32,12 +32,16 @@ public class InputController{
 	public void handleMessage(ShortMessage message)
 	{
 
+		if (message.getChannel() > 2)
+		{
+			return;
+		}
 		if (message.getCommand() == ShortMessage.NOTE_ON)
 		{
 			int key = message.getData1();
 			int velocity = message.getData2();
 
-			System.out.println("Note on! - " + key + " - " + velocity);
+			System.out.println("Note on! - " + key + " - " + velocity + " | Channel " + message.getChannel());
 			float frequency = MidiUtils.midiNoteNumberToFrequency(key);
 
 			if (currentNotes.contains(key))
@@ -63,7 +67,6 @@ public class InputController{
 			Oscillator oscillator = container.getOscillator();
 			oscillator.setType(parent.getOscillatorType());
 			container.startPlaying(frequency, Short.MAX_VALUE);
-			System.out.println(container + " is playing with " + oscillator.getFrequency() + "Hz, Ampl:" + oscillator.getAmplitude());
 			//container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
 
 			currentNotes.add(key);

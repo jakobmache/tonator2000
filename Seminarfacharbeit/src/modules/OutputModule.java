@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -52,14 +53,12 @@ public class OutputModule extends Module
 		{
 			buffer.clear();
 
-			System.out.println(dataLine.available());
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
 				short value = requestNextSample(0);		
 				buffer.putShort(value);
 			}
-			System.out.println(dataLine.available());
 
 			dataLine.write(buffer.array(), 0, buffer.position());
 
@@ -81,7 +80,17 @@ public class OutputModule extends Module
 		short sampleValue = inputWires[0].getNextSample();
 		return sampleValue;
 	}
-
+	
+	public void setVolume(float newValue)
+	{
+	      if (dataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) 
+	      {
+	            FloatControl volume = (FloatControl) dataLine.getControl(FloatControl.Type.MASTER_GAIN);
+	            volume.setValue(newValue);
+	      }
+	}
+	
+	
 	private int getLineSampleCount() 
 	{
 		return dataLine.getBufferSize() - dataLine.available();

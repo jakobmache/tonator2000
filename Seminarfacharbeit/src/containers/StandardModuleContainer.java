@@ -1,6 +1,8 @@
 package containers;
 
 
+import modules.Constant;
+import modules.Envelope;
 import modules.SampleFilter;
 import modules.LowpassFilter;
 import engine.Module;
@@ -13,22 +15,32 @@ public class StandardModuleContainer extends ModuleContainer
 	
 	private Module inputModule;
 	private LowpassFilter filter;
-	private SampleFilter identity;
+	private SampleFilter sampleFilter;
+	private Envelope cutoffEnvelope; 
+	private Constant cutoffConstant;
 
 	public StandardModuleContainer(SynthesizerEngine parent, Module inputModule)
 	{
 		super(parent);
 		this.inputModule = inputModule;
 		initModules();
-
 	}
 	
 	private void initModules()
 	{
-		filter = new LowpassFilter(parent, 1, 1);
+		filter = new LowpassFilter(parent);
+		cutoffConstant = new Constant(parent);
+		cutoffConstant.setValue((short)10); 
 		new Wire(filter, inputModule, 0, 0);
-		identity = new SampleFilter(parent);
-		new Wire(identity, filter, 0, 0);
+		cutoffEnvelope = new Envelope(parent, cutoffConstant);
+		cutoffEnvelope.setMaxValue((short) 1000); 
+		cutoffEnvelope.setAttackTime(1000);
+		cutoffEnvelope.setDecayTime(1000);
+		cutoffEnvelope.setSustainLevel(0.5F);
+		new Wire(cutoffEnvelope, cutoffConstant, 0, 0);
+		new Wire(filter, cutoffEnvelope, 0, 1);
+		sampleFilter = new SampleFilter(parent);
+		new Wire(sampleFilter, filter, 0, 0);
 	}
 
 	public LowpassFilter getLowpassFilter()
@@ -36,15 +48,20 @@ public class StandardModuleContainer extends ModuleContainer
 		return filter;
 	}
 	
-	public SampleFilter getIdentity()
+	public Constant getCutoffFrequencyInput()
 	{
-		return identity;
+		return cutoffConstant;
+	}
+	
+	public SampleFilter getSampleFilter()
+	{
+		return sampleFilter;
 	}
 
 	@Override
 	public short requestNextSample(int outputWireIndex) 
 	{
-		short value = identity.requestNextSample(0);
+		short value = sampleFilter.requestNextSample(0);
 		return value;
 	}
 }

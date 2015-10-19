@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import modules.Constant;
 import modules.LowpassFilter;
 
 public class LowpassFilterController 
@@ -21,18 +22,20 @@ public class LowpassFilterController
 	private TextField resonanceInput;
 	
 	private LowpassFilter filter;
+	private Constant cutoffConstant;
 	
 	private SynthesizerEngine parent;
 	
-	public LowpassFilterController(SynthesizerEngine parent, LowpassFilter filter)
+	public LowpassFilterController(SynthesizerEngine parent, LowpassFilter filter, Constant cutoffInput)
 	{
 		this.filter = filter;
+		this.cutoffConstant = cutoffInput;
 	}
 	
 	public void init()
 	{
 		cutoffSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
-		{filter.setCutoffFrequency(newValue.doubleValue());
+		{cutoffConstant.setValue(newValue.shortValue());
 		cutoffInput.setText(newValue.toString());});
 		
 		resonanceSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->

@@ -28,11 +28,15 @@ public class Oscillator extends Module
 	public void setType(int newType)
 	{
 		type = newType;
+		if (type == TYPE_SAW)
+			cyclePosition = -1;
 	}
 
 	public void setFrequency(double frequency)
 	{
+		//System.out.println("Set frequency to " + frequency);
 		this.frequency = frequency;
+		//System.out.println("Frequency is " + frequency);
 		cycleIncrease = frequency / parent.getSamplingRate();
 		cyclePosition = 0;
 	}
@@ -51,7 +55,6 @@ public class Oscillator extends Module
 		short value;
 		if (type == TYPE_SINE)
 		{
-			cycleIncrease = frequency / parent.getSamplingRate();
 			value = (short) (amplitude * Math.sin(Constants.TWOPI * cyclePosition));
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
@@ -61,7 +64,6 @@ public class Oscillator extends Module
 
 		else if (type == TYPE_SQUARE)
 		{
-			cycleIncrease = frequency / parent.getSamplingRate();
 			short sineValue = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
@@ -75,13 +77,11 @@ public class Oscillator extends Module
 
 		else if (type == TYPE_SAW)
 		{
-			cycleIncrease = frequency / parent.getSamplingRate();
-			double doubleValue = cyclePosition - Math.floor(cyclePosition);
+			cycleIncrease = 2 / (parent.getSamplingRate() / frequency);
 			cyclePosition += cycleIncrease;
-			value = (short) (amplitude * doubleValue);
 			if (cyclePosition > 1)
-				cyclePosition -= 1;	
-			return value;
+				cyclePosition = -1;
+			return (short)(amplitude * cyclePosition);
 		}
 	
 		else {

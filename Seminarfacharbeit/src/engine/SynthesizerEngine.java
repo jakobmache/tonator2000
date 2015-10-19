@@ -40,6 +40,8 @@ public class SynthesizerEngine implements Receiver
 	
 	private int oscillatorType = Oscillator.TYPE_SINE;
 	
+	private int maxPolyphony = 20;
+	
 	private OutputModule outputModule;
 
 	private InputController inputModule;
@@ -259,6 +261,11 @@ public class SynthesizerEngine implements Receiver
 	public boolean isRunning()
 	{
 		return isRunning;
+	}
+	
+	public int getMaxPolyphony()
+	{
+		return maxPolyphony;
 	}
 
 

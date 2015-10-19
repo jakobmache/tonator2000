@@ -4,6 +4,7 @@ import modules.Envelope;
 import modules.Oscillator;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
+import engine.Wire;
 
 public class OscillatorContainer extends ModuleContainer
 {
@@ -21,12 +22,12 @@ public class OscillatorContainer extends ModuleContainer
 	{
 		oscillator = new Oscillator(parent);
 		envelope = new Envelope(parent, oscillator);
+		new Wire(envelope, oscillator, 0, 0);
 	}
 	
 	public void startPlaying(float frequency, float amplitude)
 	{
 		oscillator.setFrequency(frequency);
-		oscillator.setAmplitude(amplitude);
 		envelope.start();
 	}
 	
