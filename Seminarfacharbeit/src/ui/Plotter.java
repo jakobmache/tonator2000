@@ -1,6 +1,5 @@
 package ui;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +17,7 @@ import engine.SynthesizerEngine;
 public class Plotter extends TitledPane
 {
 
-	private static final int MAX_DATA_POINTS = 1000;
+	private int maxDataPoints = 1000;
 
 	private SampleFilter sampleFilter;
 
@@ -26,7 +25,7 @@ public class Plotter extends TitledPane
 	private XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
 	private ExecutorService executor;
-	private ConcurrentLinkedQueue<Number> dataQ = new ConcurrentLinkedQueue<>();
+	private ConcurrentLinkedQueue<Short> dataQ = new ConcurrentLinkedQueue<>();
 
 	private NumberAxis xAxis;
 
@@ -34,7 +33,7 @@ public class Plotter extends TitledPane
 	{
 		this.sampleFilter = ((StandardModuleContainer) engine.getAllContainer()).getSampleFilter();
 
-		xAxis = new NumberAxis(0, MAX_DATA_POINTS, 1000);
+		xAxis = new NumberAxis(0, maxDataPoints, 1000);
 		xAxis.setForceZeroInRange(false);
 		xAxis.setAutoRanging(false);
 		xAxis.setTickLabelsVisible(false);
@@ -75,56 +74,52 @@ public class Plotter extends TitledPane
 
 		setText("Oszilloskop");
 		setCollapsible(false);
+		setMaxWidth(Double.MAX_VALUE);
+		setMaxHeight(Double.MAX_VALUE);
 
 	}
 
+	  private class AddToQueue implements Runnable {
+	        public void run() {
+	            try {
+	            	for (short sample:sampleFilter.getBufferList())
+	            		dataQ.add(sample);
 
-	private class AddToQueue implements Runnable {
-		public void run() 
-		{
-			List<Short> dataList = sampleFilter.getBufferList();
-			for (short sample:dataList)
-				dataQ.add(sample);
+	                Thread.sleep(50);
+	                executor.execute(this);
+	            } catch (InterruptedException ex) {
+	                ex.printStackTrace();
+	            }
+	        }
+	    }
 
-//			try {
-//				Thread.sleep(10);
-//			} 
-//			catch (InterruptedException e) 
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			executor.execute(this);
-		}
-	}
+	    //-- Timeline gets called in the JavaFX Main thread
+	    private void prepareTimeline() {
+	        // Every frame to take any data from queue and add to chart
+	        new AnimationTimer() {
+	            @Override public void handle(long now) {
+	                	addDataToSeries();
+	            }
+	        }.start();
+	    }
 
-	//-- Timeline gets called in the JavaFX Main thread
-	private void prepareTimeline() {
-		// Every frame to take any data from queue and add to chart
-		new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				addDataToSeries();
-			}
-		}.start();
-	}
+	    private void addDataToSeries() 
+	    {
+	        for (int i = 0; i < 200; i++)
+	        {
+	        	if (dataQ.isEmpty())
+	        		break;
+	        	series.getData().add(new XYChart.Data<Number, Number>(xSeriesData++, dataQ.remove()));
+	        }
+	        // remove points to keep us at no more than MAX_DATA_POINTS
+	        if (series.getData().size() > maxDataPoints) {
+	            series.getData().remove(0, series.getData().size() - maxDataPoints);
+	        }
+	        // update 
+	        xAxis.setLowerBound(xSeriesData-maxDataPoints);
+	        xAxis.setUpperBound(xSeriesData-1);
+	    }
 
-	private void addDataToSeries() {
-		for (int i = 0; i < 1000; i++) { //-- add 20 numbers to the plot+
-			if (dataQ.isEmpty()) break;
-			XYChart.Data<Number, Number> data = new XYChart.Data<Number, Number>(xSeriesData++, dataQ.remove());
-			series.getData().add(data);
-
-		}
-		// remove points to keep us at no more than MAX_DATA_POINTS
-		if (series.getData().size() > MAX_DATA_POINTS) {
-			series.getData().remove(0, series.getData().size() - MAX_DATA_POINTS);
-		}
-
-		// update
-		xAxis.setLowerBound(xSeriesData - MAX_DATA_POINTS);
-		xAxis.setUpperBound(xSeriesData - 1);
-	}
 
 
 }

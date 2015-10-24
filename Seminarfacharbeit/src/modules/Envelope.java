@@ -113,7 +113,6 @@ public class Envelope extends Module
 		
 		if (newPhase == PHASE_RELEASE)
 		{
-			System.out.println("Ampl: " + amplitudeValue);
 			releaseSamples = (int) ((0.001 * releaseTime) * parent.getSamplingRate());
 			releaseIncrease = (float) (0 - (amplitudeValue)) / releaseSamples;
 		}

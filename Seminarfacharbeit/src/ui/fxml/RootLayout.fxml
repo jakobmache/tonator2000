@@ -23,6 +23,12 @@
           <Menu fx:id="midiMenu" mnemonicParsing="false" text="MIDI">
             <items>
               <MenuItem fx:id="selectMidiDeviceMenuItem" mnemonicParsing="false" onAction="#onSelectMidiDeviceAction" text="Gerät auswählen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="selectMidiFileMenuItem" mnemonicParsing="false" onAction="#onSelectMidiFileAction" text="MIDI-Datei laden" />
+                  <MenuItem fx:id="playMidiFileMenuItem" mnemonicParsing="false" onAction="#onPlayMidiFileAction" text="MIDI-Datei abspielen" />
+                  <MenuItem fx:id="pauseMidiFileMenuItem" mnemonicParsing="false" onAction="#onPauseMidiFileAction" text="MIDI-Datei pausieren" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="resetMidiMenuItem" mnemonicParsing="false" onAction="#onResetMidiAction" text="MIDI zurücksetzen" />
             </items>
           </Menu>
         </menus>

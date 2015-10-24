@@ -42,6 +42,9 @@ public class LowpassFilterController
 		{filter.setResonance(newValue.doubleValue());
 		resonanceInput.setText(newValue.toString());});
 		
+		cutoffSlider.setValue(filter.getCutoffFrequency());
+		resonanceSlider.setValue(filter.getResonance());
+		
 		cutoffInput.setText(String.valueOf(cutoffSlider.getValue()));
 		cutoffSlider.setMax(10000);
 	}

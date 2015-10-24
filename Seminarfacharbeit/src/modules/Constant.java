@@ -1,6 +1,5 @@
 package modules;
 
-import engine.Module;
 import engine.SynthesizerEngine;
 
 public class Constant extends Oscillator
@@ -27,7 +26,6 @@ public class Constant extends Oscillator
 	@Override
 	public void setAmplitude(double newValue)
 	{
-		System.out.println(newValue);
 		value = (short) newValue;
 	}
 

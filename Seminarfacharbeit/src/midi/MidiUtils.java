@@ -8,9 +8,6 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Transmitter;
-
 
 public class MidiUtils {
 
@@ -20,14 +17,22 @@ public class MidiUtils {
 	public static int NOTE_OFF_START = 128;
 	public static int NOTE_OFF_END = 143;
 
-	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>(){{
+	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	{
 		for (int i = NOTE_ON_START; i <= NOTE_ON_END; i++)
 		{
 			add(i);
 		}
 	}};
 
-	public static List<Integer> NOTE_OFF_COMMANDS = new ArrayList<Integer>(){{
+	public static List<Integer> NOTE_OFF_COMMANDS = new ArrayList<Integer>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	{
 		for (int i = NOTE_OFF_START; i <= NOTE_OFF_END; i++)
 		{
 			add(i);

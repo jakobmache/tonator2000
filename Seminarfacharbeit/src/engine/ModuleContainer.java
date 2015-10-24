@@ -5,7 +5,6 @@ import java.util.List;
 
 public abstract class ModuleContainer extends Module
 {
-	private Wire outputWire;
 	private List<Module> modules;
 	
 	public ModuleContainer(SynthesizerEngine parent)

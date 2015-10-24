@@ -69,4 +69,13 @@ public class LowpassFilter extends Module
 		this.resonance = newValue;
 	}
 
+	public double getCutoffFrequency() {
+		return cutoffFrequency;
+	}
+
+	public double getResonance() {
+		return resonance;
+	}
+	
+
 }

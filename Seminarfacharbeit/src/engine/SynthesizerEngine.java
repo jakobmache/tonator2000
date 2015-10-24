@@ -1,8 +1,5 @@
 package engine;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
@@ -12,12 +9,13 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
-import containers.OscillatorContainer;
-import containers.StandardModuleContainer;
+import midi.MidiPlayer;
 import modules.InputController;
 import modules.Mixer;
 import modules.Oscillator;
 import modules.OutputModule;
+import containers.OscillatorContainer;
+import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -33,15 +31,14 @@ public class SynthesizerEngine implements Receiver
 
 	private double bufferTime = 0.01;
 	
-	private int startKeyNumber = 0;
-	private int endKeyNumber = 100;
-	
 	private boolean isRunning = false;
 	
 	private int oscillatorType = Oscillator.TYPE_SINE;
 	
 	private int maxPolyphony = 20;
 	
+	private MidiPlayer midiPlayer;
+
 	private OutputModule outputModule;
 
 	private InputController inputModule;
@@ -55,6 +52,7 @@ public class SynthesizerEngine implements Receiver
 	{
 		updateAudioFormat();
 		initModules();
+		midiPlayer = new MidiPlayer(this);
 	}
 	
 	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
@@ -110,6 +108,7 @@ public class SynthesizerEngine implements Receiver
 		if (outputModule != null)
 			outputModule.stopPlaying();
 		isRunning = false;
+		reset();
 	}
 	
 	public void close()
@@ -122,6 +121,20 @@ public class SynthesizerEngine implements Receiver
 	{
 		if (connectedMidiDevice != null)
 			connectedMidiDevice.close();
+	}
+	
+	public void reset()
+	{
+		try 
+		{
+			if (inputModule != null)
+				inputModule.resetMidi();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void run()
@@ -267,6 +280,15 @@ public class SynthesizerEngine implements Receiver
 	{
 		return maxPolyphony;
 	}
+	
+	public MidiPlayer getMidiPlayer()
+	{
+		return midiPlayer;
+	}
+	
+	
+
+
 
 
 }

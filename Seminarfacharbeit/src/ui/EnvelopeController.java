@@ -71,6 +71,19 @@ public class EnvelopeController
 			}
 		});
 
+		Envelope envelope = null;
+		for (ModuleContainer container:parent.getInputController().getAllModules().values())
+		{
+			envelope = ((OscillatorContainer) container).getEnvelope();
+		}
+
+		if (envelope != null)
+		{
+			attackSlider.setValue(envelope.getAttackTime());
+			decaySlider.setValue(envelope.getDecayTime());
+			sustainSlider.setValue(envelope.getSustainLevel());
+			releaseSlider.setValue(envelope.getReleaseTime());
+		}
 	}
 
 	public void onAttackInputAction(ActionEvent event)

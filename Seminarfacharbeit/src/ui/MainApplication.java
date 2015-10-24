@@ -2,25 +2,31 @@ package ui;
 
 import java.io.IOException;
 
-import javax.sound.sampled.LineUnavailableException;
-
-import containers.StandardModuleContainer;
-import modules.Constant;
-import modules.Envelope;
-import modules.LowpassFilter;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+
+import javax.sound.sampled.LineUnavailableException;
+
+import modules.Constant;
+import modules.LowpassFilter;
+import resources.Strings;
+import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 
+//TODO: Hüllkurve--> Mit Decay knackt es, Attack bei 0 falsch, stellenweise Wertüberschreitungen
+//TODO: Midi-Player Fenster
+//TODO: Konstanten
+//TODO: Presets--> Container und Module
 public class MainApplication extends Application {
 	
     private Stage primaryStage;
@@ -55,9 +61,9 @@ public class MainApplication extends Application {
         initOscillator();
         initFilter();
         initEnvelope();
-        initPlotter();
         initVolume();
-        
+        initPlotter();
+
         initStatusBar();
         
         initEventHandlers();
@@ -124,6 +130,7 @@ public class MainApplication extends Application {
 
             loader.setController(controller);
             TitledPane oscillatorView = (TitledPane) loader.load();
+            oscillatorView.setTooltip(new Tooltip(Strings.OSCILLATOR_TOOLTIP_STRING));
             controller.setMainPane(loader);
 
             synthesizerLayout.getChildren().add(oscillatorView);
@@ -147,6 +154,7 @@ public class MainApplication extends Application {
 
             loader.setController(controller);
             TitledPane filterView = (TitledPane) loader.load();
+            filterView.setTooltip(new Tooltip(Strings.LOWPASS_TOOLTIP_STRING));
             controller.init();
 
             synthesizerLayout.getChildren().add(filterView);
@@ -168,6 +176,7 @@ public class MainApplication extends Application {
 
             loader.setController(controller);
             TitledPane envelopeView = (TitledPane) loader.load();
+            envelopeView.setTooltip(new Tooltip(Strings.ENVELOPE_TOOLTIP_STRING));
             controller.init();
 
             synthesizerLayout.getChildren().add(envelopeView);
@@ -181,7 +190,9 @@ public class MainApplication extends Application {
     public void initPlotter()
     {
     	Plotter plotter = new Plotter(engine);
+    	plotter.setTooltip(new Tooltip(Strings.PLOTTER_TOOLTIP_STRING));
     	synthesizerLayout.getChildren().add(plotter);
+    	HBox.setHgrow(plotter, Priority.ALWAYS);
     }
     
     public void initVolume()
@@ -195,6 +206,7 @@ public class MainApplication extends Application {
 
             loader.setController(controller);
             TitledPane volumeView = (TitledPane) loader.load();
+            volumeView.setTooltip(new Tooltip(Strings.VOLUME_TOOLTIP_STRING));
             controller.init();
 
             synthesizerLayout.getChildren().add(volumeView);
