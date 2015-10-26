@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
@@ -13,6 +15,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -23,7 +26,7 @@ import resources.Strings;
 import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 
-//TODO: Hüllkurve--> Mit Decay knackt es, Attack bei 0 falsch, stellenweise Wertüberschreitungen
+//TODO: Hï¿½llkurve--> Mit Decay knackt es, Attack bei 0 falsch, stellenweise Wertï¿½berschreitungen
 //TODO: Midi-Player Fenster
 //TODO: Konstanten
 //TODO: Presets--> Container und Module
@@ -41,20 +44,24 @@ public class MainApplication extends Application {
     private CheckMenuItem stereoMenuItem;
     
     private HBox synthesizerLayout;
+    private VBox mainLayout;
 
     @Override
     public void start(Stage primaryStage)
     {
-    	try {
+    	try 
+    	{
 			this.engine = new SynthesizerEngine();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
+		} 
+    	catch (LineUnavailableException e) 
+    	{
 			e.printStackTrace();
 		}
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Seminarfacharbeit");
+        this.primaryStage.setTitle(Strings.APPLICATION_NAME + " - " + Strings.VERSION_NUMBER);
         
         synthesizerLayout = new HBox(5);
+        mainLayout = new VBox(5);
 
         initRootLayout();
 
@@ -62,6 +69,8 @@ public class MainApplication extends Application {
         initFilter();
         initEnvelope();
         initVolume();
+        
+        mainLayout.getChildren().add(synthesizerLayout);
         initPlotter();
 
         initStatusBar();
@@ -70,7 +79,17 @@ public class MainApplication extends Application {
         
         updateStatusBar();
         
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(Strings.START_POPUP_TITLE);
+        alert.setHeaderText(null);
+        alert.setContentText(Strings.START_POPUP_TEXT);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(480, 200);
+
+        
         primaryStage.show();
+        primaryStage.setFullScreen(true);
+        alert.showAndWait();
     }
 
     public void initRootLayout() 
@@ -89,7 +108,7 @@ public class MainApplication extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             
-            rootLayout.setCenter(synthesizerLayout);
+            rootLayout.setCenter(mainLayout);
         } 
         catch (IOException e) 
         {
@@ -191,8 +210,9 @@ public class MainApplication extends Application {
     {
     	Plotter plotter = new Plotter(engine);
     	plotter.setTooltip(new Tooltip(Strings.PLOTTER_TOOLTIP_STRING));
-    	synthesizerLayout.getChildren().add(plotter);
-    	HBox.setHgrow(plotter, Priority.ALWAYS);
+    	//synthesizerLayout.getChildren().add(plotter);
+    	mainLayout.getChildren().add(plotter);
+    	VBox.setVgrow(plotter, Priority.ALWAYS);
     }
     
     public void initVolume()

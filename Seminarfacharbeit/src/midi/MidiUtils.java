@@ -55,14 +55,14 @@ public class MidiUtils {
 			{
 				MidiDevice device = MidiSystem.getMidiDevice(info);
 
-				// Wenn das Gerät einen Transmitter hat, muss es hinzugefügt werden
+				// Wenn das Gerï¿½t einen Transmitter hat, muss es hinzugefï¿½gt werden
 				device.getTransmitter();
 				inputDeviceInfo.add(info);
 			}
 
 			catch (MidiUnavailableException e)
 			{
-				// Das Gerät hat keinen Transmitter, muss also nicht hinzugefügt werden
+				// Das Gerï¿½t hat keinen Transmitter, muss also nicht hinzugefï¿½gt werden
 			}
 		}
 

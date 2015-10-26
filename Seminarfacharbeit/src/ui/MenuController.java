@@ -65,8 +65,11 @@ public class MenuController
 
 	private ObservableList<String> getMidiDevices()
 	{
+		System.out.println("Try to load available MIDI-devices");
 		deviceInfos = MidiUtils.getAvailableInputDevices();
+		System.out.println("Loaded available MIDI-devices!");
 		ObservableList<String> devicesString = FXCollections.observableArrayList();
+
 		for (Info info:deviceInfos)
 		{
 			devicesString.add(info.getName() + " - " + info.getDescription());
@@ -85,17 +88,19 @@ public class MenuController
 			VBox root = (VBox) loader.load();
 
 			midiSelectionStage = new Stage();
-			midiSelectionStage.setTitle("MIDI-Gerät auswählen");
+			midiSelectionStage.setTitle("MIDI-Gerï¿½t auswï¿½hlen");
 			midiSelectionStage.setScene(new Scene(root));
 
 			ObservableList<String> midiDevices = getMidiDevices();
+			System.out.println(midiDevices);
 			availableMidiDevicesBox.getItems().addAll(midiDevices);
 			availableMidiDevicesBox.getSelectionModel().selectFirst();
+			System.out.println("Midi device!");
 
 			midiSelectionStage.show();
 
 		} 
-		catch (IOException e) 
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
@@ -115,7 +120,7 @@ public class MenuController
 			VBox root = (VBox) loader.load();
 
 			sampleRateStage = new Stage();
-			sampleRateStage.setTitle("Samplingrate auswählen");
+			sampleRateStage.setTitle("Samplingrate auswï¿½hlen");
 			sampleRateStage.setScene(new Scene(root));
 
 			sampleRateStage.show();
@@ -167,7 +172,7 @@ public class MenuController
 			VBox root = (VBox) loader.load();
 
 			bufferTimeStage = new Stage();
-			bufferTimeStage.setTitle("Pufferzeit auswählen");
+			bufferTimeStage.setTitle("Pufferzeit auswï¿½hlen");
 			bufferTimeStage.setScene(new Scene(root));
 
 			bufferTimeStage.show();
@@ -271,9 +276,9 @@ public class MenuController
 
 	public void onSelectMidiFileAction(ActionEvent event)
 	{
-		System.out.println("Datei auswählen!");
+		System.out.println("Datei auswï¿½hlen!");
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("MIDI-Datei auswählen");
+		fileChooser.setTitle("MIDI-Datei auswï¿½hlen");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*mid"));
 
 		File midiFile = fileChooser.showOpenDialog(parent.getPrimaryStage());

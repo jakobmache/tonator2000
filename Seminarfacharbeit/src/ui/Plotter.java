@@ -76,6 +76,24 @@ public class Plotter extends TitledPane
 		setCollapsible(false);
 		setMaxWidth(Double.MAX_VALUE);
 		setMaxHeight(Double.MAX_VALUE);
+		
+		setOnScroll((event) -> {
+			double upperBound = yAxis.getUpperBound() - 4 * event.getDeltaY();
+			double lowerBound = yAxis.getLowerBound() + 4 * event.getDeltaY();
+			if (upperBound > Short.MAX_VALUE)
+				yAxis.setUpperBound(Short.MAX_VALUE);
+			else if (upperBound < 0)
+				yAxis.setUpperBound(yAxis.getUpperBound());
+			else
+				yAxis.setUpperBound(upperBound);
+			
+			if (lowerBound < Short.MIN_VALUE)
+				yAxis.setLowerBound(Short.MIN_VALUE);
+			else if (lowerBound > 0)
+				yAxis.setLowerBound(yAxis.getLowerBound());
+			else
+				yAxis.setLowerBound(lowerBound);
+		});
 
 	}
 

@@ -80,6 +80,7 @@ public class InputController{
 
 		Oscillator oscillator = container.getOscillator();
 		oscillator.setType(parent.getOscillatorType());
+		//container.getEnvelope().setMaxValue((short) ((velocity / 127.0) * Short.MAX_VALUE));
 		container.startPlaying(frequency, (float) (velocity / 127.0) * Short.MAX_VALUE);;
 
 		currentNotes.add(key);
