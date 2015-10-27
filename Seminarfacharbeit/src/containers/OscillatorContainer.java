@@ -47,9 +47,9 @@ public class OscillatorContainer extends ModuleContainer
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
-		short value = envelope.requestNextSample(0);
+		float value = envelope.requestNextSample();
 		return value;
 	}
 

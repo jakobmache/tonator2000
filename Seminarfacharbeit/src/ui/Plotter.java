@@ -25,7 +25,7 @@ public class Plotter extends TitledPane
 	private XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
 	private ExecutorService executor;
-	private ConcurrentLinkedQueue<Short> dataQ = new ConcurrentLinkedQueue<>();
+	private ConcurrentLinkedQueue<Float> dataQ = new ConcurrentLinkedQueue<>();
 
 	private NumberAxis xAxis;
 
@@ -100,7 +100,7 @@ public class Plotter extends TitledPane
 	  private class AddToQueue implements Runnable {
 	        public void run() {
 	            try {
-	            	for (short sample:sampleFilter.getBufferList())
+	            	for (float sample:sampleFilter.getBufferList())
 	            		dataQ.add(sample);
 
 	                Thread.sleep(50);

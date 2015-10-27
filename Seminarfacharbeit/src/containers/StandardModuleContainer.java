@@ -59,9 +59,9 @@ public class StandardModuleContainer extends ModuleContainer
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
-		short value = sampleFilter.requestNextSample(0);
+		float value = sampleFilter.requestNextSample();
 		return value;
 	}
 }

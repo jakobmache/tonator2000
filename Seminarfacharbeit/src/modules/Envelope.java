@@ -35,13 +35,13 @@ public class Envelope extends Module
 
 	public Envelope(SynthesizerEngine parent, Oscillator osci) 
 	{
-		super(parent, 1, 1);
+		super(parent, 1, 1, Ids.ID_ENVELOPE);
 		oscillator = osci;
 		updateValues();
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex)
+	public float requestNextSample()
 	{
 		switch (phase)
 		{
@@ -57,7 +57,7 @@ public class Envelope extends Module
 			{
 				setPhase(PHASE_DECAY);
 			}
-			return oscillator.requestNextSample(0);
+			return oscillator.requestNextSample();
 					
 				
 		case PHASE_DECAY:
@@ -72,10 +72,10 @@ public class Envelope extends Module
 				setPhase(PHASE_SUSTAIN);
 				oscillator.setAmplitude(sustainLevel * maxValue);
 			}
-			return oscillator.requestNextSample(0);
+			return oscillator.requestNextSample();
 			
 		case PHASE_SUSTAIN:
-			return oscillator.requestNextSample(0);
+			return oscillator.requestNextSample();
 			
 		case PHASE_RELEASE:
 			if (sampleCounter < releaseSamples)
@@ -93,7 +93,7 @@ public class Envelope extends Module
 				sampleCounter++;
 				return 0;
 			}
-			return oscillator.requestNextSample(0);
+			return oscillator.requestNextSample();
 			
 		default:
 			return 0;

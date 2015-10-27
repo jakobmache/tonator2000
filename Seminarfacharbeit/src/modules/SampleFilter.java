@@ -10,19 +10,19 @@ import engine.SynthesizerEngine;
 //TODO:Namen ausdenken
 public class SampleFilter extends Module
 {	
-	private short currSample = 0;
-	private List<Short> bufferList;
+	private float currSample = 0;
+	private List<Float> bufferList;
 	int stop = 10;
 	int count = 0;
 
 	public SampleFilter(SynthesizerEngine parent) 
 	{
-		super(parent, 1, 1);
-		bufferList = new ArrayList<Short>();
+		super(parent, 1, 1, Ids.ID_SAMPLE_FILTER);
+		bufferList = new ArrayList<Float>();
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
 
 		count++;
@@ -35,15 +35,15 @@ public class SampleFilter extends Module
 		return currSample;
 	}
 	
-	public List<Short> getBufferList()
+	public List<Float> getBufferList()
 	{
-		List<Short> returnCopy = new ArrayList<Short>(bufferList);
+		List<Float> returnCopy = new ArrayList<Float>(bufferList);
 		bufferList.clear();
 		returnCopy.removeAll(Collections.singleton(null));
 		return returnCopy;
 	}
 	
-	public short getCurrSample()
+	public float getCurrSample()
 	{
 		return currSample;
 	}

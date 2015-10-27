@@ -22,7 +22,7 @@ public class Oscillator extends Module
 
 	public Oscillator(SynthesizerEngine parent) 
 	{
-		super(parent, 0, 1);
+		super(parent, 0, 1, Ids.ID_OSCILLATOR_TONE);
 	}
 
 	public void setType(int newType)
@@ -46,7 +46,7 @@ public class Oscillator extends Module
 		this.amplitude = amplitude;
 	}
 
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
 
 		if (frequency == 0)

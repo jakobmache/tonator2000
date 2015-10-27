@@ -14,9 +14,9 @@ public class Wire
 		inputModule.connectOutputWire(inputModuleIndex, this);
 	}
 	
-	public short getNextSample()
+	public float getNextSample()
 	{
-		return inputModule.requestNextSample(0);
+		return inputModule.requestNextSample();
 	}
 	
 	public String toString()

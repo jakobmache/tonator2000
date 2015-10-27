@@ -7,14 +7,17 @@ public abstract class Module
 	protected Wire[] inputWires;
 	protected Wire[] outputWires;
 	
-	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires)
+	protected int moduleId;
+	
+	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id)
 	{
 		this.parent = parent;
 		this.inputWires = new Wire[numInputWires];
 		this.outputWires = new Wire[numOutputWires];
+		this.moduleId = id;
 	}
 	
-	public abstract short requestNextSample(int outputWireIndex);
+	public abstract float requestNextSample();
 	
 	public void connectInputWire(int index, Wire wire)
 	{

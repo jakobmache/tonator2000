@@ -10,43 +10,36 @@ public class Mixer extends Module{
 	
 	public Mixer(SynthesizerEngine parent, int numInputWires) 
 	{
-		super(parent, numInputWires, 1);
+		super(parent, numInputWires, 1, Ids.ID_MIXER);
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
-		short value = calculateSum();
+		float value = calculateSum();
 		return value;
 	}
 	
-	private short calculateSum()
+	private float calculateSum()
 	{
-		int n = 0;
-		long sum = 0;
+		float sum = 0;
 		
 		for (Wire inputWire:inputWires)
 		{
-			short value = 0;
+			float value = 0;
 			
 			if (inputWire != null)
 				value = inputWire.getNextSample();
 			else 
 				continue;
 
-	
-			
-//			if (value != 0)
-//				n++;
 			sum += value;
 		}
-		
-//		if (n != 0)
-//			sum = sum / n;
+
 		
 		sum = sum / parent.getMaxPolyphony();
 		
-		return (short) sum;
+		return sum;
 		
 	}
 	

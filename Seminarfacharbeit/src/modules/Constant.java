@@ -18,7 +18,7 @@ public class Constant extends Oscillator
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
 		return (short) value;
 	}

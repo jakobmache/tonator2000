@@ -6,8 +6,6 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
@@ -79,17 +77,17 @@ public class MainApplication extends Application {
         
         updateStatusBar();
         
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(Strings.START_POPUP_TITLE);
-        alert.setHeaderText(null);
-        alert.setContentText(Strings.START_POPUP_TEXT);
-        alert.setResizable(true);
-        alert.getDialogPane().setPrefSize(480, 200);
+//        Alert alert = new Alert(AlertType.INFORMATION);
+//        alert.setTitle(Strings.START_POPUP_TITLE);
+//        alert.setHeaderText(null);
+//        alert.setContentText(Strings.START_POPUP_TEXT);
+//        alert.setResizable(true);
+//        alert.getDialogPane().setPrefSize(480, 200);
 
         
         primaryStage.show();
         primaryStage.setFullScreen(true);
-        alert.showAndWait();
+//        alert.showAndWait();
     }
 
     public void initRootLayout() 

@@ -21,14 +21,14 @@ public class LowpassFilter extends Module
 	//Input 2 - cutoff frequency
 	public LowpassFilter(SynthesizerEngine parent) 
 	{
-		super(parent, 2, 1);
+		super(parent, 2, 1, Ids.ID_LOWPASS);
 		
 		double timeDelta = 1 / parent.getSamplingRate();
 		alpha = (Constants.TWOPI * timeDelta * cutoffFrequency) / (Constants.TWOPI * timeDelta * cutoffFrequency + 1);
 	}
 
 	@Override
-	public short requestNextSample(int outputWireIndex) 
+	public float requestNextSample() 
 	{
 //		short inputSample = inputWires[0].getNextSample();
 //		inputSample -= resonance * oldValue;
@@ -54,7 +54,7 @@ public class LowpassFilter extends Module
 		output2 = output1;
 		output1 = value;
 		
-		return (short) value;
+		return (float) value;
 	}
 	
 	public void setCutoffFrequency(double newValue)
