@@ -1,19 +1,18 @@
 package ui;
 
-import containers.OscillatorContainer;
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import modules.Envelope;
-import engine.ModuleContainer;
+import modules.Ids;
+import modules.InputController;
 import engine.SynthesizerEngine;
 
-public class EnvelopeController 
+public class EnvelopeController extends ModuleController
 {
-
-	private SynthesizerEngine parent;
-
 	@FXML private Slider attackSlider;
 	@FXML private Slider decaySlider;
 	@FXML private Slider sustainSlider;
@@ -24,66 +23,74 @@ public class EnvelopeController
 	@FXML private TextField sustainInput;
 	@FXML private TextField releaseInput;
 
+	private Slider sliderToUpdate;
+
+	private InputController controller;
+
+	private Map<Slider, TextField> inputs = new HashMap<Slider, TextField>();
+	private Map<Slider, Integer> ids = new HashMap<Slider, Integer>();
+
 	public EnvelopeController(SynthesizerEngine parent)
 	{
-		this.parent = parent;
+		super(parent);
+		controller = parent.getInputController();
 	}
 
 	public void init()
 	{
+		inputs.put(attackSlider, attackInput);
+		inputs.put(decaySlider, decayInput);
+		inputs.put(releaseSlider, releaseInput);
+		inputs.put(sustainSlider, sustainInput);
+
+		ids.put(attackSlider, Ids.ID_CONSTANT_ATTACK_1);
+		ids.put(decaySlider, Ids.ID_CONSTANT_DECAY_1);
+		ids.put(releaseSlider, Ids.ID_CONSTANT_RELEASE_1);
+		ids.put(sustainSlider, Ids.ID_CONSTANT_SUSTAIN_1);
+		
 		attackSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
-			for (ModuleContainer container:parent.getInputController().getAllModules().values())
-			{
-				Envelope envelope = ((OscillatorContainer) container).getEnvelope();
-				envelope.setAttackTime((float) newValue.doubleValue()); 
-				attackInput.setText(newValue.toString());
-			}
+			sliderToUpdate = attackSlider;
+			update();
 		});
 
 		decaySlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
-			for (ModuleContainer container:parent.getInputController().getAllModules().values())
-			{
-				Envelope envelope = ((OscillatorContainer) container).getEnvelope();
-				envelope.setDecayTime((float) newValue.doubleValue()); 
-				decayInput.setText(newValue.toString());
-			}
+			sliderToUpdate = decaySlider;
+			update();
 		});
 
 		sustainSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
-			for (ModuleContainer container:parent.getInputController().getAllModules().values())
-			{
-				Envelope envelope = ((OscillatorContainer) container).getEnvelope();
-				envelope.setSustainLevel((float) newValue.doubleValue()); 
-				sustainInput.setText(newValue.toString());
-			}
+			sliderToUpdate = sustainSlider;
+			update();
 		});
 
 		releaseSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
-			for (ModuleContainer container:parent.getInputController().getAllModules().values())
-			{
-				Envelope envelope = ((OscillatorContainer) container).getEnvelope();
-				envelope.setReleaseTime((float) newValue.doubleValue()); 
-				releaseInput.setText(newValue.toString());
-			}
+			sliderToUpdate = releaseSlider;
+			update();
 		});
 
-		Envelope envelope = null;
-		for (ModuleContainer container:parent.getInputController().getAllModules().values())
+		for (Slider slider:inputs.keySet())
 		{
-			envelope = ((OscillatorContainer) container).getEnvelope();
+			TextField input = inputs.get(slider);
+			float value = controller.getPreset().getParam(ids.get(slider));
+			input.setText(Float.toString(Math.round(value * 100f) / 100f));
+			slider.setValue(value);
 		}
+	}
 
-		if (envelope != null)
-		{
-			attackSlider.setValue(envelope.getAttackTime());
-			decaySlider.setValue(envelope.getDecayTime());
-			sustainSlider.setValue(envelope.getSustainLevel());
-			releaseSlider.setValue(envelope.getReleaseTime());
-		}
+	@Override
+	protected void update() 
+	{
+		TextField input = inputs.get(sliderToUpdate);
+
+		float value = (float) sliderToUpdate.getValue();
+		input.setText(Float.toString(Math.round(value * 100f) / 100f));
+		
+		int id = ids.get(sliderToUpdate);
+		controller.updatePresetValue(id, value);
 	}
 
 	public void onAttackInputAction(ActionEvent event)
@@ -109,9 +116,4 @@ public class EnvelopeController
 		double value = Double.valueOf(releaseInput.getText());
 		releaseSlider.setValue(value);
 	}
-
-
-
-
-
 }

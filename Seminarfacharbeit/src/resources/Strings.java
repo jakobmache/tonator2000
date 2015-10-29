@@ -15,5 +15,5 @@ public class Strings
  + " Wenn sie das Programm starten möchten, schließen sie bitte ein kompatibles MIDI-Gerät an!"	;
 	public static final String START_POPUP_TITLE = "Information";
 	
-	public static final String VERSION_NUMBER = "v0.3.2 beta";
+	public static final String VERSION_NUMBER = "v0.4.1 beta";
 }

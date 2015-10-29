@@ -1,56 +1,64 @@
 package ui;
 
-
-import modules.Oscillator;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TitledPane;
+import modules.Ids;
+import modules.InputController;
+import modules.Oscillator;
 import engine.SynthesizerEngine;
 
-public class OscillatorController{
-	
-	private SynthesizerEngine engine;
-	private FXMLLoader loader;
-	
+public class OscillatorController extends ModuleController
+{
+	@FXML
 	private CheckBox sineBox;
+	@FXML
 	private CheckBox sawBox;
+	@FXML
 	private CheckBox triangleBox;
+	@FXML
 	private CheckBox squareBox;
+	
+	private int type;
+	
+	private InputController controller;
 	
 	public OscillatorController(SynthesizerEngine engine)
 	{
-		this.engine = engine;
+		super(engine);
+		controller = engine.getInputController();
+		type = (int) controller.getPreset().getParam(Ids.ID_CONSTANT_OSCITYPE_1);
 	}
 
-	
 	public void onSineBoxAction(ActionEvent event)
 	{
-		engine.setOscillatorType(Oscillator.TYPE_SINE);
-		updateBoxes();
+		type = Oscillator.TYPE_SINE;
+		update();
 	}
 	
 	public void onSawBoxAction(ActionEvent event)
 	{
-		engine.setOscillatorType(Oscillator.TYPE_SAW);
-		updateBoxes();
+		type = Oscillator.TYPE_SAW;
+		update();
 	}
 	
 	public void onSquareBoxAction(ActionEvent event)
 	{
-		engine.setOscillatorType(Oscillator.TYPE_SQUARE);
-		updateBoxes();
+		type = Oscillator.TYPE_SQUARE;
+		update();
 	}
 	
 	public void onTriangleBoxAction(ActionEvent event)
 	{
 		//engine.setOscillatorType(Oscillator.TYPE_SAW);
-		updateBoxes();
+		update();
 	}
 	
-	private void updateBoxes()
-	{
-		if (engine.getOscillatorType() == Oscillator.TYPE_SINE)
+	@Override
+	protected void update()
+	{		
+		if (type == Oscillator.TYPE_SINE)
 		{
 			sineBox.setSelected(true);
 			sawBox.setSelected(false);
@@ -58,7 +66,7 @@ public class OscillatorController{
 			triangleBox.setSelected(false);
 		}
 		
-		else if (engine.getOscillatorType() == Oscillator.TYPE_SAW)
+		else if (type == Oscillator.TYPE_SAW)
 		{
 			sawBox.setSelected(true);
 			sineBox.setSelected(false);
@@ -66,26 +74,27 @@ public class OscillatorController{
 			triangleBox.setSelected(false);
 		}
 		
-		else if (engine.getOscillatorType() == Oscillator.TYPE_SQUARE)
+		else if (type == Oscillator.TYPE_SQUARE)
 		{
 			sawBox.setSelected(false);
 			sineBox.setSelected(false);
 			squareBox.setSelected(true);
 			triangleBox.setSelected(false);
 		}
+		
+		controller.updatePresetValue(Ids.ID_CONSTANT_OSCITYPE_1, type);
 	}
 	
 	public void setMainPane(FXMLLoader loader)
 	{
-		this.loader = loader;
-		
 		sineBox = (CheckBox) loader.getNamespace().get("sineBox");
 		sawBox = (CheckBox) loader.getNamespace().get("sawBox");
 		triangleBox = (CheckBox) loader.getNamespace().get("triangleBox");
 		squareBox = (CheckBox) loader.getNamespace().get("squareBox");	
 		
-		updateBoxes();
+		update();
 	}
+
 
 }
 

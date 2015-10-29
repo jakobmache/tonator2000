@@ -2,26 +2,30 @@ package engine;
 
 public class Wire 
 {
-	private Module outputModule;
-	private Module inputModule;
+	private Module moduleDataIsSentTo;
+	private Module moduleDataIsGrabbedFrom;
 	
-	public Wire (Module outputModule, Module inputModule, int inputModuleIndex, int outputModuleIndex)
+	private int indexDataIsGrabbedFrom;
+	
+	public Wire (Module moduleDataIsSentTo, Module moduleDataIsGrabbedFrom, int indexDataIsGrabbedFrom, int indexDataIsSentTo)
 	{
-		this.outputModule = outputModule;
-		this.inputModule = inputModule; 
+		this.moduleDataIsSentTo = moduleDataIsSentTo;
+		this.moduleDataIsGrabbedFrom = moduleDataIsGrabbedFrom; 
 		
-		outputModule.connectInputWire(outputModuleIndex, this);
-		inputModule.connectOutputWire(inputModuleIndex, this);
+		moduleDataIsSentTo.connectInputWire(indexDataIsSentTo, this);
+		moduleDataIsGrabbedFrom.connectOutputWire(indexDataIsGrabbedFrom, this);
+		
+		this.indexDataIsGrabbedFrom = indexDataIsGrabbedFrom;
 	}
 	
 	public float getNextSample()
 	{
-		return inputModule.requestNextSample();
+		return moduleDataIsGrabbedFrom.requestNextSample(indexDataIsGrabbedFrom);
 	}
 	
 	public String toString()
 	{
-		return "Kabel von " + inputModule + " zu " + outputModule + ", id: " + this.hashCode();
+		return "Kabel von " + moduleDataIsGrabbedFrom + " zu " + moduleDataIsSentTo + ", id: " + this.hashCode();
 	}
 
 }

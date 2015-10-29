@@ -10,12 +10,11 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
 import midi.MidiPlayer;
+import modules.Ids;
 import modules.InputController;
 import modules.Mixer;
 import modules.Oscillator;
 import modules.OutputModule;
-import containers.OscillatorContainer;
-import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -68,21 +67,20 @@ public class SynthesizerEngine implements Receiver
 
 	private void initModules()
 	{
+		outputMixer = new Mixer(this, 250, Ids.ID_MIXER_1);
 		inputModule = new InputController(this);
+
 		try 
 		{
-			outputModule = new OutputModule(this);
+			outputModule = new OutputModule(this, Ids.ID_OUTPUT_1);
 		} 
 		catch (LineUnavailableException e) 
 		{
 			e.printStackTrace();
 		}
-		
-		outputMixer = new Mixer(this, 250);
 
-		
-		allContainer = new StandardModuleContainer(this, outputMixer);
-		new Wire(outputModule, allContainer, 0, 0);
+		//allContainer = new StandardModuleContainer(this, outputMixer);
+		new Wire(outputModule, outputMixer, 0, 0);
 	}
 
 	private void updateAudioFormat() throws LineUnavailableException
@@ -157,18 +155,7 @@ public class SynthesizerEngine implements Receiver
 		thread.start();
 		isRunning = true;
 	}
-	
-	public void setOscillatorType(int type)
-	{
-		for (ModuleContainer container:inputModule.getAllModules().values())
-		{
-			OscillatorContainer cont = (OscillatorContainer) container;
-			cont.getOscillator().setType(type);
-		}
-		
-		oscillatorType = type;
-	}
-	
+
 	public int getOscillatorType()
 	{
 		return oscillatorType;

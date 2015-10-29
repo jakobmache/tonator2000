@@ -5,24 +5,20 @@ import engine.SynthesizerEngine;
 
 public class Amplifier extends Module 
 {
-	private float factor;
+	public static final int SAMPLE_INPUT = 0;
+	public static final int FACTOR_INPUT = 1;
+	public static final int SAMPLE_OUTPUT = 0;
 
-	public Amplifier(SynthesizerEngine parent) 
+	public Amplifier(SynthesizerEngine parent, int id) 
 	{
-		super(parent, 1, 1, Ids.ID_AMPLIFIER);
+		super(parent, 2, 1, id);
 	}
 
 	@Override
-	public float requestNextSample() 
+	public float requestNextSample(int index) 
 	{
-		float inputSample = inputWires[0].getNextSample();
-		float newValue = inputSample * factor;
-		return (float) newValue;
+		float inputSample = inputWires[SAMPLE_INPUT].getNextSample();
+		float newValue = inputWires[FACTOR_INPUT].getNextSample() * inputSample;
+		return newValue;
 	}
-	
-	public void setFactor(float newFactor)
-	{
-		factor = newFactor;
-	}
-
 }

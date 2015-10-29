@@ -17,7 +17,7 @@ public abstract class Module
 		this.moduleId = id;
 	}
 	
-	public abstract float requestNextSample();
+	public abstract float requestNextSample(int index);
 	
 	public void connectInputWire(int index, Wire wire)
 	{
@@ -27,5 +27,10 @@ public abstract class Module
 	public void connectOutputWire(int index, Wire wire)
 	{
 		outputWires[index] = wire;
+	}
+	
+	public int getId()
+	{
+		return moduleId;
 	}
 }

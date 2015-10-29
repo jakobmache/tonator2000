@@ -1,33 +1,32 @@
 package modules;
 
+import engine.Module;
 import engine.SynthesizerEngine;
 
-public class Constant extends Oscillator
+public class Constant extends Module
 {
-
-	private double value = 100;
+	public static final int VALUE_OUTPUT = 0;
 	
-	public Constant(SynthesizerEngine parent) 
+	private float value = 100;
+	
+	public Constant(SynthesizerEngine parent, int id) 
 	{
-		super(parent);
+		super(parent, 0, 1, id);
 	}
 	
-	public void setValue(short newValue)
+	public void setValue(float sample)
 	{
-		value = newValue;
+		value = sample;
 	}
 
 	@Override
-	public float requestNextSample() 
+	public float requestNextSample(int index)
 	{
-		return (short) value;
+		if (index != VALUE_OUTPUT)
+			return 0;
+		return value;
 	}
-	
-	@Override
-	public void setAmplitude(double newValue)
-	{
-		value = (short) newValue;
-	}
+
 
 	
 

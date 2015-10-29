@@ -1,8 +1,5 @@
 package modules;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 
 import javax.sound.sampled.AudioSystem;
@@ -25,16 +22,10 @@ public class OutputModule extends Module
 	private int packetSize;
 
 	private boolean stopPlaying = false;
-
-	private int zeroCounter = 0;
-	private int zeroBorder = 10;
 	
-	private boolean doOutput = false;
-	private PrintWriter writer;
-	
-	public OutputModule(SynthesizerEngine parent) throws LineUnavailableException 
+	public OutputModule(SynthesizerEngine parent, int id) throws LineUnavailableException 
 	{
-		super(parent, 1, 0, Ids.ID_OUTPUT);
+		super(parent, 1, 0, id);
 		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
 		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
 
@@ -52,12 +43,6 @@ public class OutputModule extends Module
 		
 		samplesPerPacket = packetSize / parent.getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
-		try {
-			writer = new PrintWriter(new File("ausgabe.txt"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void startPlaying() throws InterruptedException
@@ -71,18 +56,7 @@ public class OutputModule extends Module
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
-				float value = requestNextSample();		
-				if (value == 0)
-					zeroCounter++;
-				if (zeroCounter > zeroBorder)
-				{
-					System.out.println("Underflow");
-					zeroCounter = 0;
-				}
-				if (doOutput)
-				{
-					writer.println(Math.round(value));
-				}
+				float value = requestNextSample(0);
 				buffer.putShort((short) value);
 			}
 
@@ -99,9 +73,8 @@ public class OutputModule extends Module
 		dataLine.drain();
 	}
 
-
 	@Override
-	public float requestNextSample() 
+	public float requestNextSample(int index) 
 	{
 		float sampleValue = inputWires[0].getNextSample();
 		return sampleValue;
@@ -116,7 +89,6 @@ public class OutputModule extends Module
 	      }
 	}
 	
-	
 	private int getLineSampleCount() 
 	{
 		return dataLine.getBufferSize() - dataLine.available();
@@ -129,7 +101,6 @@ public class OutputModule extends Module
 	
 	public void close()
 	{
-		writer.close();
 		dataLine.close();
 	}
 	

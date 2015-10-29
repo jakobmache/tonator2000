@@ -7,6 +7,11 @@ import engine.SynthesizerEngine;
 //Grundlage für Sinus: http://www.wolinlabs.com/blog/java.sine.wave.html
 public class Oscillator extends Module 
 {
+	public static final int FREQUENCY_INPUT = 0;
+	public static final int AMPLITUDE_INPUT = 1;
+	public static final int TYPE_INPUT = 2;
+	
+	public static final int SAMPLE_OUTPUT = 0;
 
 	public static final int TYPE_SINE = 0;
 	public static final int TYPE_SQUARE = 1;
@@ -14,15 +19,15 @@ public class Oscillator extends Module
 
 	private int type = Oscillator.TYPE_SINE;
 
-	private double frequency;
-	private double amplitude;
+	private float frequency;
+	private float amplitude;
 
 	private double cycleIncrease;
 	private double cyclePosition;
 
-	public Oscillator(SynthesizerEngine parent) 
+	public Oscillator(SynthesizerEngine parent, int id) 
 	{
-		super(parent, 0, 1, Ids.ID_OSCILLATOR_TONE);
+		super(parent, 3, 1, id);
 	}
 
 	public void setType(int newType)
@@ -32,30 +37,35 @@ public class Oscillator extends Module
 			cyclePosition = -1;
 	}
 
-	public void setFrequency(double frequency)
+	public void setFrequency(float frequency)
 	{
-		//System.out.println("Set frequency to " + frequency);
 		this.frequency = frequency;
-		//System.out.println("Frequency is " + frequency);
 		cycleIncrease = frequency / parent.getSamplingRate();
 		cyclePosition = 0;
 	}
 
-	public void setAmplitude(double amplitude)
+	public void setAmplitude(float amplitude)
 	{
 		this.amplitude = amplitude;
 	}
 
-	public float requestNextSample() 
+	public float requestNextSample(int index) 
 	{
-
+		if (frequency != inputWires[FREQUENCY_INPUT].getNextSample())
+			setFrequency(inputWires[FREQUENCY_INPUT].getNextSample());
+		
+		if (type != inputWires[TYPE_INPUT].getNextSample())
+			setType((int) inputWires[TYPE_INPUT].getNextSample());
+		
+		setAmplitude(inputWires[AMPLITUDE_INPUT].getNextSample());
+		
 		if (frequency == 0)
 			return 0;
 
-		short value;
+		float value;
 		if (type == TYPE_SINE)
 		{
-			value = (short) (amplitude * Math.sin(Constants.TWOPI * cyclePosition));
+			value = (float) (amplitude * Math.sin(Constants.TWOPI * cyclePosition));
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
 				cyclePosition -= 1;	
@@ -64,14 +74,14 @@ public class Oscillator extends Module
 
 		else if (type == TYPE_SQUARE)
 		{
-			short sineValue = (short) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
+			float sineValue = (float) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
 				cyclePosition -= 1;	
 			if (sineValue >= 0)
-				value = (short) amplitude;
+				value = amplitude;
 			else 
-				value = (short) (-1 * amplitude);
+				value = (-1F * amplitude);
 			return value;
 		}
 
@@ -81,7 +91,7 @@ public class Oscillator extends Module
 			cyclePosition += cycleIncrease;
 			if (cyclePosition > 1)
 				cyclePosition = -1;
-			return (short)(amplitude * cyclePosition);
+			return (float) (amplitude * cyclePosition);
 		}
 	
 		else {

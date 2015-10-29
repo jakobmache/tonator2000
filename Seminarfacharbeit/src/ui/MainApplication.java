@@ -18,10 +18,7 @@ import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import modules.Constant;
-import modules.LowpassFilter;
 import resources.Strings;
-import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 
 //TODO: H�llkurve--> Mit Decay knackt es, Attack bei 0 falsch, stellenweise Wert�berschreitungen
@@ -69,7 +66,7 @@ public class MainApplication extends Application {
         initVolume();
         
         mainLayout.getChildren().add(synthesizerLayout);
-        initPlotter();
+//        initPlotter();
 
         initStatusBar();
         
@@ -86,7 +83,6 @@ public class MainApplication extends Application {
 
         
         primaryStage.show();
-        primaryStage.setFullScreen(true);
 //        alert.showAndWait();
     }
 
@@ -116,8 +112,6 @@ public class MainApplication extends Application {
     
     public void initStatusBar()
     {
-
-    	
     	try 
     	{
         	FXMLLoader loader = new FXMLLoader();
@@ -162,9 +156,7 @@ public class MainApplication extends Application {
     {
         try 
         {
-        	LowpassFilter filter = ((StandardModuleContainer) engine.getAllContainer()).getLowpassFilter();
-        	Constant cutoffInput = ((StandardModuleContainer) engine.getAllContainer()).getCutoffFrequencyInput();
-        	LowpassFilterController controller = new LowpassFilterController(engine, filter, cutoffInput);
+        	LowpassFilterController controller = new LowpassFilterController(engine);
             
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApplication.class.getResource("fxml/LowpassFilterLayout.fxml"));

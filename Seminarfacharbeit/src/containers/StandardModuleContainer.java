@@ -3,6 +3,7 @@ package containers;
 
 import modules.Constant;
 import modules.Envelope;
+import modules.Ids;
 import modules.SampleFilter;
 import modules.LowpassFilter;
 import engine.Module;
@@ -29,18 +30,17 @@ public class StandardModuleContainer extends ModuleContainer
 	private void initModules()
 	{
 		filter = new LowpassFilter(parent);
-		cutoffConstant = new Constant(parent);
+		cutoffConstant = new Constant(parent, Ids.ID_CONSTANT_CUTOFF);
 		cutoffConstant.setValue((short)10); 
-		new Wire(filter, inputModule, 0, 0);
+//		new Wire(filter, inputModule, 0, 0);
 		cutoffEnvelope = new Envelope(parent, cutoffConstant);
-		cutoffEnvelope.setMaxValue((short) 1000); 
 		cutoffEnvelope.setAttackTime(1000);
 		cutoffEnvelope.setDecayTime(1000);
 		cutoffEnvelope.setSustainLevel(0.5F);
-		new Wire(cutoffEnvelope, cutoffConstant, 0, 0);
-		new Wire(filter, cutoffEnvelope, 0, 1);
+//		new Wire(cutoffEnvelope, cutoffConstant, 0, 0);
+//		new Wire(filter, cutoffEnvelope, 0, 1);
 		sampleFilter = new SampleFilter(parent);
-		new Wire(sampleFilter, filter, 0, 0);
+		new Wire(sampleFilter, inputModule, 0, 0);
 	}
 
 	public LowpassFilter getLowpassFilter()

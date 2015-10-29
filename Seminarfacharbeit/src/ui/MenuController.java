@@ -280,6 +280,7 @@ public class MenuController
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("MIDI-Datei ausw�hlen");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*mid"));
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*midi"));
 
 		File midiFile = fileChooser.showOpenDialog(parent.getPrimaryStage());
 		try {
