@@ -6,6 +6,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import modules.Ids;
 import modules.InputController;
+import engine.Module;
+import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class LowpassFilterController extends ModuleController
@@ -22,9 +24,9 @@ public class LowpassFilterController extends ModuleController
 	
 	private InputController controller;
 	
-	public LowpassFilterController(SynthesizerEngine parent)
+	public LowpassFilterController(SynthesizerEngine parent, int id)
 	{
-		super(parent);
+		super(parent, id);
 		controller = this.parent.getInputController();
 	}
 	
@@ -73,6 +75,25 @@ public class LowpassFilterController extends ModuleController
 		
 		cutoffInput.setText(Float.toString(Math.round(cutoff * 100f) / 100f));
 		resonanceInput.setText(Float.toString(Math.round(resonance * 100f) / 100f));
+	}
+
+	@Override
+	public void setModuleEnabled(boolean value) 
+	{
+		for (ModuleContainer container:parent.getInputController().getAllContainers())
+		{
+			Module osci = container.findModuleById(id);
+			osci.setEnabled(value);
+		}
+	}
+
+	@Override
+	public void setChildNodesEnabled(boolean value) 
+	{
+		cutoffInput.setDisable(value);
+		cutoffSlider.setDisable(value);
+		resonanceInput.setDisable(value);
+		resonanceSlider.setDisable(value);
 	}
 
 

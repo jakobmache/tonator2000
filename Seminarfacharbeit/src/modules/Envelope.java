@@ -23,6 +23,7 @@ public class Envelope extends Module
 	private float releaseTime = 100;
 
 	private float maxValue = Short.MAX_VALUE;
+	private float startLevel = 0;
 
 	private float[] increases = new float[3];	
 	private float[] startAmplitudes = new float[3];
@@ -37,8 +38,6 @@ public class Envelope extends Module
 	private float precalc = 0;
 
 	private Constant constant;
-	
-	private boolean finished = false;
 
 	private int phase = ATTACK;
 	private final static int ATTACK = 0;
@@ -46,21 +45,17 @@ public class Envelope extends Module
 	public final static int RELEASE = 2;
 	private final static int SUSTAIN = 3;
 
-	public Envelope(SynthesizerEngine parent, Constant value, int id, EnvelopeFinishedListener listener) 
+	public Envelope(SynthesizerEngine parent, Constant value, int id, EnvelopeFinishedListener listener)  
 	{
 		super(parent, 6, 1, id);
 		constant = value;
 		this.listener = listener;
 	}
 
+	
 	@Override
-	public float requestNextSample(int index)
-	{
-		if (finished)
-		{
-			return inputWires[SAMPLE_INPUT].getNextSample();
-		}
-		
+	public float calcNextSample(int index)
+	{	
 		if (attackTime != inputWires[ATTACK_INPUT].getNextSample() ||
 				decayTime != inputWires[DECAY_INPUT].getNextSample() ||
 				sustainLevel != inputWires[SUSTAIN_INPUT].getNextSample() ||
@@ -81,22 +76,21 @@ public class Envelope extends Module
 			sample += startAmplitudes[phase];
 
 			sampleCounter[phase]++;
-
-			if (phase == ATTACK && sampleCounter[phase] >= numSamples[ATTACK])
+			
+			if (phase == ATTACK && sampleCounter[ATTACK] > numSamples[ATTACK])
 			{
-				if (numSamples[DECAY] == 0)
-					setPhase(SUSTAIN);
-				else 
-					setPhase(DECAY);
+				setPhase(DECAY);
 			}
-			else if (phase == DECAY && sampleCounter[phase] >= numSamples[DECAY])
+			else if (phase == DECAY && sampleCounter[DECAY] > numSamples[DECAY])
 				setPhase(SUSTAIN);
-			else if (phase == RELEASE && sampleCounter[phase] >= numSamples[RELEASE])
+			else if (phase == RELEASE && sampleCounter[RELEASE] > numSamples[RELEASE])
 			{
-				sample = 0;
+				sample = endAmplitudes[RELEASE];
 				listener.onEnvelopeFinished(this);
 			}
 
+
+				
 			constant.setValue(sample * maxValue);
 		}
 
@@ -112,6 +106,10 @@ public class Envelope extends Module
 		}
 		phase = newPhase;
 		updateValues();
+		if (phase == ATTACK && numSamples[ATTACK] == 0)
+			setPhase(DECAY);
+		if (phase == DECAY && numSamples[DECAY] == 0)
+			setPhase(SUSTAIN);
 	}
 
 	private void updateValues()
@@ -125,14 +123,12 @@ public class Envelope extends Module
 		if (factor > 0)
 			factor = -1 * factor;
 
-		startAmplitudes[ATTACK] = 0;
+		startAmplitudes[ATTACK] = startLevel;
 		endAmplitudes[ATTACK] = peakLevel;
 		startAmplitudes[DECAY] = peakLevel;
 		endAmplitudes[DECAY] = sustainLevel;
 		startAmplitudes[RELEASE] = constant.requestNextSample(0) / maxValue;
-		endAmplitudes[RELEASE] = 0;
-
-
+		endAmplitudes[RELEASE] = startLevel;
 		increases[ATTACK] = 1 / ((attackTime / 1000) * parent.getSamplingRate());
 		increases[DECAY] = 1 / ((decayTime / 1000) * parent.getSamplingRate());
 		increases[RELEASE] = 1 / ((releaseTime / 1000) * parent.getSamplingRate());
@@ -147,10 +143,15 @@ public class Envelope extends Module
 			precalc = diffUp / diffDown;
 		}
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
 
 	public void start()
 	{
-		finished = false;
 		setPhase(ATTACK);
 	}
 
@@ -195,9 +196,21 @@ public class Envelope extends Module
 		updateValues();
 	}
 	
-	public boolean isFinished()
+	public void setMaxValue(float maxValue)
 	{
-		return isFinished();
+		this.maxValue = maxValue;
+		updateValues();
 	}
-
+	
+	public void setStartLevel(float newLevel)
+	{
+		this.startLevel = newLevel;
+		updateValues();
+	}
+	
+	public void setPeakLevel(float peakLevel)
+	{
+		this.peakLevel = peakLevel;
+		updateValues();
+	}
 }

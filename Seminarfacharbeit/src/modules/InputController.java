@@ -23,6 +23,8 @@ public class InputController implements ModuleContainerListener{
 	private Map<Integer, ModuleContainer> currentNotes;
 	private ContainerPreset preset;
 	private SynthesizerEngine parent;
+	
+	private HashMap<Integer, ContainerPreset> channelPresets = new HashMap<Integer, ContainerPreset>();
 
 	private final int NOTE_ON_START = 144;
 	private final int NOTE_OFF_START = 128;
@@ -59,6 +61,7 @@ public class InputController implements ModuleContainerListener{
 	{
 		int key = message.getData1();
 		int velocity = message.getData2();
+		int channel = message.getChannel();
 		float frequency = MidiUtils.midiNoteNumberToFrequency(key);
 		
 		System.out.println("Note on! - " + key + " - " + velocity + " - " + frequency + "Hz | Channel " + message.getChannel());

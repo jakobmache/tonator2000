@@ -1,18 +1,52 @@
 package ui;
 
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import engine.SynthesizerEngine;
 
 public abstract class ModuleController 
 {
 
 	protected SynthesizerEngine parent;
+	protected int id;
+	protected boolean enabled = true;
 	
-	public ModuleController(SynthesizerEngine parent)
+	public ModuleController(SynthesizerEngine parent, int id)
 	{
 		this.parent = parent;
+		this.id = id;
+		setModuleEnabled(true);
+	}
+	
+	public void onMouseClicked(MouseEvent event)
+	{
+        if(event.getButton().equals(MouseButton.PRIMARY))
+        {
+            if(event.getClickCount() == 2)
+            {
+            	//Wir müssen das Modul deaktivieren
+                if (enabled)
+                {
+                	setModuleEnabled(false);
+                	setChildNodesEnabled(false);
+                	enabled = false;
+                }
+                else 
+                {
+					setModuleEnabled(true);
+					setChildNodesEnabled(true);
+					enabled = true;
+				}
+            }
+        }
 	}
 	
 	protected abstract void update();
+	
+	public abstract void setModuleEnabled(boolean value);
+	
+	public abstract void setChildNodesEnabled(boolean value);
+
 	
 	
 }

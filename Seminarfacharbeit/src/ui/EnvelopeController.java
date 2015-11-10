@@ -7,8 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import modules.Ids;
 import modules.InputController;
+import engine.Module;
+import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class EnvelopeController extends ModuleController
@@ -22,6 +23,11 @@ public class EnvelopeController extends ModuleController
 	@FXML private TextField decayInput;
 	@FXML private TextField sustainInput;
 	@FXML private TextField releaseInput;
+	
+	private int attackId;
+	private int decayId;
+	private int sustainId;
+	private int releaseId;
 
 	private Slider sliderToUpdate;
 
@@ -30,10 +36,15 @@ public class EnvelopeController extends ModuleController
 	private Map<Slider, TextField> inputs = new HashMap<Slider, TextField>();
 	private Map<Slider, Integer> ids = new HashMap<Slider, Integer>();
 
-	public EnvelopeController(SynthesizerEngine parent)
+	public EnvelopeController(SynthesizerEngine parent, int attackId, int decayId, int sustainId, int releaseId, int moduleId)
 	{
-		super(parent);
+		super(parent, moduleId);
 		controller = parent.getInputController();
+		
+		this.attackId = attackId;
+		this.sustainId = sustainId;
+		this.releaseId = releaseId;
+		this.decayId = decayId;
 	}
 
 	public void init()
@@ -43,10 +54,10 @@ public class EnvelopeController extends ModuleController
 		inputs.put(releaseSlider, releaseInput);
 		inputs.put(sustainSlider, sustainInput);
 
-		ids.put(attackSlider, Ids.ID_CONSTANT_ATTACK_1);
-		ids.put(decaySlider, Ids.ID_CONSTANT_DECAY_1);
-		ids.put(releaseSlider, Ids.ID_CONSTANT_RELEASE_1);
-		ids.put(sustainSlider, Ids.ID_CONSTANT_SUSTAIN_1);
+		ids.put(attackSlider, attackId);
+		ids.put(decaySlider, decayId);
+		ids.put(releaseSlider, releaseId);
+		ids.put(sustainSlider, sustainId);
 		
 		attackSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
@@ -115,5 +126,28 @@ public class EnvelopeController extends ModuleController
 	{
 		double value = Double.valueOf(releaseInput.getText());
 		releaseSlider.setValue(value);
+	}
+
+	@Override
+	public void setModuleEnabled(boolean value) 
+	{
+		for (ModuleContainer container:parent.getInputController().getAllContainers())
+		{
+			Module osci = container.findModuleById(id);
+			osci.setEnabled(value);
+		}
+	}
+
+	@Override
+	public void setChildNodesEnabled(boolean value) 
+	{
+		for (Slider slider:inputs.keySet())
+		{
+			slider.setDisable(value);
+		}
+		for (TextField textField:inputs.values())
+		{
+			textField.setDisable(value);
+		}
 	}
 }

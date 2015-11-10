@@ -18,12 +18,19 @@ public class Constant extends Module
 	{
 		value = sample;
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return 0;
+	}
 
 	@Override
-	public float requestNextSample(int index)
+	public float calcNextSample(int index)
 	{
-		if (index != VALUE_OUTPUT)
+		if (!enabled)
 			return 0;
+		
 		return value;
 	}
 

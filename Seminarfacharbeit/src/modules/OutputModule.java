@@ -14,6 +14,8 @@ import engine.SynthesizerEngine;
 //Grundlage: http://www.wolinlabs.com/blog/java.sine.wave.html
 public class OutputModule extends Module
 {
+	public static final int SAMPLE_INPUT = 0;
+	
 	private SourceDataLine dataLine; 
 	private ByteBuffer buffer;
 
@@ -72,11 +74,17 @@ public class OutputModule extends Module
 
 		dataLine.drain();
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
 
 	@Override
-	public float requestNextSample(int index) 
+	public float calcNextSample(int index) 
 	{
-		float sampleValue = inputWires[0].getNextSample();
+		float sampleValue = inputWires[SAMPLE_INPUT].getNextSample();
 		return sampleValue;
 	}
 	

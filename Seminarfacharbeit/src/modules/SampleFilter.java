@@ -7,24 +7,28 @@ import java.util.List;
 import engine.Module;
 import engine.SynthesizerEngine;
 
-//TODO:Namen ausdenken
 public class SampleFilter extends Module
 {	
+	public static final int SAMPLE_INPUT = 0;
+	public static final int SAMPLE_OUTPUT = 0;
+	
 	private float currSample = 0;
 	private List<Float> bufferList;
 	int stop = 10;
 	int count = 0;
 
-	public SampleFilter(SynthesizerEngine parent) 
+	public SampleFilter(SynthesizerEngine parent, int id) 
 	{
-		super(parent, 1, 1, Ids.ID_SAMPLE_FILTER);
+		super(parent, 1, 1, id);
 		bufferList = new ArrayList<Float>();
 	}
 
 	@Override
-	public float requestNextSample() 
+	public float calcNextSample(int index) 
 	{
-
+		if (!enabled)
+			return inputWires[SAMPLE_INPUT].getNextSample();
+		
 		count++;
 		currSample = inputWires[0].getNextSample();
 		if (stop == count)
@@ -33,6 +37,12 @@ public class SampleFilter extends Module
 			bufferList.add(currSample);
 		}
 		return currSample;
+	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
 	}
 	
 	public List<Float> getBufferList()
@@ -47,4 +57,5 @@ public class SampleFilter extends Module
 	{
 		return currSample;
 	}
+
 }

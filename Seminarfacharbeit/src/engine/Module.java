@@ -9,6 +9,8 @@ public abstract class Module
 	
 	protected int moduleId;
 	
+	protected boolean enabled = true;
+	
 	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id)
 	{
 		this.parent = parent;
@@ -17,7 +19,16 @@ public abstract class Module
 		this.moduleId = id;
 	}
 	
-	public abstract float requestNextSample(int index);
+	public float requestNextSample(int index)
+	{
+		if (enabled)
+			return calcNextSample(index);
+		else 
+			return calcNextDisabledSample(index);
+	}
+	
+	public abstract float calcNextSample(int index);
+	public abstract float calcNextDisabledSample(int index);
 	
 	public void connectInputWire(int index, Wire wire)
 	{
@@ -32,5 +43,16 @@ public abstract class Module
 	public int getId()
 	{
 		return moduleId;
+	}
+	
+	public void setEnabled(boolean value)
+	{
+		System.out.println("Module "+ moduleId + " set to " + value);
+		enabled = value;
+	}
+	
+	public boolean isEnabled()
+	{
+		return enabled;
 	}
 }

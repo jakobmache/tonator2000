@@ -5,19 +5,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import containers.StandardModuleContainer;
 import javafx.animation.AnimationTimer;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TitledPane;
+import modules.Ids;
 import modules.SampleFilter;
-import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 
 public class Plotter extends TitledPane
 {
 
-	private int maxDataPoints = 1000;
+	private int maxDataPoints = 500;
 
 	private SampleFilter sampleFilter;
 
@@ -31,8 +32,8 @@ public class Plotter extends TitledPane
 
 	public Plotter(SynthesizerEngine engine)
 	{
-		this.sampleFilter = ((StandardModuleContainer) engine.getAllContainer()).getSampleFilter();
-
+		sampleFilter = ((SampleFilter) ((StandardModuleContainer) engine.getAllContainer()).findModuleById(Ids.ID_SAMPLE_FILTER_1));
+		
 		xAxis = new NumberAxis(0, maxDataPoints, 1000);
 		xAxis.setForceZeroInRange(false);
 		xAxis.setAutoRanging(false);

@@ -13,10 +13,19 @@ public class Amplifier extends Module
 	{
 		super(parent, 2, 1, id);
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
 
 	@Override
-	public float requestNextSample(int index) 
+	public float calcNextSample(int index) 
 	{
+		if (!enabled)
+			return inputWires[SAMPLE_INPUT].getNextSample();
+		
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample();
 		float newValue = inputWires[FACTOR_INPUT].getNextSample() * inputSample;
 		return newValue;

@@ -16,11 +16,17 @@ public class Mixer extends Module{
 	{
 		super(parent, numInputWires, 1, id);
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return 0;
+	}
 
 	@Override
-	public float requestNextSample(int index) 
+	public float calcNextSample(int index) 
 	{
-		if (index != SAMPLE_OUTPUT)
+		if (!enabled)
 			return 0;
 		
 		float value = calculateSum();
@@ -64,8 +70,6 @@ public class Mixer extends Module{
 				break;
 			}
 		}
-		
-		System.out.println("Connect to " + targetIndex);
 		
 		inputWires[targetIndex] = wire;
 	}

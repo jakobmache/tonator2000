@@ -18,13 +18,12 @@ import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
 
+import modules.Ids;
 import resources.Strings;
 import engine.SynthesizerEngine;
 
-//TODO: Hï¿½llkurve--> Mit Decay knackt es, Attack bei 0 falsch, stellenweise Wertï¿½berschreitungen
 //TODO: Midi-Player Fenster
-//TODO: Konstanten
-//TODO: Presets--> Container und Module
+//TODO: Fix disablen
 public class MainApplication extends Application {
 	
     private Stage primaryStage;
@@ -62,11 +61,12 @@ public class MainApplication extends Application {
 
         initOscillator();
         initFilter();
+        initFilterEnvelope();
         initEnvelope();
         initVolume();
         
         mainLayout.getChildren().add(synthesizerLayout);
-//        initPlotter();
+        initPlotter();
 
         initStatusBar();
         
@@ -134,10 +134,10 @@ public class MainApplication extends Application {
     public void initOscillator() {
         try 
         {
-            OscillatorController controller = new OscillatorController(engine);
+            OscillatorController controller = new OscillatorController(engine, Ids.ID_OSCILLATOR_TONE_1);
             
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApplication.class.getResource("fxml/Oscillator.fxml"));
+            loader.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
 
             loader.setController(controller);
             TitledPane oscillatorView = (TitledPane) loader.load();
@@ -156,7 +156,7 @@ public class MainApplication extends Application {
     {
         try 
         {
-        	LowpassFilterController controller = new LowpassFilterController(engine);
+        	LowpassFilterController controller = new LowpassFilterController(engine, Ids.ID_LOWPASS_1);
             
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApplication.class.getResource("fxml/LowpassFilterLayout.fxml"));
@@ -174,11 +174,34 @@ public class MainApplication extends Application {
         }
     }
     
+    public void initFilterEnvelope()
+    {
+    	try 
+    	{
+        	EnvelopeController controller = new EnvelopeController(engine, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2, Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_ENVELOPE_2);
+            
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApplication.class.getResource("fxml/EnvelopeLayout.fxml"));
+
+            loader.setController(controller);
+            TitledPane envelopeView = (TitledPane) loader.load();
+            envelopeView.setTooltip(new Tooltip(Strings.ENVELOPE_TOOLTIP_STRING));
+            envelopeView.setText("Hüllkurve - Tiefpassfilter");
+            controller.init();
+
+            synthesizerLayout.getChildren().add(envelopeView);
+		} 
+    	catch (IOException e) 
+    	{
+    		e.printStackTrace();
+		}
+    }
+    
     public void initEnvelope()
     {
         try 
         {
-        	EnvelopeController controller = new EnvelopeController(engine);
+        	EnvelopeController controller = new EnvelopeController(engine, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1, Ids.ID_CONSTANT_SUSTAIN_1, Ids.ID_CONSTANT_RELEASE_1, Ids.ID_ENVELOPE_1);
             
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApplication.class.getResource("fxml/EnvelopeLayout.fxml"));

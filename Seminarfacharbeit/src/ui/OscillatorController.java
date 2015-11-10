@@ -7,6 +7,8 @@ import javafx.scene.control.CheckBox;
 import modules.Ids;
 import modules.InputController;
 import modules.Oscillator;
+import engine.Module;
+import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class OscillatorController extends ModuleController
@@ -24,9 +26,9 @@ public class OscillatorController extends ModuleController
 	
 	private InputController controller;
 	
-	public OscillatorController(SynthesizerEngine engine)
+	public OscillatorController(SynthesizerEngine engine, int id)
 	{
-		super(engine);
+		super(engine, id);
 		controller = engine.getInputController();
 		type = (int) controller.getPreset().getParam(Ids.ID_CONSTANT_OSCITYPE_1);
 	}
@@ -94,6 +96,25 @@ public class OscillatorController extends ModuleController
 		
 		update();
 	}
+
+	public void setModuleEnabled(boolean value) 
+	{
+		for (ModuleContainer container:parent.getInputController().getAllContainers())
+		{
+			Module osci = container.findModuleById(id);
+			osci.setEnabled(value);
+		}
+	}
+
+	@Override
+	public void setChildNodesEnabled(boolean value) 
+	{
+		//triangleBox.setDisable(value);
+		sineBox.setDisable(value);
+		squareBox.setDisable(value);
+		sawBox.setDisable(value);
+	}
+
 
 
 }

@@ -2,7 +2,6 @@ package test;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 
 import javax.sound.sampled.LineUnavailableException;
 
@@ -15,7 +14,7 @@ public class TestClass
 	private float decayTime = 100;
 	private float sustainLevel = 0.8F;
 	private float peakLevel = 1F;
-	private float releaseTime = 100;
+	private float releaseTime = 1000;
 	
 	private float maxValue = Short.MAX_VALUE;
 	private float value = 0;
@@ -24,14 +23,13 @@ public class TestClass
 	private float[] startAmplitudes = new float[3];
 	private float[] endAmplitudes = new float[3];
 	private float[] numSamples = new float[3];
+	private float[] sampleCounter = new float[3];
 
 	private float xStart = 0;
 	private float xEnd = 1;
 
-	private float factor = -2F;
+	private float factor = -3F;
 	private float precalc = 0;
-
-	private int sampleCounter = 0;
 
 	private int phase = ATTACK;
 	private final static int ATTACK = 0;
@@ -48,38 +46,46 @@ public class TestClass
 
 		if (phase == SUSTAIN)
 		{
-			//return sustainLevel * maxValue;
-			return 0;
+			return sustainLevel;
 		}
 		else 
 		{
-			float sample = (float) (Math.pow(Math.E, factor * sampleCounter * increases[phase]) - Math.pow(Math.E, factor * xStart));
+			float sample = (float) (Math.pow(Math.E, factor * sampleCounter[phase] * increases[phase]) - Math.pow(Math.E, factor * xStart));
 			sample = precalc * sample;
 			sample += startAmplitudes[phase];
 
-			System.out.println(sample);
-			sampleCounter++;
+			sampleCounter[phase]++;
 
-			if (phase == ATTACK && sampleCounter > numSamples[ATTACK])
-				setPhase(DECAY);
-			else if (phase == DECAY && sampleCounter > numSamples[DECAY])
+			if (phase == ATTACK && sampleCounter[phase] > numSamples[ATTACK])
+			{
+				if (numSamples[DECAY] == 0)
+					setPhase(SUSTAIN);
+				else 
+					setPhase(DECAY);
+			}
+			else if (phase == DECAY && sampleCounter[phase] > numSamples[DECAY])
 				setPhase(SUSTAIN);
-			else if (phase == RELEASE && sampleCounter > numSamples[RELEASE])
+			else if (phase == RELEASE && sampleCounter[phase] > numSamples[RELEASE])
+			{
 				sample = 0;
-
+			}
 			return sample;
-
 		}
+
 
 	}
 
 	public void setPhase(int newPhase)
 	{
+		for (int i = 0; i < sampleCounter.length; i++)
+		{
+			sampleCounter[i] = 0;
+		}
 		
 		phase = newPhase;
 
 		updateValues();
-		sampleCounter = 0;
+
 	}
 
 	private void updateValues()
@@ -123,10 +129,10 @@ public class TestClass
 	public static void main(String[] args) throws LineUnavailableException, FileNotFoundException 
 	{
 
-		PrintWriter writer = new PrintWriter("envelopeAusgabe.txt");
+		PrintWriter writer = new PrintWriter("ausgabeEnvelope.txt");
 		TestClass test = new TestClass();
 		test.start();
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 100000; i++)
 		{
 
 			float sample = test.requestNextSample(0);
@@ -134,7 +140,7 @@ public class TestClass
 			//System.out.println(sample);
 		}
 		test.release();
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 100000; i++)
 		{
 			writer.println(test.requestNextSample(0));
 		}

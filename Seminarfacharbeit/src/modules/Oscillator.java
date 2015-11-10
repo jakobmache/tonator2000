@@ -49,8 +49,17 @@ public class Oscillator extends Module
 		this.amplitude = amplitude;
 	}
 
-	public float requestNextSample(int index) 
+	@Override
+	public float calcNextDisabledSample(int index) 
 	{
+		return 0;
+	}
+	
+	public float calcNextSample(int index) 
+	{
+		if (!enabled)
+			return 0;
+		
 		if (frequency != inputWires[FREQUENCY_INPUT].getNextSample())
 			setFrequency(inputWires[FREQUENCY_INPUT].getNextSample());
 		

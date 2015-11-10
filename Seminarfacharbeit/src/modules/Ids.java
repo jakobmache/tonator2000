@@ -10,6 +10,7 @@ public class Ids
 	public static final int ID_OSCILLATOR_OTHER_1 = 5;
 	public static final int ID_OUTPUT_1 = 6;
 	public static final int ID_SAMPLE_FILTER_1 = 7;
+	public static final int ID_ENVELOPE_2 = 8;
 	
 	public static final int ID_CONSTANT_CUTOFF_1 = 100;
 	public static final int ID_CONSTANT_RESONANCE_1 = 101;
@@ -21,6 +22,11 @@ public class Ids
 	public static final int ID_CONSTANT_RELEASE_1 = 107;
 	public static final int ID_CONSTANT_STEEPNESS_1 = 108;
 	public static final int ID_CONSTANT_OSCITYPE_1 = 109;
+	public static final int ID_CONSTANT_ATTACK_2 = 110;
+	public static final int ID_CONSTANT_DECAY_2 = 111;
+	public static final int ID_CONSTANT_SUSTAIN_2 = 112;
+	public static final int ID_CONSTANT_RELEASE_2 = 113;
+	public static final int ID_CONSTANT_STEEPNESS_2 = 114;
 	
 	public static final int ID_CONTAINER = 200;
 	

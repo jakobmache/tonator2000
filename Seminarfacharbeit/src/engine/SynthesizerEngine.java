@@ -9,6 +9,7 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
+import containers.StandardModuleContainer;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.InputController;
@@ -20,7 +21,7 @@ public class SynthesizerEngine implements Receiver
 {
 
 	private AudioFormat audioFormat;
-	private float samplingRate = 44100;
+	private float samplingRate = 22050;
 	private int numChannels = 1;
 	private boolean signed = true;
 	private boolean bigEndian = true;
@@ -28,7 +29,7 @@ public class SynthesizerEngine implements Receiver
 	private int sampleSizeInBits = 16;
 	private int sampleSizeInBytes = 2;
 
-	private double bufferTime = 0.01;
+	private double bufferTime = 0.02;
 	
 	private boolean isRunning = false;
 	
@@ -79,8 +80,9 @@ public class SynthesizerEngine implements Receiver
 			e.printStackTrace();
 		}
 
-		//allContainer = new StandardModuleContainer(this, outputMixer);
-		new Wire(outputModule, outputMixer, 0, 0);
+		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER);
+		new Wire(allContainer, outputMixer, Mixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
+		new Wire(outputModule, allContainer, ModuleContainer.SAMPLE_OUTPUT, OutputModule.SAMPLE_INPUT);
 	}
 
 	private void updateAudioFormat() throws LineUnavailableException

@@ -94,7 +94,4 @@ public abstract class ModuleContainer extends Module
 	{
 		return outputWires[SAMPLE_OUTPUT];
 	}
-	
-	@Override
-	public abstract float requestNextSample(int index);
 }

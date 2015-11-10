@@ -27,17 +27,26 @@ public class LowpassFilter extends Module
 	{
 		super(parent, 3, 1, id);
 	}
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
 
 	@Override
-	public float requestNextSample(int index) 
+	public float calcNextSample(int index) 
 	{
+		if (!enabled)
+			return inputWires[SAMPLE_INPUT].getNextSample();
+		
 		if (cutoffFrequency != inputWires[CUTOFF_INPUT].getNextSample())
 		{
 			setCutoffFrequency(inputWires[CUTOFF_INPUT].getNextSample());
 		}
 		if (resonance != inputWires[RESONANCE_INPUT].getNextSample())
 		{
-			setCutoffFrequency(inputWires[RESONANCE_INPUT].getNextSample());
+			setResonance(inputWires[RESONANCE_INPUT].getNextSample());
 		}
 		
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample();
@@ -64,8 +73,6 @@ public class LowpassFilter extends Module
 //		input1 = input;
 //		output2 = output1;
 //		output1 = value;
-		
-
 		
 		return value;
 	}

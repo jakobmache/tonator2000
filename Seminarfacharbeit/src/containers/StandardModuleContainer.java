@@ -1,12 +1,7 @@
 package containers;
 
-
-import modules.Constant;
-import modules.Envelope;
 import modules.Ids;
 import modules.SampleFilter;
-import modules.LowpassFilter;
-import engine.Module;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;
@@ -14,54 +9,33 @@ import engine.Wire;
 public class StandardModuleContainer extends ModuleContainer 
 {
 	
-	private Module inputModule;
-	private LowpassFilter filter;
-	private SampleFilter sampleFilter;
-	private Envelope cutoffEnvelope; 
-	private Constant cutoffConstant;
+	private SampleFilter filter;
 
-	public StandardModuleContainer(SynthesizerEngine parent, Module inputModule)
+	public StandardModuleContainer(SynthesizerEngine parent, int numInputWires,
+			int numOutputWires, int id) 
 	{
-		super(parent);
-		this.inputModule = inputModule;
-		initModules();
+		super(parent, numInputWires, numOutputWires, id);
+		
+		filter = new SampleFilter(parent, Ids.ID_SAMPLE_FILTER_1);
+		addModule(filter);
 	}
 	
-	private void initModules()
+	@Override
+	public void connectInputWire(int index, Wire wire)
 	{
-		filter = new LowpassFilter(parent);
-		cutoffConstant = new Constant(parent, Ids.ID_CONSTANT_CUTOFF);
-		cutoffConstant.setValue((short)10); 
-//		new Wire(filter, inputModule, 0, 0);
-		cutoffEnvelope = new Envelope(parent, cutoffConstant);
-		cutoffEnvelope.setAttackTime(1000);
-		cutoffEnvelope.setDecayTime(1000);
-		cutoffEnvelope.setSustainLevel(0.5F);
-//		new Wire(cutoffEnvelope, cutoffConstant, 0, 0);
-//		new Wire(filter, cutoffEnvelope, 0, 1);
-		sampleFilter = new SampleFilter(parent);
-		new Wire(sampleFilter, inputModule, 0, 0);
-	}
-
-	public LowpassFilter getLowpassFilter()
-	{
-		return filter;
-	}
-	
-	public Constant getCutoffFrequencyInput()
-	{
-		return cutoffConstant;
-	}
-	
-	public SampleFilter getSampleFilter()
-	{
-		return sampleFilter;
+		findModuleById(Ids.ID_SAMPLE_FILTER_1).connectInputWire(index, wire);
 	}
 
 	@Override
-	public float requestNextSample() 
-	{
-		float value = sampleFilter.requestNextSample();
-		return value;
+	public float calcNextSample(int index) {
+		float sample = filter.requestNextSample(SampleFilter.SAMPLE_OUTPUT);
+		return sample;
 	}
+
+	@Override
+	public float calcNextDisabledSample(int index) {
+		float sample = filter.requestNextSample(SampleFilter.SAMPLE_OUTPUT);
+		return sample;
+	}
+
 }
