@@ -42,12 +42,20 @@ public class LowpassFilterController extends ModuleController
 			update();
 		});
 		
-		cutoffSlider.setValue(controller.getPreset().getParam(Ids.ID_CONSTANT_CUTOFF_1));
-		resonanceSlider.setValue(controller.getPreset().getParam(Ids.ID_CONSTANT_RESONANCE_1));
+		loadData();
 		
-		cutoffInput.setText(String.valueOf(cutoffSlider.getValue()));
-		resonanceInput.setText(String.valueOf(resonanceSlider.getValue()));
 		cutoffSlider.setMax(10000);
+	}
+	
+	public void loadData()
+	{
+		float cutoff = parent.getInputController().getPreset(currChannel).getParam(Ids.ID_CONSTANT_CUTOFF_1);
+		cutoffSlider.setValue(cutoff);
+		cutoffInput.setText(Float.toString(Math.round(cutoff * 100f) / 100f));
+		
+		float resonance = parent.getInputController().getPreset(currChannel).getParam(Ids.ID_CONSTANT_RESONANCE_1);
+		resonanceSlider.setValue(resonance);
+		resonanceInput.setText(Float.toString(Math.round(resonance * 100f) / 100f));
 	}
 	
 	public void onCutoffInputAction(ActionEvent event)
@@ -70,8 +78,8 @@ public class LowpassFilterController extends ModuleController
 		float cutoff = (float) cutoffSlider.getValue();
 		float resonance = (float) resonanceSlider.getValue();
 		
-		controller.getPreset().setParam(Ids.ID_CONSTANT_CUTOFF_1, cutoff);
-		controller.getPreset().setParam(Ids.ID_CONSTANT_RESONANCE_1, resonance);
+		controller.updatePresetValue(currChannel, Ids.ID_CONSTANT_CUTOFF_1, cutoff);
+		controller.updatePresetValue(currChannel, Ids.ID_CONSTANT_RESONANCE_1, resonance);
 		
 		cutoffInput.setText(Float.toString(Math.round(cutoff * 100f) / 100f));
 		resonanceInput.setText(Float.toString(Math.round(resonance * 100f) / 100f));

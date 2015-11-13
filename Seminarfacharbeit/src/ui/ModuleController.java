@@ -9,6 +9,7 @@ public abstract class ModuleController
 
 	protected SynthesizerEngine parent;
 	protected int id;
+	protected int currChannel = 0;
 	protected boolean enabled = true;
 	
 	public ModuleController(SynthesizerEngine parent, int id)
@@ -41,7 +42,15 @@ public abstract class ModuleController
         }
 	}
 	
+	public void setCurrChannel(int channel)
+	{
+		currChannel = channel;
+		loadData();
+	}
+	
 	protected abstract void update();
+	
+	public abstract void loadData();
 	
 	public abstract void setModuleEnabled(boolean value);
 	

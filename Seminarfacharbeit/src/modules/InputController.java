@@ -8,8 +8,8 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
-import presets.OscillatorContainerPreset;
 import midi.MidiUtils;
+import presets.OscillatorContainerPreset;
 import containers.ContainerPreset;
 import containers.ModuleContainerListener;
 import containers.OscillatorContainer;
@@ -20,8 +20,7 @@ import engine.Wire;
 public class InputController implements ModuleContainerListener{
 
 	private List<ModuleContainer> allContainers;
-	private Map<Integer, ModuleContainer> currentNotes;
-	private ContainerPreset preset;
+	private Map<Integer, Map<Integer, ModuleContainer>> channelNotes;
 	private SynthesizerEngine parent;
 	
 	private HashMap<Integer, ContainerPreset> channelPresets = new HashMap<Integer, ContainerPreset>();
@@ -33,9 +32,18 @@ public class InputController implements ModuleContainerListener{
 	public InputController(SynthesizerEngine parent)
 	{
 		this.parent = parent;
-		currentNotes = new HashMap<Integer, ModuleContainer>();
+		channelNotes = new HashMap<Integer, Map<Integer, ModuleContainer>>();
 		allContainers = new ArrayList<ModuleContainer>();
-		preset = new OscillatorContainerPreset();
+		initChannelPresets();
+	}
+	
+	private void initChannelPresets()
+	{
+		for (int i = 0; i < NUM_CHANNELS; i++)
+		{
+			channelPresets.put(i, new OscillatorContainerPreset());
+			channelNotes.put(i, new HashMap<Integer, ModuleContainer>());
+		}
 	}
 
 	public void handleMessage(ShortMessage message)
@@ -59,6 +67,7 @@ public class InputController implements ModuleContainerListener{
 
 	private void playNoteOn(ShortMessage message)
 	{
+		//Daten aus der MIDI-Message auslesen
 		int key = message.getData1();
 		int velocity = message.getData2();
 		int channel = message.getChannel();
@@ -66,46 +75,53 @@ public class InputController implements ModuleContainerListener{
 		
 		System.out.println("Note on! - " + key + " - " + velocity + " - " + frequency + "Hz | Channel " + message.getChannel());
 
-		//Wird die Note schon abgespielt?
-		if (currentNotes.keySet().contains(key))
+		//Wird die Note auf diesem Kanal schon abgespielt?
+		if (channelNotes.get(channel).containsKey(key))
 		{
 			System.out.println("Note wird schon abgespielt - Fehler!");
 			return;
 		}
 
+		System.out.println("Container playing!");
 		//Sie wird nicht abgespielt --> Wir erzeugen einen neuen Container, der sie spielt
 		OscillatorContainer container;
 		container = new OscillatorContainer(parent);
-		container.applyContainerPreset(preset);
+		container.applyContainerPreset(channelPresets.get(channel));
 		container.addListener(this);
 	
 		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, Mixer.NEXT_FREE_INPUT);
 
 		//Wir müssen uns den Container merken
 		allContainers.add(container);
-		currentNotes.put(key, container);
+		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
+		noteMap.put(key, container);
 
-		container.startPlaying(frequency, (velocity / 127.0F) * Short.MAX_VALUE);
+		updatePresetValue(channel, Ids.ID_CONSTANT_AMPLITUDE_1, (velocity / 127.0F) * Short.MAX_VALUE);
+		Envelope envelope = (Envelope) channelNotes.get(channel).get(key).findModuleById(Ids.ID_ENVELOPE_1);
+		envelope.setMaxValue((velocity / 127.0F) * Short.MAX_VALUE);
+		container.startPlaying(frequency,(velocity / 127.0F) * Short.MAX_VALUE);
 	}
 
 	private void playNoteOff(ShortMessage message)
 	{
 		int key = message.getData1();
+		int channel = message.getChannel();
 		System.out.println("Note off! - " + key);
 
 		//Wenn der Ton nicht abgespielt wird, können wir es ignorieren
-		if (!currentNotes.keySet().contains(key))
+		if (!channelNotes.get(channel).containsKey(key))
 		{
 			System.out.println("Note wird nicht abgespielt - Fehler!");
 			return;
 		}
 		
 		//Sie wird abgespielt --> Wir stoppen das Abspielen (bzw bei ASDR Release)
-		OscillatorContainer container = (OscillatorContainer) currentNotes.get(key);
+		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
+		OscillatorContainer container = (OscillatorContainer) noteMap.get(key);
 		container.stopPlaying();
 		
 		//Die entsprechende Note wird nicht mehr abgespielt
-		currentNotes.remove(key);
+		noteMap.remove(key);
 	}
 
 	public void resetMidi() throws InvalidMidiDataException
@@ -121,26 +137,24 @@ public class InputController implements ModuleContainerListener{
 		return allContainers;
 	}
 
-	public ContainerPreset getPreset() {
-		return preset;
+	public ContainerPreset getPreset(int channel) {
+		return channelPresets.get(channel);
 	}
 
-	public void setPreset(ContainerPreset preset) 
+	public void setPreset(ContainerPreset preset, int channel) 
 	{
-		this.preset = preset;
-		for (ModuleContainer container:allContainers)
-		{
+		channelPresets.put(channel, preset);
+		for (ModuleContainer container:channelNotes.get(channel).values())
 			container.applyContainerPreset(preset);
-		}
 	}
 
-	public void updatePresetValue(int id, float value)
+	public void updatePresetValue(int channel, int id, float value)
 	{
-		for (ModuleContainer container:allContainers)
+		for (ModuleContainer container:channelNotes.get(channel).values())
 		{
 			container.updatePreset(id, value);
 		}
-		preset.setParam(id, value);
+		channelPresets.get(channel).setParam(id, value);
 	}
 
 	@Override
@@ -148,6 +162,11 @@ public class InputController implements ModuleContainerListener{
 	{
 		parent.getOutputMixer().disconnectInputWire(container.getOutputWire());
 		allContainers.remove(container);
+	}
+	
+	public int getNumMidiChannels()
+	{
+		return NUM_CHANNELS;
 	}
 
 }

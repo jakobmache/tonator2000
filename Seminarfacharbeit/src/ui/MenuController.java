@@ -48,6 +48,10 @@ public class MenuController
 	private Stage bufferTimeStage;
 	@FXML
 	private TextField bufferTimeInput;
+	
+	private Stage channelSelectionStage;
+	@FXML 
+	private ChoiceBox<String> availableChannelsBox;
 
 	@FXML
 	private CheckMenuItem monoMenuItem;
@@ -65,9 +69,7 @@ public class MenuController
 
 	private ObservableList<String> getMidiDevices()
 	{
-		System.out.println("Try to load available MIDI-devices");
 		deviceInfos = MidiUtils.getAvailableInputDevices();
-		System.out.println("Loaded available MIDI-devices!");
 		ObservableList<String> devicesString = FXCollections.observableArrayList();
 
 		for (Info info:deviceInfos)
@@ -92,10 +94,8 @@ public class MenuController
 			midiSelectionStage.setScene(new Scene(root));
 
 			ObservableList<String> midiDevices = getMidiDevices();
-			System.out.println(midiDevices);
 			availableMidiDevicesBox.getItems().addAll(midiDevices);
 			availableMidiDevicesBox.getSelectionModel().selectFirst();
-			System.out.println("Midi device!");
 
 			midiSelectionStage.show();
 
@@ -104,9 +104,6 @@ public class MenuController
 		{
 			e.printStackTrace();
 		}
-
-		parent.updateStatusBar();
-
 	}
 	
 	public void onSetSampleRateMenuAction(ActionEvent event)
@@ -129,8 +126,6 @@ public class MenuController
 		{
 			e.printStackTrace();
 		}
-
-		parent.updateStatusBar();
 	}
 
 	public void loadData()
@@ -151,14 +146,15 @@ public class MenuController
 	public void onSetSampleRateAction(ActionEvent event)
 	{
 		float samplingRate = Float.valueOf(samplingRateInput.getText());
-		try {
+		try 
+		{
 			engine.setSamplingRate(samplingRate);
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (LineUnavailableException e) 
+		{
 			e.printStackTrace();
 		}
 		sampleRateStage.close();
-		parent.updateStatusBar();
 	}
 
 	public void onSetBufferTimeMenuAction(ActionEvent event)
@@ -181,8 +177,6 @@ public class MenuController
 		{
 			e.printStackTrace();
 		}
-
-		parent.updateStatusBar();
 	}
 	
 	public void onSetBufferTimeAction(ActionEvent event)
@@ -190,17 +184,16 @@ public class MenuController
 		double bufferTime = Double.valueOf(bufferTimeInput.getText());
 		try {
 			engine.setBufferTime(bufferTime);
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
+		} catch (LineUnavailableException e) 
+		{
 			e.printStackTrace();
 		} 
 		bufferTimeStage.close();
-
-		parent.updateStatusBar();
 	}
 
-	public void onEngineMenuAction(ActionEvent event)
+	public void onEngineMenuAction()
 	{
+		System.out.println("Engine menu action!");
 		if (engine.isRunning())
 			changeEngineStateMenuItem.setText("Pausieren");
 		else 
@@ -228,9 +221,6 @@ public class MenuController
 			engine.setNumChannels(2);
 			monoMenuItem.setSelected(false);
 		}
-
-		parent.updateStatusBar();
-
 	}
 
 	public void onChangeEngineStateAction(ActionEvent event)
@@ -247,8 +237,6 @@ public class MenuController
 			engine.run();
 			source.setText("Pausieren");
 		}
-
-		parent.updateStatusBar();
 	}
 	
 	//MIDI-Handler
@@ -269,16 +257,13 @@ public class MenuController
 		}
 
 		midiSelectionStage.close();
-
-		parent.updateStatusBar();
-
 	}
 
 	public void onSelectMidiFileAction(ActionEvent event)
 	{
-		System.out.println("Datei auswï¿½hlen!");
+		System.out.println("Datei auswählen!");
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("MIDI-Datei auswï¿½hlen");
+		fileChooser.setTitle("MIDI-Datei auswählen");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*mid"));
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*midi"));
 
@@ -292,24 +277,56 @@ public class MenuController
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		parent.updateStatusBar();
 	}
 	
 	public void onPlayMidiFileAction(ActionEvent event)
 	{
 		engine.getMidiPlayer().startPlayingMidiFile();
-		parent.updateStatusBar();
 	}
 	
 	public void onPauseMidiFileAction(ActionEvent event)
 	{
 		engine.getMidiPlayer().stopPlayingMidiFile();
-		parent.updateStatusBar();
 	}
 
 	public void onResetMidiAction(ActionEvent event)
 	{
 		engine.reset();
+	}
+	
+	public void onSelectCurrentChannelAction(ActionEvent event)
+	{
+		try 
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MenuController.class.getResource("fxml/SelectCurrentChannelLayout.fxml"));
+
+			loader.setController(this);
+			VBox root = (VBox) loader.load();
+
+			channelSelectionStage = new Stage();
+			channelSelectionStage.setTitle("Akuellen MIDI-Kanal auswählen");
+			channelSelectionStage.setScene(new Scene(root));
+
+			for (int i = 0; i < engine.getInputController().getNumMidiChannels(); i++)
+				availableChannelsBox.getItems().add(i + " - " + MidiUtils.channelNames.get(i));
+			
+			availableChannelsBox.getSelectionModel().select(parent.getCurrChannel());
+
+			channelSelectionStage.show();
+
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void onConfirmCurrentChannelAction(ActionEvent event)
+	{
+		parent.setCurrChannel(availableChannelsBox.getSelectionModel().getSelectedIndex());
+		channelSelectionStage.close();
 		parent.updateStatusBar();
 	}
 

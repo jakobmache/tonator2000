@@ -83,10 +83,15 @@ public class EnvelopeController extends ModuleController
 			update();
 		});
 
-		for (Slider slider:inputs.keySet())
+		loadData();
+	}
+	
+	public void loadData() 
+	{
+		for (Slider slider:ids.keySet())
 		{
 			TextField input = inputs.get(slider);
-			float value = controller.getPreset().getParam(ids.get(slider));
+			float value = controller.getPreset(currChannel).getParam(ids.get(slider));
 			input.setText(Float.toString(Math.round(value * 100f) / 100f));
 			slider.setValue(value);
 		}
@@ -101,7 +106,7 @@ public class EnvelopeController extends ModuleController
 		input.setText(Float.toString(Math.round(value * 100f) / 100f));
 		
 		int id = ids.get(sliderToUpdate);
-		controller.updatePresetValue(id, value);
+		controller.updatePresetValue(currChannel, id, value);
 	}
 
 	public void onAttackInputAction(ActionEvent event)

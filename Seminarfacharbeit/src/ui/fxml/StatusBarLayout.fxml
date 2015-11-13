@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<ToolBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<ToolBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <Label fx:id="engineRunningLabel" text="Engine gestoppt" />
       <Separator orientation="VERTICAL" />
@@ -14,9 +14,9 @@
       <Separator orientation="VERTICAL" />
       <Label fx:id="samplingRateLabel" text="Samplingrate:" />
       <Separator orientation="VERTICAL" />
-      <Label fx:id="numChannelsLabel" text="Kanäle:" />
-      <Separator orientation="VERTICAL" />
       <Label fx:id="midiDeviceLabel" text="Kein MIDI-Gerät verbunden" />
+      <Separator orientation="VERTICAL" />
+      <Label fx:id="currChannelLabel" text="MIDI-Kanal: " />
    </items>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

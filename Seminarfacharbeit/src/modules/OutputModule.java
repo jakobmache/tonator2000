@@ -69,7 +69,6 @@ public class OutputModule extends Module
 			{
 				Thread.sleep(1);
 			}
-
 		}
 
 		dataLine.drain();

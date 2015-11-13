@@ -30,7 +30,7 @@ public class OscillatorController extends ModuleController
 	{
 		super(engine, id);
 		controller = engine.getInputController();
-		type = (int) controller.getPreset().getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		type = (int) controller.getPreset(currChannel).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
 	}
 
 	public void onSineBoxAction(ActionEvent event)
@@ -84,7 +84,7 @@ public class OscillatorController extends ModuleController
 			triangleBox.setSelected(false);
 		}
 		
-		controller.updatePresetValue(Ids.ID_CONSTANT_OSCITYPE_1, type);
+		controller.updatePresetValue(currChannel, Ids.ID_CONSTANT_OSCITYPE_1, type);
 	}
 	
 	public void setMainPane(FXMLLoader loader)
@@ -109,10 +109,17 @@ public class OscillatorController extends ModuleController
 	@Override
 	public void setChildNodesEnabled(boolean value) 
 	{
-		//triangleBox.setDisable(value);
+		triangleBox.setDisable(value);
 		sineBox.setDisable(value);
 		squareBox.setDisable(value);
 		sawBox.setDisable(value);
+	}
+
+	@Override
+	public void loadData() 
+	{
+		type = (int) controller.getPreset(currChannel).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		update();
 	}
 
 

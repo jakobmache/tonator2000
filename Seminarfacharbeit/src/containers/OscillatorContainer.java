@@ -51,7 +51,7 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		addConnection(findModuleById(Ids.ID_CONSTANT_STEEPNESS_1), findModuleById(Ids.ID_ENVELOPE_1), Constant.VALUE_OUTPUT, Envelope.STEEPNESS_INPUT);
 		
 //		addConnection(findModuleById(Ids.ID_CONSTANT_CUTOFF_1), findModuleById(Ids.ID_ENVELOPE_2), Constant.VALUE_OUTPUT, Envelope.SAMPLE_INPUT);
-//		addConnection(findModuleById(Ids.ID_ENVELOPE_2), findModuleById(Ids.ID_LOWPASS_1), Envelope.SAMPLE_OUTPUT, LowpassFilter.CUTOFF_INPUT);
+		addConnection(findModuleById(Ids.ID_ENVELOPE_2), findModuleById(Ids.ID_LOWPASS_1), Envelope.SAMPLE_OUTPUT, LowpassFilter.CUTOFF_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_CUTOFF_1), findModuleById(Ids.ID_LOWPASS_1), Constant.VALUE_OUTPUT, LowpassFilter.CUTOFF_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_RESONANCE_1), findModuleById(Ids.ID_LOWPASS_1), Constant.VALUE_OUTPUT, LowpassFilter.RESONANCE_INPUT);
 		

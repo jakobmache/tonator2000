@@ -1,6 +1,8 @@
 package ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -31,6 +33,7 @@ public class MainApplication extends Application {
     private SynthesizerEngine engine;
     
     private StatusBarController statusBarController;
+    private List<ModuleController> controllers = new ArrayList<ModuleController>();
     
     @FXML 
     private CheckMenuItem monoMenuItem;
@@ -39,6 +42,8 @@ public class MainApplication extends Application {
     
     private HBox synthesizerLayout;
     private VBox mainLayout;
+    
+    private int currChannel = 0;
 
     @Override
     public void start(Stage primaryStage)
@@ -73,17 +78,9 @@ public class MainApplication extends Application {
         initEventHandlers();
         
         updateStatusBar();
-        
-//        Alert alert = new Alert(AlertType.INFORMATION);
-//        alert.setTitle(Strings.START_POPUP_TITLE);
-//        alert.setHeaderText(null);
-//        alert.setContentText(Strings.START_POPUP_TEXT);
-//        alert.setResizable(true);
-//        alert.getDialogPane().setPrefSize(480, 200);
 
-        
+        setCurrChannel(0);
         primaryStage.show();
-//        alert.showAndWait();
     }
 
     public void initRootLayout() 
@@ -117,7 +114,7 @@ public class MainApplication extends Application {
         	FXMLLoader loader = new FXMLLoader();
         	loader.setLocation(MainApplication.class.getResource("fxml/StatusBarLayout.fxml"));
         	
-			statusBarController = new StatusBarController(engine);
+			statusBarController = new StatusBarController(engine, this);
 			loader.setController(statusBarController);
         	
 			ToolBar statusBar = (ToolBar) loader.load();
@@ -145,6 +142,8 @@ public class MainApplication extends Application {
             controller.setMainPane(loader);
 
             synthesizerLayout.getChildren().add(oscillatorView);
+            
+            controllers.add(controller);
         } 
         catch (IOException e) 
         {
@@ -167,6 +166,7 @@ public class MainApplication extends Application {
             controller.init();
 
             synthesizerLayout.getChildren().add(filterView);
+            controllers.add(controller);
         } 
         catch (IOException e) 
         {
@@ -190,6 +190,7 @@ public class MainApplication extends Application {
             controller.init();
 
             synthesizerLayout.getChildren().add(envelopeView);
+            controllers.add(controller);
 		} 
     	catch (IOException e) 
     	{
@@ -212,6 +213,8 @@ public class MainApplication extends Application {
             controller.init();
 
             synthesizerLayout.getChildren().add(envelopeView);
+            
+            controllers.add(controller);
         } 
         catch (IOException e) 
         {
@@ -264,6 +267,20 @@ public class MainApplication extends Application {
     
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+    
+    public void setCurrChannel(int newChannel)
+    {
+    	currChannel = newChannel;
+    	for (ModuleController controller:controllers)
+    	{
+    		controller.setCurrChannel(currChannel);
+    	}
+    }
+    
+    public int getCurrChannel()
+    {
+    	return currChannel;
     }
 
 	public static void main(String[] args) {

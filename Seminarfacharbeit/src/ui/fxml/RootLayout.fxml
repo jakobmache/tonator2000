@@ -9,7 +9,7 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-            <Menu fx:id="engineMenu" mnemonicParsing="false" onAction="#onEngineMenuAction" text="Engine">
+            <Menu fx:id="engineMenu" mnemonicParsing="false" onShowing="#onEngineMenuAction" text="Engine">
               <items>
                   <MenuItem fx:id="changeEngineStateMenuItem" mnemonicParsing="false" onAction="#onChangeEngineStateAction" text="Starten" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -31,6 +31,11 @@
                   <MenuItem fx:id="resetMidiMenuItem" mnemonicParsing="false" onAction="#onResetMidiAction" text="MIDI zurücksetzen" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Presets">
+              <items>
+                <MenuItem fx:id="selectCurrentChannelMenuItem" mnemonicParsing="false" onAction="#onSelectCurrentChannelAction" text="Aktueller Kanal" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

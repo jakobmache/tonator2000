@@ -1,5 +1,8 @@
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
@@ -9,13 +12,13 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
-import containers.StandardModuleContainer;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.InputController;
 import modules.Mixer;
-import modules.Oscillator;
 import modules.OutputModule;
+import modules.listener.EngineListener;
+import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -33,8 +36,6 @@ public class SynthesizerEngine implements Receiver
 	
 	private boolean isRunning = false;
 	
-	private int oscillatorType = Oscillator.TYPE_SINE;
-	
 	private int maxPolyphony = 20;
 	
 	private MidiPlayer midiPlayer;
@@ -47,6 +48,8 @@ public class SynthesizerEngine implements Receiver
 	private ModuleContainer osciContainer;
 	
 	private MidiDevice connectedMidiDevice;
+	
+	private List<EngineListener> listeners = new ArrayList<EngineListener>();
 
 	public SynthesizerEngine() throws LineUnavailableException
 	{
@@ -91,6 +94,11 @@ public class SynthesizerEngine implements Receiver
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 		if (outputModule != null)
 			outputModule.updateFormat();
+		
+		for (EngineListener listener:listeners)
+		{
+			listener.onValueChanged();
+		}
 	}
 
 	@Override
@@ -156,11 +164,6 @@ public class SynthesizerEngine implements Receiver
 		});
 		thread.start();
 		isRunning = true;
-	}
-
-	public int getOscillatorType()
-	{
-		return oscillatorType;
 	}
 	
 	public ModuleContainer getAllContainer() 
@@ -250,6 +253,11 @@ public class SynthesizerEngine implements Receiver
 		updateAudioFormat();
 	}
 	
+	public void addListener(EngineListener listener)
+	{
+		listeners.add(listener);
+	}
+	
 	public InputController getInputController()
 	{
 		return inputModule;
@@ -274,10 +282,4 @@ public class SynthesizerEngine implements Receiver
 	{
 		return midiPlayer;
 	}
-	
-	
-
-
-
-
 }

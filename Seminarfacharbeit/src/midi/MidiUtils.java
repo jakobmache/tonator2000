@@ -1,4 +1,3 @@
-
 package midi;
 
 import java.util.ArrayList;
@@ -16,6 +15,31 @@ public class MidiUtils {
 
 	public static int NOTE_OFF_START = 128;
 	public static int NOTE_OFF_END = 143;
+	
+	public static List<String > channelNames = new ArrayList<String>()
+	{
+		private static final long serialVersionUID = 1L;
+		
+		{
+			add("Klavier");
+			add("Perkussion 1");
+			add("Orgel");
+			add("Gitarre");
+			add("Bass");
+			add("Streicher");
+			add("Ensemble");
+			add("Blechbläser");
+			add("Holzbläser");
+			add("Flöten");
+			add("Synth Lead");
+			add("Synth Pad");
+			add("Synth Effekte");
+			add("Ethnic");
+			add("Perkussion 2");
+			add("Soundeffekte");
+		}
+		
+	};
 
 	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>()
 	{
