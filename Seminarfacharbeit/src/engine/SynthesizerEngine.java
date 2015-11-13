@@ -145,8 +145,7 @@ public class SynthesizerEngine implements Receiver
 			
 			container.getOscillator().setFrequency((double) frequency);
 			container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-			container.getOscillator().setType(Oscillator.TYPE_SINE);
-			
+			container.getOscillator().setType(Oscillator.TYPE_SQUARE);
 			currentNotes.put(key, container);
 
 			PlayThread thread = new PlayThread(container.getOutputModule());

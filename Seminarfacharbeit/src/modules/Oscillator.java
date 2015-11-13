@@ -10,7 +10,7 @@ public class Oscillator extends Module
 	public static final int TYPE_SINE = 0;
 	public static final int TYPE_SQUARE = 1;
 
-	private static int TYPE = Oscillator.TYPE_SINE;
+	private static int TYPE = Oscillator.TYPE_SQUARE;
 
 	private double frequency;
 	private double amplitude;
