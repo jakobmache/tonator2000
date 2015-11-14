@@ -1,8 +1,8 @@
 package presets;
 
-import containers.ContainerPreset;
 import modules.Ids;
 import modules.Oscillator;
+import containers.ContainerPreset;
 
 public class OscillatorContainerPreset extends ContainerPreset
 {

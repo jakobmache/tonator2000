@@ -16,4 +16,6 @@ public class Strings
 	public static final String START_POPUP_TITLE = "Information";
 	
 	public static final String VERSION_NUMBER = "v0.4.1 beta";
+	
+	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
 }

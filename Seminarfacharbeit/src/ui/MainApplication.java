@@ -278,6 +278,14 @@ public class MainApplication extends Application {
     	}
     }
     
+    public void update()
+    {
+    	for (ModuleController controller:controllers)
+    	{
+    		controller.loadData();
+    	}
+    }
+    
     public int getCurrChannel()
     {
     	return currChannel;

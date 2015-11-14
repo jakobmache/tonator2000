@@ -6,28 +6,28 @@ import engine.SynthesizerEngine;
 
 public class LowpassFilter extends Module
 {
-	
+
 	public static final int SAMPLE_INPUT = 0;
 	public static final int CUTOFF_INPUT = 1;
 	public static final int RESONANCE_INPUT = 2;
-	
+
 	public static final int SAMPLE_OUTPUT = 0;
-	
+
 	private double oldValue = 0;
 
 	private double alpha;
-	
+
 	private float cutoffFrequency = 1000F;
 	private float resonance = 0.2F;
-	
-	private double a1, a2, a3, b1, b2, c;
-	private double input1, input2, output1, output2;
+
+	private double p = 0, q = 0, f = 0;
+	private double t0 = 0, t1 = 0, t2 = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
 	public LowpassFilter(SynthesizerEngine parent, int id) 
 	{
 		super(parent, 3, 1, id);
 	}
-	
+
 	@Override
 	public float calcNextDisabledSample(int index) 
 	{
@@ -39,7 +39,7 @@ public class LowpassFilter extends Module
 	{
 		if (!enabled)
 			return inputWires[SAMPLE_INPUT].getNextSample();
-		
+
 		if (cutoffFrequency != inputWires[CUTOFF_INPUT].getNextSample())
 		{
 			setCutoffFrequency(inputWires[CUTOFF_INPUT].getNextSample());
@@ -48,45 +48,50 @@ public class LowpassFilter extends Module
 		{
 			setResonance(inputWires[RESONANCE_INPUT].getNextSample());
 		}
-		
-		float inputSample = inputWires[SAMPLE_INPUT].getNextSample();
 
-		inputSample -= resonance * oldValue;
-		float value = (float) (alpha * inputSample + (1 - alpha) * oldValue);
-		oldValue = value;
-//		setCutoffFrequency(inputWires[1].getNextSample());
-//		c = (1.0) / Math.tan(Math.PI * cutoffFrequency / parent.getSamplingRate());
-//		a1 = 1.0 / ( 1.0 + resonance * c + c * c);
-//		a2 = 2 * a1;
-//		a3 = a1;
-//		b1 = 2.0 * ( 1.0 - c*c) * a1;
-//		b2 = ( 1.0 - resonance * c + c * c) * a1;
-//		input1 = 0;
-//		output1 = 0;
-//		input2 = 0;
-//		output2 = 0;
-//		
-//		double input = inputWires[0].getNextSample();
-//		double value = a1 * input + a2 * input1 + a3* input2 - b1 * output1 - b2 * output2;
-//		
-//		input2 = input1;
-//		input1 = input;
-//		output2 = output1;
-//		output1 = value;
+		float inputSample = inputWires[SAMPLE_INPUT].getNextSample() / Short.MAX_VALUE;
+
 		
-		return value;
+		inputSample -= q * b4;                          //feedback
+		//System.out.println(q + "|" + b4);
+		t1 = b1;  
+		b1 = (inputSample + b0) * p - b1 * f;
+		t2 = b2;  
+		b2 = (b1 + t1) * p - b2 * f;
+		t1 = b3;  
+		b3 = (b2 + t2) * p - b3 * f;
+		b4 = (b3 + t1) * p - b4 * f;
+		b4 = b4 - b4 * b4 * b4 * 0.166667f;    //clipping
+		b0 = inputSample;
+		
+		//		inputSample -= resonance * oldValue;
+		//		float value = (float) (alpha * inputSample + (1 - alpha) * oldValue);
+		//		oldValue = value;
+
+
+		return (float) b4 * Short.MAX_VALUE;
 	}
-	
+
 	public void setCutoffFrequency(float newValue)
 	{
 		cutoffFrequency = newValue;
 		double timeDelta = 1 / parent.getSamplingRate();
 		alpha = (Constants.TWOPI * timeDelta * cutoffFrequency) / (Constants.TWOPI * timeDelta * cutoffFrequency + 1);
+		precalc();
 	}
-	
+
 	public void setResonance(float newValue)
 	{
 		this.resonance = newValue;
+		precalc();
+	}
+
+	private void precalc()
+	{
+		q = 1.0f - cutoffFrequency;
+		p = cutoffFrequency + 0.8f * cutoffFrequency * q;
+		f = p + p - 1.0f;
+		q = resonance * (1.0f + 0.5f * q * (1.0f - q + 5.6f * q * q));
 	}
 
 	public double getCutoffFrequency() {
@@ -96,6 +101,6 @@ public class LowpassFilter extends Module
 	public double getResonance() {
 		return resonance;
 	}
-	
+
 
 }

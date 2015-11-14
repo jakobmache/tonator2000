@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +26,13 @@ import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+
+import containers.ContainerPreset;
+import resources.Strings;
 import midi.MidiUtils;
 import engine.SynthesizerEngine;
 
@@ -261,7 +268,6 @@ public class MenuController
 
 	public void onSelectMidiFileAction(ActionEvent event)
 	{
-		System.out.println("Datei auswählen!");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("MIDI-Datei auswählen");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("MIDI-Dateien", "*mid"));
@@ -328,6 +334,58 @@ public class MenuController
 		parent.setCurrChannel(availableChannelsBox.getSelectionModel().getSelectedIndex());
 		channelSelectionStage.close();
 		parent.updateStatusBar();
+	}
+	
+	public void onSavePreset(ActionEvent event)
+	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Preset speichern");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("XML-Dateien", "*.xml"));
+		fileChooser.setInitialFileName(Strings.SAVE_PRESET_FILE_NAME);
+		
+		File file = fileChooser.showSaveDialog(parent.getPrimaryStage());
+		
+		if (file != null)
+		{
+			try {
+				engine.getInputController().getPreset(parent.getCurrChannel()).writeToFile(file.getPath());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void onLoadPreset(ActionEvent event)
+	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Preset laden");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("XML-Dateien", "*.xml"));
+		
+		File file = fileChooser.showOpenDialog(parent.getPrimaryStage());
+		
+		if (file != null)
+		{
+			try {
+				engine.getInputController().setPreset(new ContainerPreset(file.getPath()), parent.getCurrChannel());
+				parent.update();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 

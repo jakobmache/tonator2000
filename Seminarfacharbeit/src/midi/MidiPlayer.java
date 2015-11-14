@@ -34,7 +34,6 @@ public class MidiPlayer
 		
 		sequencer.open();
 		
-		System.out.println(sequencer.getTransmitters());
 		for (Transmitter trans:sequencer.getTransmitters())
 		{
 			Receiver receiver = trans.getReceiver();
@@ -50,7 +49,6 @@ public class MidiPlayer
 		if (sequencer != null)
 		{
 			sequencer.start();
-			System.out.println(sequencer.getTransmitters());
 		}
 	}
 	

@@ -43,8 +43,6 @@ public class LowpassFilterController extends ModuleController
 		});
 		
 		loadData();
-		
-		cutoffSlider.setMax(10000);
 	}
 	
 	public void loadData()
