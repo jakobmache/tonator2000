@@ -28,7 +28,7 @@ public class TestClass
 	private float xStart = 0;
 	private float xEnd = 1;
 
-	private float factor = -3F;
+	private float steepness = -3F;
 	private float precalc = 0;
 
 	private int phase = ATTACK;
@@ -44,35 +44,36 @@ public class TestClass
 		if (index != Envelope.SAMPLE_OUTPUT)
 			return 0;
 
+		float factor;
+		
 		if (phase == SUSTAIN)
 		{
-			return sustainLevel;
+			factor = sustainLevel;
 		}
 		else 
 		{
-			float sample = (float) (Math.pow(Math.E, factor * sampleCounter[phase] * increases[phase]) - Math.pow(Math.E, factor * xStart));
-			sample = precalc * sample;
-			sample += startAmplitudes[phase];
+			factor = (float) (Math.pow(Math.E, steepness * sampleCounter[phase] * increases[phase]) - Math.pow(Math.E, steepness * xStart));
+			factor = precalc * factor;
+			factor += startAmplitudes[phase];
 
 			sampleCounter[phase]++;
-
-			if (phase == ATTACK && sampleCounter[phase] > numSamples[ATTACK])
+			
+			if (phase == ATTACK && sampleCounter[ATTACK] > numSamples[ATTACK])
 			{
-				if (numSamples[DECAY] == 0)
-					setPhase(SUSTAIN);
-				else 
-					setPhase(DECAY);
+				setPhase(DECAY);
 			}
-			else if (phase == DECAY && sampleCounter[phase] > numSamples[DECAY])
+			else if (phase == DECAY && sampleCounter[DECAY] > numSamples[DECAY])
 				setPhase(SUSTAIN);
-			else if (phase == RELEASE && sampleCounter[phase] > numSamples[RELEASE])
+			else if (phase == RELEASE && sampleCounter[RELEASE] > numSamples[RELEASE])
 			{
-				sample = 0;
+				factor = endAmplitudes[RELEASE];
 			}
-			return sample;
 		}
+//		
+//		if (factor < 0)
+//			factor *= -1;
 
-
+		return factor;
 	}
 
 	public void setPhase(int newPhase)
@@ -90,8 +91,8 @@ public class TestClass
 
 	private void updateValues()
 	{
-		if (factor > 0)
-			factor = -1 * factor;
+		if (steepness > 0)
+			steepness = -1 * steepness;
 
 		startAmplitudes[ATTACK] = 0;
 		endAmplitudes[ATTACK] = peakLevel;
@@ -111,7 +112,7 @@ public class TestClass
 		if (phase != SUSTAIN)
 		{
 			float diffUp = (endAmplitudes[phase] - startAmplitudes[phase]);
-			float diffDown = (float) (Math.pow(Math.E, factor * xEnd) - Math.pow(Math.E, factor * xStart));
+			float diffDown = (float) (Math.pow(Math.E, steepness * xEnd) - Math.pow(Math.E, steepness * xStart));
 			precalc = diffUp / diffDown;
 		}
 	}

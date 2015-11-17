@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import javax.sound.sampled.LineUnavailableException;
 
 import midi.MidiPlayer;
 import modules.Ids;
-import modules.InputController;
 import modules.Mixer;
 import modules.OutputModule;
 import modules.listener.EngineListener;
@@ -36,7 +36,7 @@ public class SynthesizerEngine implements Receiver
 	
 	private boolean isRunning = false;
 	
-	private int maxPolyphony = 20;
+	private int maxPolyphony = 40;
 	
 	private MidiPlayer midiPlayer;
 
@@ -46,12 +46,13 @@ public class SynthesizerEngine implements Receiver
 	private Mixer outputMixer;
 	private ModuleContainer allContainer;
 	private ModuleContainer osciContainer;
+	private ProgramManager programManager;
 	
 	private MidiDevice connectedMidiDevice;
 	
 	private List<EngineListener> listeners = new ArrayList<EngineListener>();
 
-	public SynthesizerEngine() throws LineUnavailableException
+	public SynthesizerEngine() throws LineUnavailableException, IOException
 	{
 		updateAudioFormat();
 		initModules();
@@ -66,13 +67,18 @@ public class SynthesizerEngine implements Receiver
 		Transmitter transmitter = device.getTransmitter();
 		transmitter.setReceiver(this);
 		
-		connectedMidiDevice = device;
+		if (transmitter.getReceiver() == this)
+			connectedMidiDevice = device;
+		
+		notifyListeners();
 	}
 
-	private void initModules()
+	private void initModules() throws IOException
 	{
+		programManager = new ProgramManager();
 		outputMixer = new Mixer(this, 250, Ids.ID_MIXER_1);
 		inputModule = new InputController(this);
+
 
 		try 
 		{
@@ -95,6 +101,11 @@ public class SynthesizerEngine implements Receiver
 		if (outputModule != null)
 			outputModule.updateFormat();
 		
+		notifyListeners();
+	}
+	
+	private void notifyListeners()
+	{
 		for (EngineListener listener:listeners)
 		{
 			listener.onValueChanged();
@@ -117,6 +128,7 @@ public class SynthesizerEngine implements Receiver
 			outputModule.stopPlaying();
 		isRunning = false;
 		reset();
+		notifyListeners();
 	}
 	
 	public void close()
@@ -129,6 +141,7 @@ public class SynthesizerEngine implements Receiver
 	{
 		if (connectedMidiDevice != null)
 			connectedMidiDevice.close();
+		notifyListeners();
 	}
 	
 	public void reset()
@@ -164,6 +177,7 @@ public class SynthesizerEngine implements Receiver
 		});
 		thread.start();
 		isRunning = true;
+		notifyListeners();
 	}
 	
 	public ModuleContainer getAllContainer() 
@@ -281,5 +295,9 @@ public class SynthesizerEngine implements Receiver
 	public MidiPlayer getMidiPlayer()
 	{
 		return midiPlayer;
+	}
+
+	public ProgramManager getProgramManager() {
+		return programManager;
 	}
 }

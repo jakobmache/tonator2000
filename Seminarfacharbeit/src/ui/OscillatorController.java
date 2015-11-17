@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import modules.Ids;
-import modules.InputController;
 import modules.Oscillator;
 import engine.Module;
 import engine.ModuleContainer;
@@ -24,13 +23,10 @@ public class OscillatorController extends ModuleController
 	
 	private int type;
 	
-	private InputController controller;
-	
 	public OscillatorController(SynthesizerEngine engine, int id)
 	{
 		super(engine, id);
-		controller = engine.getInputController();
-		type = (int) controller.getPreset(currChannel).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
 	}
 
 	public void onSineBoxAction(ActionEvent event)
@@ -84,7 +80,7 @@ public class OscillatorController extends ModuleController
 			triangleBox.setSelected(false);
 		}
 		
-		controller.updatePresetValue(currChannel, Ids.ID_CONSTANT_OSCITYPE_1, type);
+		parent.getProgramManager().updateInstrumentPresetValue(currProgram, Ids.ID_CONSTANT_OSCITYPE_1, type);
 	}
 	
 	public void setMainPane(FXMLLoader loader)
@@ -118,7 +114,7 @@ public class OscillatorController extends ModuleController
 	@Override
 	public void loadData() 
 	{
-		type = (int) controller.getPreset(currChannel).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
 		update();
 	}
 

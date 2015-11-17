@@ -14,6 +14,8 @@ public class Envelope extends Module
 	public static final int SUSTAIN_INPUT = 3;
 	public static final int RELEASE_INPUT = 4;
 	public static final int STEEPNESS_INPUT = 5;
+	public static final int STARTLEVEL_INPUT = 6;
+	public static final int PEAKLEVEL_INPUT = 7;
 	public static final int SAMPLE_OUTPUT = 0;
 
 	private float attackTime = 100;
@@ -22,7 +24,6 @@ public class Envelope extends Module
 	private float peakLevel = 1F;
 	private float releaseTime = 100;
 
-	private float maxValue = Short.MAX_VALUE;
 	private float startLevel = 0;
 
 	private float[] increases = new float[3];	
@@ -33,11 +34,11 @@ public class Envelope extends Module
 
 	private float xStart = 0;
 	private float xEnd = 1;
+	
+	private float currFactor = 0;
 
-	private float factor = -2.0F;
+	private float steepness = -2.0F;
 	private float precalc = 0;
-
-	private Constant constant;
 
 	private int phase = ATTACK;
 	private final static int ATTACK = 0;
@@ -45,10 +46,9 @@ public class Envelope extends Module
 	public final static int RELEASE = 2;
 	private final static int SUSTAIN = 3;
 
-	public Envelope(SynthesizerEngine parent, Constant value, int id, EnvelopeFinishedListener listener)  
+	public Envelope(SynthesizerEngine parent, int id, EnvelopeFinishedListener listener)  
 	{
-		super(parent, 6, 1, id);
-		constant = value;
+		super(parent, 8, 1, id);
 		this.listener = listener;
 	}
 
@@ -56,24 +56,28 @@ public class Envelope extends Module
 	@Override
 	public float calcNextSample(int index)
 	{	
+		float currValue = inputWires[SAMPLE_INPUT].getNextSample();
+		
 		if (attackTime != inputWires[ATTACK_INPUT].getNextSample() ||
 				decayTime != inputWires[DECAY_INPUT].getNextSample() ||
 				sustainLevel != inputWires[SUSTAIN_INPUT].getNextSample() ||
 				releaseTime != inputWires[RELEASE_INPUT].getNextSample() ||
-				factor != inputWires[STEEPNESS_INPUT].getNextSample())
+				steepness != inputWires[STEEPNESS_INPUT].getNextSample() ||
+				peakLevel != inputWires[PEAKLEVEL_INPUT].getNextSample() ||
+				startLevel != inputWires[STARTLEVEL_INPUT].getNextSample())
 		{
 			updateValues();
 		}
-
+		
 		if (phase == SUSTAIN)
 		{
-			constant.setValue(sustainLevel * maxValue);
+			currFactor = sustainLevel;
 		}
 		else 
 		{
-			float sample = (float) (Math.pow(Math.E, factor * sampleCounter[phase] * increases[phase]) - Math.pow(Math.E, factor * xStart));
-			sample = precalc * sample;
-			sample += startAmplitudes[phase];
+			currFactor = (float) (Math.pow(Math.E, steepness * sampleCounter[phase] * increases[phase]) - Math.pow(Math.E, steepness * xStart));
+			currFactor = precalc * currFactor;
+			currFactor += startAmplitudes[phase];
 
 			sampleCounter[phase]++;
 			
@@ -83,18 +87,16 @@ public class Envelope extends Module
 			}
 			else if (phase == DECAY && sampleCounter[DECAY] > numSamples[DECAY])
 				setPhase(SUSTAIN);
-			else if (phase == RELEASE && sampleCounter[RELEASE] > numSamples[RELEASE])
+			else if (phase == RELEASE && sampleCounter[RELEASE] >= numSamples[RELEASE])
 			{
-				sample = endAmplitudes[RELEASE];
+				//if (moduleId == Ids.ID_ENVELOPE_1)
+				currFactor = endAmplitudes[RELEASE];
 				listener.onEnvelopeFinished(this);
 			}
-
-
-				
-			constant.setValue(sample * maxValue);
 		}
-
-		return inputWires[SAMPLE_INPUT].getNextSample();
+		
+		currValue *= currFactor;
+		return currValue;
 
 	}
 
@@ -118,16 +120,18 @@ public class Envelope extends Module
 		decayTime = inputWires[DECAY_INPUT].getNextSample();
 		sustainLevel = inputWires[SUSTAIN_INPUT].getNextSample();
 		releaseTime = inputWires[RELEASE_INPUT].getNextSample();
-		factor = inputWires[STEEPNESS_INPUT].getNextSample();
+		steepness = inputWires[STEEPNESS_INPUT].getNextSample();
+		startLevel = inputWires[STARTLEVEL_INPUT].getNextSample();
+		peakLevel = inputWires[PEAKLEVEL_INPUT].getNextSample();
 
-		if (factor > 0)
-			factor = -1 * factor;
+		if (steepness > 0)
+			steepness = -1 * steepness;
 
 		startAmplitudes[ATTACK] = startLevel;
 		endAmplitudes[ATTACK] = peakLevel;
 		startAmplitudes[DECAY] = peakLevel;
 		endAmplitudes[DECAY] = sustainLevel;
-		startAmplitudes[RELEASE] = constant.requestNextSample(0) / maxValue;
+		startAmplitudes[RELEASE] = currFactor;
 		endAmplitudes[RELEASE] = startLevel;
 		increases[ATTACK] = 1 / ((attackTime / 1000) * parent.getSamplingRate());
 		increases[DECAY] = 1 / ((decayTime / 1000) * parent.getSamplingRate());
@@ -139,7 +143,7 @@ public class Envelope extends Module
 		if (phase != SUSTAIN)
 		{
 			float diffUp = (endAmplitudes[phase] - startAmplitudes[phase]);
-			float diffDown = (float) (Math.pow(Math.E, factor * xEnd) - Math.pow(Math.E, factor * xStart));
+			float diffDown = (float) (Math.pow(Math.E, steepness * xEnd) - Math.pow(Math.E, steepness * xStart));
 			precalc = diffUp / diffDown;
 		}
 	}
@@ -164,53 +168,15 @@ public class Envelope extends Module
 		return attackTime;
 	}
 
-	public void setAttackTime(float attackTime) {
-		this.attackTime = attackTime;
-		updateValues();
-	}
-
 	public float getDecayTime() {
 		return decayTime;
-	}
-
-	public void setDecayTime(float decayTime) {
-		this.decayTime = decayTime;
-		updateValues();
 	}
 
 	public float getSustainLevel() {
 		return sustainLevel;
 	}
 
-	public void setSustainLevel(float sustainLevel) {
-		this.sustainLevel = sustainLevel;
-		updateValues();
-	}
-
 	public float getReleaseTime() {
 		return releaseTime;
-	}
-
-	public void setReleaseTime(float releaseTime) {
-		this.releaseTime = releaseTime;
-		updateValues();
-	}
-	
-	public void setMaxValue(float maxValue)
-	{
-		this.maxValue = maxValue;
-		updateValues();
-	}
-	
-	public void setStartLevel(float newLevel)
-	{
-		this.startLevel = newLevel;
-		updateValues();
-	}
-	
-	public void setPeakLevel(float peakLevel)
-	{
-		this.peakLevel = peakLevel;
-		updateValues();
 	}
 }

@@ -28,6 +28,11 @@ public class Ids
 	public static final int ID_CONSTANT_RELEASE_2 = 113;
 	public static final int ID_CONSTANT_STEEPNESS_2 = 114;
 	
+	public static final int ID_CONSTANT_STARTLEVEL_1 = 115;
+	public static final int ID_CONSTANT_STARTLEVEL_2 = 116;
+	public static final int ID_CONSTANT_PEAKLEVEL_1 = 117;
+	public static final int ID_CONSTANT_PEAKLEVEL_2 = 118;
+	
 	public static final int ID_CONTAINER = 200;
 	
 }

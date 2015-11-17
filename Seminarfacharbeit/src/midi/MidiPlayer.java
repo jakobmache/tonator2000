@@ -2,13 +2,18 @@ package midi;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Track;
 import javax.sound.midi.Transmitter;
 
 import engine.SynthesizerEngine;
@@ -59,5 +64,25 @@ public class MidiPlayer
 			sequencer.stop();
 		}
 	}
-
+	
+	public List<Integer> getAllPrograms()
+	{
+		List<Integer> programs = new ArrayList<Integer>();
+        for (Track track :  sequence.getTracks()) 
+        {
+            for (int i = 0; i < track.size(); i++) 
+            { 
+                MidiMessage message = track.get(i).getMessage();
+                if (message instanceof ShortMessage) 
+                {
+                	if (((ShortMessage) message).getCommand() == ShortMessage.PROGRAM_CHANGE)
+                	{
+                		if (!programs.contains(((ShortMessage) message).getData1()))
+                			programs.add(((ShortMessage) message).getData1());
+                	}
+                }
+            }
+        }
+        return programs;
+	}
 }

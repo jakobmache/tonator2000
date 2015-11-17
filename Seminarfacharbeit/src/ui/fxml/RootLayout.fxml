@@ -33,7 +33,8 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Presets">
               <items>
-                <MenuItem fx:id="selectCurrentChannelMenuItem" mnemonicParsing="false" onAction="#onSelectCurrentChannelAction" text="Aktueller Kanal" />
+                <MenuItem fx:id="selectCurrentProgramMenuItem" mnemonicParsing="false" onAction="#onSelectCurrentProgramAction" text="Instrument bearbeiten" />
+                  <MenuItem fx:id="assignPresetToChannelMenuItem" mnemonicParsing="false" onAction="#onAssignPresetToChannelAction" text="Instrument einem Kanal zuweisen" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="onSavePresetMenuItem" mnemonicParsing="false" onAction="#onSavePreset" text="Speichern" />
                   <MenuItem fx:id="onLoadPresetMenuItem" mnemonicParsing="false" onAction="#onLoadPreset" text="Laden" />

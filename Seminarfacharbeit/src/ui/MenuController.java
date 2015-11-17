@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
@@ -29,11 +30,13 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import midi.MidiUtils;
+
 import org.xml.sax.SAXException;
 
-import containers.ContainerPreset;
 import resources.Strings;
-import midi.MidiUtils;
+import containers.ContainerPreset;
+import engine.ProgramManager;
 import engine.SynthesizerEngine;
 
 public class MenuController 
@@ -99,12 +102,15 @@ public class MenuController
 			midiSelectionStage = new Stage();
 			midiSelectionStage.setTitle("MIDI-Gerï¿½t auswï¿½hlen");
 			midiSelectionStage.setScene(new Scene(root));
+			midiSelectionStage.initStyle(StageStyle.UTILITY);
 
 			ObservableList<String> midiDevices = getMidiDevices();
 			availableMidiDevicesBox.getItems().addAll(midiDevices);
 			availableMidiDevicesBox.getSelectionModel().selectFirst();
 
 			midiSelectionStage.show();
+			
+			
 
 		} 
 		catch (Exception e) 
@@ -128,11 +134,27 @@ public class MenuController
 			sampleRateStage.setScene(new Scene(root));
 
 			sampleRateStage.show();
+			
+			
 		} 
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void onSetSampleRateAction(ActionEvent event)
+	{
+		float samplingRate = Float.valueOf(samplingRateInput.getText());
+		try 
+		{
+			engine.setSamplingRate(samplingRate);
+		} 
+		catch (LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}
+		sampleRateStage.close();
 	}
 
 	public void loadData()
@@ -150,19 +172,7 @@ public class MenuController
 		}
 	}
 
-	public void onSetSampleRateAction(ActionEvent event)
-	{
-		float samplingRate = Float.valueOf(samplingRateInput.getText());
-		try 
-		{
-			engine.setSamplingRate(samplingRate);
-		} 
-		catch (LineUnavailableException e) 
-		{
-			e.printStackTrace();
-		}
-		sampleRateStage.close();
-	}
+
 
 	public void onSetBufferTimeMenuAction(ActionEvent event)
 	{
@@ -200,7 +210,6 @@ public class MenuController
 
 	public void onEngineMenuAction()
 	{
-		System.out.println("Engine menu action!");
 		if (engine.isRunning())
 			changeEngineStateMenuItem.setText("Pausieren");
 		else 
@@ -300,7 +309,7 @@ public class MenuController
 		engine.reset();
 	}
 	
-	public void onSelectCurrentChannelAction(ActionEvent event)
+	public void onSelectCurrentProgramAction(ActionEvent event)
 	{
 		try 
 		{
@@ -313,14 +322,14 @@ public class MenuController
 			channelSelectionStage = new Stage();
 			channelSelectionStage.setTitle("Akuellen MIDI-Kanal auswählen");
 			channelSelectionStage.setScene(new Scene(root));
+			channelSelectionStage.initStyle(StageStyle.UTILITY);
 
-			for (int i = 0; i < engine.getInputController().getNumMidiChannels(); i++)
-				availableChannelsBox.getItems().add(i + " - " + MidiUtils.channelNames.get(i));
-			
-			availableChannelsBox.getSelectionModel().select(parent.getCurrChannel());
+			for (int i = 0; i < ProgramManager.NUM_PROGRAMS; i++)
+				availableChannelsBox.getItems().add(engine.getProgramManager().getInstrumentName(i));
+				
+			availableChannelsBox.getSelectionModel().select(parent.getCurrProgram());
 
 			channelSelectionStage.show();
-
 		} 
 		catch (Exception e) 
 		{
@@ -329,11 +338,16 @@ public class MenuController
 		
 	}
 	
-	public void onConfirmCurrentChannelAction(ActionEvent event)
+	public void onConfirmCurrentProgramAction(ActionEvent event)
 	{
-		parent.setCurrChannel(availableChannelsBox.getSelectionModel().getSelectedIndex());
+		parent.setCurrProgram(availableChannelsBox.getSelectionModel().getSelectedIndex());
 		channelSelectionStage.close();
 		parent.updateStatusBar();
+	}
+	
+	public void onAssignPresetToChannelAction(ActionEvent event)
+	{
+		//TODO:das hier
 	}
 	
 	public void onSavePreset(ActionEvent event)
@@ -348,7 +362,7 @@ public class MenuController
 		if (file != null)
 		{
 			try {
-				engine.getInputController().getPreset(parent.getCurrChannel()).writeToFile(file.getPath());
+				engine.getProgramManager().getInstrumentPreset(parent.getCurrProgram()).writeToFile(file.getPath());
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -373,7 +387,7 @@ public class MenuController
 		if (file != null)
 		{
 			try {
-				engine.getInputController().setPreset(new ContainerPreset(file.getPath()), parent.getCurrChannel());
+				engine.getProgramManager().setInstrumentPreset(parent.getCurrProgram(), new ContainerPreset(file.getPath()));
 				parent.update();
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block

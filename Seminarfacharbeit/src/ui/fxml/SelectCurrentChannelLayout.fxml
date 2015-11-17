@@ -11,7 +11,7 @@
       <ChoiceBox fx:id="availableChannelsBox" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
       <VBox alignment="CENTER_RIGHT" centerShape="false">
          <children>
-            <Button fx:id="confirmCurrentChannelButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#onConfirmCurrentChannelAction" text="OK" />
+            <Button fx:id="confirmCurrentProgramButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#onConfirmCurrentProgramAction" text="OK" />
          </children>
          <opaqueInsets>
             <Insets />

@@ -68,12 +68,16 @@ public class LowpassFilter extends Module
 		//		float value = (float) (alpha * inputSample + (1 - alpha) * oldValue);
 		//		oldValue = value;
 
-
 		return (float) b4 * Short.MAX_VALUE;
 	}
 
 	public void setCutoffFrequency(float newValue)
 	{
+		if (newValue > 1.0F)
+			newValue = 1.0F;
+		if (newValue < 0F)
+			newValue = 0F;
+		
 		cutoffFrequency = newValue;
 		double timeDelta = 1 / parent.getSamplingRate();
 		alpha = (Constants.TWOPI * timeDelta * cutoffFrequency) / (Constants.TWOPI * timeDelta * cutoffFrequency + 1);
@@ -82,6 +86,11 @@ public class LowpassFilter extends Module
 
 	public void setResonance(float newValue)
 	{
+		if (newValue > 1.0F)
+			newValue = 1.0F;
+		if (newValue < 0F)
+			newValue = 0F;
+		
 		this.resonance = newValue;
 		precalc();
 	}

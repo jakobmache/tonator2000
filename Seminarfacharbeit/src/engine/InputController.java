@@ -1,4 +1,4 @@
-package modules;
+package engine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,21 +9,18 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
 import midi.MidiUtils;
-import presets.OscillatorContainerPreset;
-import containers.ContainerPreset;
+import modules.Mixer;
+import modules.listener.ProgramListener;
 import containers.ModuleContainerListener;
 import containers.OscillatorContainer;
-import engine.ModuleContainer;
-import engine.SynthesizerEngine;
-import engine.Wire;
 
-public class InputController implements ModuleContainerListener{
+public class InputController implements ModuleContainerListener, ProgramListener{
 
 	private List<ModuleContainer> allContainers;
 	private Map<Integer, Map<Integer, ModuleContainer>> channelNotes;
 	private SynthesizerEngine parent;
 	
-	private HashMap<Integer, ContainerPreset> channelPresets = new HashMap<Integer, ContainerPreset>();
+	private List<Integer> channelPrograms = new ArrayList<Integer>();
 
 	private final int NOTE_ON_START = 144;
 	private final int NOTE_OFF_START = 128;
@@ -34,22 +31,21 @@ public class InputController implements ModuleContainerListener{
 		this.parent = parent;
 		channelNotes = new HashMap<Integer, Map<Integer, ModuleContainer>>();
 		allContainers = new ArrayList<ModuleContainer>();
-		initChannelPresets();
-	}
-	
-	private void initChannelPresets()
-	{
+		
 		for (int i = 0; i < NUM_CHANNELS; i++)
 		{
-			channelPresets.put(i, new OscillatorContainerPreset());
+			channelPrograms.add(0);
 			channelNotes.put(i, new HashMap<Integer, ModuleContainer>());
 		}
+		
+		parent.getProgramManager().addListener(this);
 	}
 
 	public void handleMessage(ShortMessage message)
 	{
 		if (message.getChannel() == 9)
 			return;
+		
 		if ((NOTE_ON_START <= message.getCommand()) && (message.getCommand() < NOTE_ON_START + NUM_CHANNELS))
 		{
 			if (message.getData2() == 0)
@@ -63,6 +59,11 @@ public class InputController implements ModuleContainerListener{
 		{
 			playNoteOff(message);
 		}
+		
+		else if (message.getCommand() == ShortMessage.PROGRAM_CHANGE)
+		{
+			setProgram(message);
+		}
 	}
 
 	private void playNoteOn(ShortMessage message)
@@ -73,22 +74,24 @@ public class InputController implements ModuleContainerListener{
 		int channel = message.getChannel();
 		float frequency = MidiUtils.midiNoteNumberToFrequency(key);
 		
-		System.out.println("Note on! - " + key + " - " + velocity + " - " + frequency + "Hz | Channel " + message.getChannel());
-
+		System.out.println("Note on! - " + key + " - " + velocity + " - " + frequency + "Hz | Programm " + channelPrograms.get(channel));
+		
 		//Wird die Note auf diesem Kanal schon abgespielt?
 		if (channelNotes.get(channel).containsKey(key))
 		{
 			System.out.println("Note wird schon abgespielt - Fehler!");
 			return;
 		}
-
-		System.out.println("Container playing!");
+		
 		//Sie wird nicht abgespielt --> Wir erzeugen einen neuen Container, der sie spielt
-		OscillatorContainer container;
-		container = new OscillatorContainer(parent);
-		container.applyContainerPreset(channelPresets.get(channel));
-		container.addListener(this);
+		ProgramManager manager = parent.getProgramManager();
 	
+		OscillatorContainer container;
+		
+		container = new OscillatorContainer(parent);
+		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
+		container.addListener(this);
+		
 		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, Mixer.NEXT_FREE_INPUT);
 
 		//Wir müssen uns den Container merken
@@ -96,9 +99,6 @@ public class InputController implements ModuleContainerListener{
 		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
 		noteMap.put(key, container);
 
-		updatePresetValue(channel, Ids.ID_CONSTANT_AMPLITUDE_1, (velocity / 127.0F) * Short.MAX_VALUE);
-		Envelope envelope = (Envelope) channelNotes.get(channel).get(key).findModuleById(Ids.ID_ENVELOPE_1);
-		envelope.setMaxValue((velocity / 127.0F) * Short.MAX_VALUE);
 		container.startPlaying(frequency,(velocity / 127.0F) * Short.MAX_VALUE);
 	}
 
@@ -107,21 +107,36 @@ public class InputController implements ModuleContainerListener{
 		int key = message.getData1();
 		int channel = message.getChannel();
 		System.out.println("Note off! - " + key);
-
-		//Wenn der Ton nicht abgespielt wird, können wir es ignorieren
-		if (!channelNotes.get(channel).containsKey(key))
+		
+		try {
+			
+			//Sie wird abgespielt --> Wir stoppen das Abspielen (bzw bei ASDR Release)
+			Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
+			OscillatorContainer container = (OscillatorContainer) noteMap.get(key);
+			System.out.println(container);
+			container.stopPlaying();
+			
+			//Die entsprechende Note wird nicht mehr abgespielt
+			noteMap.remove(key);
+		} 
+		catch (Exception e) 
 		{
+			//Wenn der Ton nicht abgespielt wird, können wir es ignorieren
 			System.out.println("Note wird nicht abgespielt - Fehler!");
 			return;
+
 		}
+
+	}
+	
+	private void setProgram(ShortMessage message)
+	{
+		int channel = message.getChannel();
+		int program = message.getData1();
 		
-		//Sie wird abgespielt --> Wir stoppen das Abspielen (bzw bei ASDR Release)
-		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
-		OscillatorContainer container = (OscillatorContainer) noteMap.get(key);
-		container.stopPlaying();
+		System.out.printf("New program on channel %d:%d\n", channel, program);
 		
-		//Die entsprechende Note wird nicht mehr abgespielt
-		noteMap.remove(key);
+		channelPrograms.set(channel, program);
 	}
 
 	public void resetMidi() throws InvalidMidiDataException
@@ -137,26 +152,6 @@ public class InputController implements ModuleContainerListener{
 		return allContainers;
 	}
 
-	public ContainerPreset getPreset(int channel) {
-		return channelPresets.get(channel);
-	}
-
-	public void setPreset(ContainerPreset preset, int channel) 
-	{
-		channelPresets.put(channel, preset);
-		for (ModuleContainer container:channelNotes.get(channel).values())
-			container.applyContainerPreset(preset);
-	}
-
-	public void updatePresetValue(int channel, int id, float value)
-	{
-		for (ModuleContainer container:channelNotes.get(channel).values())
-		{
-			container.updatePreset(id, value);
-		}
-		channelPresets.get(channel).setParam(id, value);
-	}
-
 	@Override
 	public void onContainerFinished(ModuleContainer container) 
 	{
@@ -167,6 +162,21 @@ public class InputController implements ModuleContainerListener{
 	public int getNumMidiChannels()
 	{
 		return NUM_CHANNELS;
+	}
+
+	@Override
+	public void programValueChanged(int program, int id, float newValue) 
+	{
+		for (int channel:channelNotes.keySet())
+		{
+			if (channelPrograms.get(channel) == program)
+			{
+				for (ModuleContainer container:channelNotes.get(channel).values())
+				{
+					container.updatePreset(id, newValue);
+				}		
+			}
+		}
 	}
 
 }

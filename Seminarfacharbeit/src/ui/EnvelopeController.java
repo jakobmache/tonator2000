@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import modules.InputController;
 import engine.Module;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
@@ -31,15 +30,12 @@ public class EnvelopeController extends ModuleController
 
 	private Slider sliderToUpdate;
 
-	private InputController controller;
-
 	private Map<Slider, TextField> inputs = new HashMap<Slider, TextField>();
 	private Map<Slider, Integer> ids = new HashMap<Slider, Integer>();
 
 	public EnvelopeController(SynthesizerEngine parent, int attackId, int decayId, int sustainId, int releaseId, int moduleId)
 	{
 		super(parent, moduleId);
-		controller = parent.getInputController();
 		
 		this.attackId = attackId;
 		this.sustainId = sustainId;
@@ -91,7 +87,7 @@ public class EnvelopeController extends ModuleController
 		for (Slider slider:ids.keySet())
 		{
 			TextField input = inputs.get(slider);
-			float value = controller.getPreset(currChannel).getParam(ids.get(slider));
+			float value = parent.getProgramManager().getInstrumentPreset(currProgram).getParam(ids.get(slider));
 			input.setText(Float.toString(Math.round(value * 100f) / 100f));
 			slider.setValue(value);
 		}
@@ -106,7 +102,7 @@ public class EnvelopeController extends ModuleController
 		input.setText(Float.toString(Math.round(value * 100f) / 100f));
 		
 		int id = ids.get(sliderToUpdate);
-		controller.updatePresetValue(currChannel, id, value);
+		parent.getProgramManager().updateInstrumentPresetValue(currProgram, id, value);
 	}
 
 	public void onAttackInputAction(ActionEvent event)
