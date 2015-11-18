@@ -8,25 +8,37 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
 
+import jdk.nashorn.internal.ir.Labels;
 import modules.Ids;
 
 import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.control.action.Action;
+import org.controlsfx.tools.Borders;
 
 import resources.Strings;
 import engine.SynthesizerEngine;
@@ -108,9 +120,9 @@ public class MainApplication extends Application {
 		alert.setContentText(Strings.START_POPUP_TEXT);
 		alert.setHeaderText(Strings.START_POPUP_HEADER);
 		alert.showAndWait();
-		
+
 		showOverlay(OVERLAY_MIDI);
-		
+
 		engine.run();
 	}
 
@@ -175,8 +187,9 @@ public class MainApplication extends Application {
 
 			loader.setController(controller);
 			TitledPane oscillatorView = (TitledPane) loader.load();
-			oscillatorView.setTooltip(new Tooltip(Strings.OSCILLATOR_TOOLTIP_STRING));
 			controller.setMainPane(loader);
+
+			initMouseHandler(oscillatorView, Strings.OSCILLATOR);
 
 			synthesizerLayout.getChildren().add(oscillatorView);
 
@@ -199,8 +212,9 @@ public class MainApplication extends Application {
 
 			loader.setController(controller);
 			TitledPane filterView = (TitledPane) loader.load();
-			filterView.setTooltip(new Tooltip(Strings.LOWPASS_TOOLTIP_STRING));
 			controller.init();
+
+			initMouseHandler(filterView, Strings.LOWPASS);
 
 			synthesizerLayout.getChildren().add(filterView);
 			controllers.add(controller);
@@ -222,9 +236,10 @@ public class MainApplication extends Application {
 
 			loader.setController(controller);
 			TitledPane envelopeView = (TitledPane) loader.load();
-			envelopeView.setTooltip(new Tooltip(Strings.ENVELOPE_TOOLTIP_STRING));
 			envelopeView.setText("Hüllkurve - Tiefpassfilter");
 			controller.init();
+
+			initMouseHandler(envelopeView, Strings.ENVELOPE);
 
 			synthesizerLayout.getChildren().add(envelopeView);
 			controllers.add(controller);
@@ -246,8 +261,9 @@ public class MainApplication extends Application {
 
 			loader.setController(controller);
 			TitledPane envelopeView = (TitledPane) loader.load();
-			envelopeView.setTooltip(new Tooltip(Strings.ENVELOPE_TOOLTIP_STRING));
 			controller.init();
+
+			initMouseHandler(envelopeView, Strings.ENVELOPE);
 
 			synthesizerLayout.getChildren().add(envelopeView);
 
@@ -262,8 +278,10 @@ public class MainApplication extends Application {
 	public void initPlotter()
 	{
 		Plotter plotter = new Plotter(engine);
-		plotter.setTooltip(new Tooltip(Strings.PLOTTER_TOOLTIP_STRING));
 		mainLayout.getChildren().add(plotter);
+
+		initMouseHandler(plotter, Strings.PLOTTER);
+
 		VBox.setVgrow(plotter, Priority.ALWAYS);
 	}
 
@@ -278,7 +296,6 @@ public class MainApplication extends Application {
 
 			loader.setController(controller);
 			TitledPane volumeView = (TitledPane) loader.load();
-			volumeView.setTooltip(new Tooltip(Strings.VOLUME_TOOLTIP_STRING));
 			controller.init();
 
 			synthesizerLayout.getChildren().add(volumeView);
@@ -321,6 +338,56 @@ public class MainApplication extends Application {
 			controller.loadData();
 		}
 	}
+
+	private void initMouseHandler(Parent pane, int module)
+	{
+		pane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> 
+		{
+			if (event.getClickCount() == 2)
+			{
+				PopOver popOver = new PopOver();
+				popOver.setDetachable(true);
+				popOver.setDetachedTitle(Strings.MODULE_NAMES[module]);
+				popOver.setDetached(true);
+				popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
+
+				VBox content = new VBox();
+				Label mainInfo = new Label(Strings.TOOLTIPS[module]);
+				mainInfo.setMaxWidth(500);
+				mainInfo.setWrapText(true);
+				Node borderedInfo = Borders.wrap(mainInfo).lineBorder().buildAll();
+				content.getChildren().add(borderedInfo);
+
+				//Modul hat Parameter zum Darstellen
+				if (Strings.PARAM_NAMES.length > module)
+				{
+					String[] paramNames = Strings.PARAM_NAMES[module];
+					String[] paramDescriptions = Strings.PARAM_DESCRIPTIONS[module];
+					for (int i = 0; i < paramNames.length; i++)
+					{
+						Node label = createTitledPane(paramNames[i], paramDescriptions[i]);
+						content.getChildren().add(label);
+					}
+				}
+				
+				popOver.setContentNode(content);
+
+				popOver.show(pane);
+			}
+		});
+
+	}
+
+	private Node createTitledPane(String title, String text) 
+	{
+		Label label = new Label(text);
+		label.setWrapText(true);
+		label.setMaxWidth(500);
+		Node borderedLabel = Borders.wrap(label).etchedBorder().title(title).buildAll();
+		return borderedLabel;
+	}
+
+
 
 	public int getCurrProgram()
 	{
