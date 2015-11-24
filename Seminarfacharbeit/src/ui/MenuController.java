@@ -11,11 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -152,7 +154,9 @@ public class MenuController
 		} 
 		catch (LineUnavailableException e) 
 		{
-			e.printStackTrace();
+			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
+					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
+			alert.showAndWait();
 		}
 		sampleRateStage.close();
 	}
@@ -361,18 +365,66 @@ public class MenuController
 		
 		if (file != null)
 		{
-			try {
-				engine.getProgramManager().getInstrumentPreset(parent.getCurrProgram()).writeToFile(file.getPath());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			savePreset(engine.getProgramManager().getInstrumentPreset(parent.getCurrProgram()), file.getPath());
+		}
+	}
+	
+	public void onSaveAllMenuPresets(ActionEvent event)
+	{
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Ordner ausw" + Strings.ae + "hlen");
+		File selectedDirectory = chooser.showDialog(parent.getPrimaryStage());
+	
+		if (selectedDirectory != null)
+		{
+			for (int program = 0; program < ProgramManager.NUM_PROGRAMS; program++)
+			{
+				String path = selectedDirectory.getPath() + "\\" + Integer.toString(program) + ".xml";
+				savePreset(engine.getProgramManager().getInstrumentPreset(program), path);
 			}
+		}
+	}
+	
+	public void onLoadAllPresets(ActionEvent event)
+	{
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Ordner ausw" + Strings.ae + "hlen");
+		File selectedDirectory = chooser.showDialog(parent.getPrimaryStage());
+		
+		if (selectedDirectory != null)
+		{
+			ProgramManager manager = engine.getProgramManager();
+			for (int program = 0; program < ProgramManager.NUM_PROGRAMS; program++)
+			{
+				String path = selectedDirectory.getPath() + "\\" + Integer.toString(program) + ".xml";
+				try 
+				{
+					manager.setInstrumentPreset(program, new ContainerPreset(path));
+				} 
+				catch (Exception ex)
+				{
+					Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), ex, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS],
+							Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOAD_ALL_PRESETS]);
+					alert.showAndWait();
+					break;
+				}
+			}
+		}
+	}
+	
+	private void savePreset(ContainerPreset preset, String path)
+	{
+		try {
+			preset.writeToFile(path);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

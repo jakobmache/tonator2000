@@ -79,7 +79,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		//Wird die Note auf diesem Kanal schon abgespielt?
 		if (channelNotes.get(channel).containsKey(key))
 		{
-			System.out.println("Note wird schon abgespielt - Fehler!");
+			//System.out.println("Note wird schon abgespielt - Fehler!");
 			return;
 		}
 		
@@ -106,14 +106,13 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	{
 		int key = message.getData1();
 		int channel = message.getChannel();
-		System.out.println("Note off! - " + key);
+		//System.out.println("Note off! - " + key);
 		
 		try {
 			
 			//Sie wird abgespielt --> Wir stoppen das Abspielen (bzw bei ASDR Release)
 			Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
 			OscillatorContainer container = (OscillatorContainer) noteMap.get(key);
-			System.out.println(container);
 			container.stopPlaying();
 			
 			//Die entsprechende Note wird nicht mehr abgespielt
@@ -122,7 +121,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		catch (Exception e) 
 		{
 			//Wenn der Ton nicht abgespielt wird, können wir es ignorieren
-			System.out.println("Note wird nicht abgespielt - Fehler!");
+			//System.out.println("Note wird nicht abgespielt - Fehler!");
 			return;
 
 		}

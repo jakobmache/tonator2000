@@ -13,25 +13,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import jdk.nashorn.internal.ir.Labels;
 import modules.Ids;
 
 import org.controlsfx.control.NotificationPane;
@@ -75,16 +69,22 @@ public class MainApplication extends Application {
 	{
 		try 
 		{
-			try {
+			try 
+			{
 				this.engine = new SynthesizerEngine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} 
+			catch (IOException e) 
+			{
+				Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_UNKNOWN], 
+						Strings.ERROR_EXPLANATIONS[Strings.ERROR_UNKNOWN]);
+				alert.showAndWait();
 			}
 		} 
 		catch (LineUnavailableException e) 
 		{
-			e.printStackTrace();
+			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
+					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
+			alert.showAndWait();
 		}
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle(Strings.APPLICATION_NAME + " - " + Strings.VERSION_NUMBER);

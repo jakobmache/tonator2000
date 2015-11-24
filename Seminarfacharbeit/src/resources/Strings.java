@@ -7,6 +7,10 @@ public class Strings
 	public static final int ENVELOPE = 2;
 	public static final int PLOTTER = 3;
 	public static final int VOLUME = 4;
+	
+	public static final int ERROR_UNKNOWN = 0;
+	public static final int ERROR_AUDIO = 1;
+	public static final int ERROR_LOAD_ALL_PRESETS = 2;
 
 	public static final String ae = "\u00e4";
 	public static final String AE = "\u00c4";
@@ -17,6 +21,22 @@ public class Strings
 	public static final String SS = "\u00df";
 
 	public static final String APPLICATION_NAME = "Ton Total 2000";
+	
+	public static final String ERROR_TITLE = "Fehler";
+	
+	public static final String[] ERROR_HEADERS = new String[]
+	{
+		"Nicht n" + ae + "her spezifizierter Fehler",
+		"Fehler bei Audio-Initialisierung",
+		"Fehler beim Laden der Presets"
+	};
+	
+	public static final String[] ERROR_EXPLANATIONS = new String[]
+	{
+		"Nicht n" + ae + "her spezifizierter Fehler ist aufgetreten. Wir bitten um Entschuldigung.",
+		"Das Audiosystem konnte nicht mit den gew" + ue + "nschten Parametern initialisiert werden. Bitte " + ue + "berpr" + ue + "fen Sie Ihre Eingabe.",
+		"Die Preset-Dateien konnten nicht vollst" + ae + "ndig geladen werden. Bitte " + ue + "berpr" + ue + "fen Sie die Dateien." 
+	};
 
 	public static final String[] MODULE_NAMES = new String[]
 			{
@@ -48,6 +68,16 @@ public class Strings
 		"Das Oszilloskop zeigt die entstehenden Kl" + ae + "nge.",
 		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert den entstehenden Klang nicht."
 			};
+	
+
+	public static final String[] PARAM_NAMES_OSCILLATOR = new String[]{
+		"Sinus", "S" + ae + "gezahn", "Rechteck", "Dreieck"
+	};
+
+	public static final String[] PARAM_LABELS_OSCILLATOR = new String[]{
+		"die Wellenform, die der Oszillator erzeugt"
+	};
+
 
 	public static final String OVERLAY_MIDI_STRING = "Bitte schlieﬂen Sie ein MIDI-Ger" + ae + "t an oder laden Sie eine MIDI-Datei!";
 
@@ -64,14 +94,6 @@ public class Strings
 	public static final String VERSION_NUMBER = "v0.4.2 beta";
 
 	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
-
-	public static final String[] PARAM_NAMES_OSCILLATOR = new String[]{
-		"Sinus", "S" + ae + "gezahn", "Rechteck", "Dreieck"
-	};
-
-	public static final String[] PARAM_LABELS_OSCILLATOR = new String[]{
-		"die Wellenform, die der Oszillator erzeugt"
-	};
 
 
 }

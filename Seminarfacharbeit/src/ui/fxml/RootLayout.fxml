@@ -36,6 +36,9 @@
                 <MenuItem fx:id="selectCurrentProgramMenuItem" mnemonicParsing="false" onAction="#onSelectCurrentProgramAction" text="Instrument bearbeiten" />
                   <MenuItem fx:id="assignPresetToChannelMenuItem" mnemonicParsing="false" onAction="#onAssignPresetToChannelAction" text="Instrument einem Kanal zuweisen" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="onSaveAllPresetsMenuAction" mnemonicParsing="false" onAction="#onSaveAllMenuPresets" text="Alle speichern" />
+                  <MenuItem fx:id="onLoadAllPresetsMenuItem" mnemonicParsing="false" onAction="#onLoadAllPresets" text="Alle laden" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="onSavePresetMenuItem" mnemonicParsing="false" onAction="#onSavePreset" text="Speichern" />
                   <MenuItem fx:id="onLoadPresetMenuItem" mnemonicParsing="false" onAction="#onLoadPreset" text="Laden" />
               </items>

@@ -47,6 +47,8 @@ public class MidiPlayer
 				trans.close();
 			}
 		}
+		
+		System.out.println("All programs: " + getAllPrograms());
 	}
 	
 	public void startPlayingMidiFile()

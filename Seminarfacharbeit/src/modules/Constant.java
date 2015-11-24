@@ -17,8 +17,6 @@ public class Constant extends Module
 	public void setValue(float sample)
 	{
 		value = sample;
-		if (moduleId == Ids.ID_CONSTANT_RELEASE_1)
-			System.out.println("Changed to: " + value);
 	}
 	
 	@Override
