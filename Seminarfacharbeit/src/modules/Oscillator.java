@@ -1,5 +1,7 @@
 package modules;
 
+import java.util.Random;
+
 import utils.Constants;
 import engine.Module;
 import engine.SynthesizerEngine;
@@ -16,6 +18,8 @@ public class Oscillator extends Module
 	public static final int TYPE_SINE = 0;
 	public static final int TYPE_SQUARE = 1;
 	public static final int TYPE_SAW = 2;
+	public static final int TYPE_TRI = 3;
+	public static final int TYPE_WHITE_NOISE = 4;
 
 	private int type = Oscillator.TYPE_SINE;
 
@@ -24,10 +28,13 @@ public class Oscillator extends Module
 
 	private double cycleIncrease;
 	private double cyclePosition;
+	
+	private Random random;
 
 	public Oscillator(SynthesizerEngine parent, int id) 
 	{
 		super(parent, 3, 1, id);
+		random = new Random(System.currentTimeMillis());
 	}
 
 	public void setType(int newType)
@@ -101,6 +108,22 @@ public class Oscillator extends Module
 			if (cyclePosition > 1)
 				cyclePosition = -1;
 			return (float) (amplitude * cyclePosition);
+		}
+		
+		else if (type == TYPE_TRI)
+		{
+			cycleIncrease = 2 / (parent.getSamplingRate() / frequency);
+			value = (float) (2 / Math.PI * Math.asin(Math.sin(Math.PI * cyclePosition)));
+			cyclePosition += cycleIncrease;
+			if (cyclePosition > 1)
+				cyclePosition = -1;
+			return (float) (amplitude * value);
+		}
+		
+		else if (type == TYPE_WHITE_NOISE)
+		{
+			value = (2 * random.nextFloat() - 1) * amplitude;
+			return value;
 		}
 	
 		else {

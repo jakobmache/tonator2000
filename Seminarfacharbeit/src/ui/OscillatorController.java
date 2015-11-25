@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import modules.Ids;
 import modules.Oscillator;
 import engine.Module;
 import engine.ModuleContainer;
@@ -20,13 +19,18 @@ public class OscillatorController extends ModuleController
 	private CheckBox triangleBox;
 	@FXML
 	private CheckBox squareBox;
+	@FXML
+	private CheckBox whiteNoiseBox;
 	
 	private int type;
 	
-	public OscillatorController(SynthesizerEngine engine, int id)
+	private int typeId;
+	
+	public OscillatorController(SynthesizerEngine engine, int osciId, int typeId)
 	{
-		super(engine, id);
-		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		super(engine, osciId);
+		this.typeId = typeId;
+		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(typeId);
 	}
 
 	public void onSineBoxAction(ActionEvent event)
@@ -49,7 +53,13 @@ public class OscillatorController extends ModuleController
 	
 	public void onTriangleBoxAction(ActionEvent event)
 	{
-		//engine.setOscillatorType(Oscillator.TYPE_SAW);
+		type = Oscillator.TYPE_TRI;
+		update();
+	}
+	
+	public void onWhiteNoiseBoxAction(ActionEvent event)
+	{
+		type = Oscillator.TYPE_WHITE_NOISE;
 		update();
 	}
 	
@@ -62,6 +72,7 @@ public class OscillatorController extends ModuleController
 			sawBox.setSelected(false);
 			squareBox.setSelected(false);
 			triangleBox.setSelected(false);
+			whiteNoiseBox.setSelected(false);
 		}
 		
 		else if (type == Oscillator.TYPE_SAW)
@@ -70,6 +81,7 @@ public class OscillatorController extends ModuleController
 			sineBox.setSelected(false);
 			squareBox.setSelected(false);
 			triangleBox.setSelected(false);
+			whiteNoiseBox.setSelected(false);
 		}
 		
 		else if (type == Oscillator.TYPE_SQUARE)
@@ -78,9 +90,28 @@ public class OscillatorController extends ModuleController
 			sineBox.setSelected(false);
 			squareBox.setSelected(true);
 			triangleBox.setSelected(false);
+			whiteNoiseBox.setSelected(false);
 		}
 		
-		parent.getProgramManager().updateInstrumentPresetValue(currProgram, Ids.ID_CONSTANT_OSCITYPE_1, type);
+		else if (type == Oscillator.TYPE_TRI)
+		{
+			sawBox.setSelected(false);
+			sineBox.setSelected(false);
+			squareBox.setSelected(false);
+			triangleBox.setSelected(true);
+			whiteNoiseBox.setSelected(false);
+		}
+		
+		else if (type == Oscillator.TYPE_WHITE_NOISE)
+		{
+			sineBox.setSelected(false);
+			sawBox.setSelected(false);
+			squareBox.setSelected(false);
+			triangleBox.setSelected(false);
+			whiteNoiseBox.setSelected(true);
+		}
+		
+		parent.getProgramManager().updateInstrumentPresetValue(currProgram, typeId, type);
 	}
 	
 	public void setMainPane(FXMLLoader loader)
@@ -89,6 +120,7 @@ public class OscillatorController extends ModuleController
 		sawBox = (CheckBox) loader.getNamespace().get("sawBox");
 		triangleBox = (CheckBox) loader.getNamespace().get("triangleBox");
 		squareBox = (CheckBox) loader.getNamespace().get("squareBox");	
+		whiteNoiseBox = (CheckBox) loader.getNamespace().get("whiteNoiseBox");	
 		
 		update();
 	}
@@ -114,7 +146,7 @@ public class OscillatorController extends ModuleController
 	@Override
 	public void loadData() 
 	{
-		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCITYPE_1);
+		type = (int) parent.getProgramManager().getInstrumentPreset(currProgram).getParam(typeId);
 		update();
 	}
 

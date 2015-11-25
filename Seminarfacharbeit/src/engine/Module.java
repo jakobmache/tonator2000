@@ -1,5 +1,6 @@
 package engine;
 
+
 public abstract class Module 
 {
 	protected SynthesizerEngine parent;
@@ -22,7 +23,12 @@ public abstract class Module
 	public float requestNextSample(int index)
 	{
 		if (enabled)
-			return calcNextSample(index);
+		{
+			float value =  calcNextSample(index);
+			if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
+				System.out.println("Value too high at " + moduleId);
+			return value;
+		}
 		else 
 			return calcNextDisabledSample(index);
 	}

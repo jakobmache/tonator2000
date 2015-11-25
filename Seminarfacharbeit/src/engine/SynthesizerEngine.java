@@ -36,7 +36,7 @@ public class SynthesizerEngine implements Receiver
 	
 	private boolean isRunning = false;
 	
-	private int maxPolyphony = 40;
+	private int maxPolyphony = 45;
 	
 	private MidiPlayer midiPlayer;
 
@@ -76,7 +76,7 @@ public class SynthesizerEngine implements Receiver
 	private void initModules() throws IOException
 	{
 		programManager = new ProgramManager();
-		outputMixer = new Mixer(this, 250, Ids.ID_MIXER_1);
+		outputMixer = new Mixer(this, maxPolyphony, Ids.ID_MIXER_1);
 		inputModule = new InputController(this);
 
 

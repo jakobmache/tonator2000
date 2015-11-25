@@ -89,7 +89,6 @@ public class Envelope extends Module
 				setPhase(SUSTAIN);
 			else if (phase == RELEASE && sampleCounter[RELEASE] >= numSamples[RELEASE])
 			{
-				//if (moduleId == Ids.ID_ENVELOPE_1)
 				currFactor = endAmplitudes[RELEASE];
 				listener.onEnvelopeFinished(this);
 			}

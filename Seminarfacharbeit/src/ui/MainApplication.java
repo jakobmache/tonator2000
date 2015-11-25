@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -97,7 +98,7 @@ public class MainApplication extends Application {
 
 		mainLayout.getChildren().add(notificationPane);
 
-		initOscillator();
+		initOscillators();
 		initFilter();
 		initFilterEnvelope();
 		initEnvelope();
@@ -176,30 +177,60 @@ public class MainApplication extends Application {
 		rootLayout.setBottom(statusBar);
 		notificationPane = new NotificationPane(synthesizerLayout);
 	}
-
-	public void initOscillator() {
+	
+	public void initOscillators()
+	{
+		VBox vBox = new VBox();
+		vBox.setSpacing(5);
 		try 
 		{
-			OscillatorController controller = new OscillatorController(engine, Ids.ID_OSCILLATOR_TONE_1);
+			OscillatorController controller1 = new OscillatorController(engine, Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1);
 
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
+			FXMLLoader loader1 = new FXMLLoader();
+			loader1.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
 
-			loader.setController(controller);
-			TitledPane oscillatorView = (TitledPane) loader.load();
-			controller.setMainPane(loader);
+			loader1.setController(controller1);
+			TitledPane oscillatorView1 = (TitledPane) loader1.load();
+			controller1.setMainPane(loader1);
+			vBox.getChildren().add(oscillatorView1);
 
-			initMouseHandler(oscillatorView, Strings.OSCILLATOR);
+			initMouseHandler(oscillatorView1, Strings.OSCILLATOR);
 
-			synthesizerLayout.getChildren().add(oscillatorView);
+			controllers.add(controller1);
+			
+			FXMLLoader loader2 = new FXMLLoader();
+			OscillatorController controller2 = new OscillatorController(engine, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2);
+			loader2.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
 
-			controllers.add(controller);
+			loader2.setController(controller2);
+			TitledPane oscillatorView2 = (TitledPane) loader2.load();
+			controller2.setMainPane(loader2);
+			vBox.getChildren().add(oscillatorView2);
+
+			initMouseHandler(oscillatorView2, Strings.OSCILLATOR);
+
+			controllers.add(controller2);
 		} 
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
+		
+		Slider balance = new Slider();
+		balance.setMin(0);
+		balance.setMax(1);
+		balance.setValue(0.5F);
+		balance.valueProperty().addListener((observableValue, oldValue, newValue) ->
+		{
+			
+			engine.getProgramManager().updateInstrumentPresetValue(currProgram, Ids.ID_CONSTANT_OSCIBALANCE_1, newValue.floatValue());
+		});
+		balance.setValue(engine.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCIBALANCE_1));
+		vBox.getChildren().add(balance);
+		synthesizerLayout.getChildren().add(vBox);
+
 	}
+
 
 	public void initFilter()
 	{

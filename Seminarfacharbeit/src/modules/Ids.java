@@ -6,11 +6,12 @@ public class Ids
 	public static final int ID_ENVELOPE_1 = 1;
 	public static final int ID_LOWPASS_1 = 2;
 	public static final int ID_MIXER_1 = 3;
-	public static final int ID_OSCILLATOR_TONE_1 = 4;
-	public static final int ID_OSCILLATOR_OTHER_1 = 5;
+	public static final int ID_OSCILLATOR_1 = 4;
+	public static final int ID_OSCILLATOR_2 = 5;
 	public static final int ID_OUTPUT_1 = 6;
 	public static final int ID_SAMPLE_FILTER_1 = 7;
 	public static final int ID_ENVELOPE_2 = 8;
+	public static final int ID_MIXER_2 = 9;
 	
 	public static final int ID_CONSTANT_CUTOFF_1 = 100;
 	public static final int ID_CONSTANT_RESONANCE_1 = 101;
@@ -27,11 +28,16 @@ public class Ids
 	public static final int ID_CONSTANT_SUSTAIN_2 = 112;
 	public static final int ID_CONSTANT_RELEASE_2 = 113;
 	public static final int ID_CONSTANT_STEEPNESS_2 = 114;
+	public static final int ID_CONSTANT_FREQUENCY_2 = 115;
+	public static final int ID_CONSTANT_AMPLITUDE_2 = 116;
+	public static final int ID_CONSTANT_OSCITYPE_2 = 117;
 	
-	public static final int ID_CONSTANT_STARTLEVEL_1 = 115;
-	public static final int ID_CONSTANT_STARTLEVEL_2 = 116;
-	public static final int ID_CONSTANT_PEAKLEVEL_1 = 117;
-	public static final int ID_CONSTANT_PEAKLEVEL_2 = 118;
+	public static final int ID_CONSTANT_STARTLEVEL_1 = 118;
+	public static final int ID_CONSTANT_STARTLEVEL_2 = 119;
+	public static final int ID_CONSTANT_PEAKLEVEL_1 = 120;
+	public static final int ID_CONSTANT_PEAKLEVEL_2 = 121;
+	
+	public static final int ID_CONSTANT_OSCIBALANCE_1 = 1000;
 	
 	public static final int ID_CONTAINER = 200;
 	

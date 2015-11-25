@@ -7,16 +7,18 @@ import engine.Wire;
 public class Mixer extends Module{
 
 	public static final int SAMPLE_OUTPUT = 0;
-	
+
 	public static final int NEXT_FREE_INPUT = 0;
-	
+
 	private int numModules = 0;
-	
+	private int maxPolyphony;
+
 	public Mixer(SynthesizerEngine parent, int numInputWires, int id) 
 	{
 		super(parent, numInputWires, 1, id);
+		setMaxPolyphony(numInputWires);
 	}
-	
+
 	@Override
 	public float calcNextDisabledSample(int index) 
 	{
@@ -26,17 +28,13 @@ public class Mixer extends Module{
 	@Override
 	public float calcNextSample(int index) 
 	{
-		if (!enabled)
-			return 0;
-		
 		float value = calculateSum();
 		return value;
 	}
-	
+
 	private float calculateSum()
 	{
 		float sum = 0;
-		
 		for (Wire inputWire:inputWires)
 		{
 			float value = 0;
@@ -49,14 +47,20 @@ public class Mixer extends Module{
 				continue;
 
 			sum += value;
+			
 		}
-		
-		sum = sum / parent.getMaxPolyphony();
+
+		sum = sum / maxPolyphony;
 
 		return sum;
-		
+
 	}
-	
+
+	public void setMaxPolyphony(int value)
+	{
+		this.maxPolyphony = value;	
+	}
+
 	@Override
 	public void connectInputWire(int index, Wire wire)
 	{
@@ -70,10 +74,10 @@ public class Mixer extends Module{
 				break;
 			}
 		}
-		
+
 		inputWires[targetIndex] = wire;
 	}
-	
+
 	public void disconnectInputWire(Wire wire)
 	{
 		for (int i = 0; i < inputWires.length; i++)
@@ -82,7 +86,7 @@ public class Mixer extends Module{
 				inputWires[i] = null;
 		}
 	}
-	
+
 	public int getNumModules()
 	{
 		return numModules;

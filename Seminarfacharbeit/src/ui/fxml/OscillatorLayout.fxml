@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane collapsible="false"  text="Oszillator" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TitledPane collapsible="false" text="Oszillator" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox>
          <children>
@@ -14,6 +14,7 @@
             <CheckBox fx:id="sawBox" mnemonicParsing="false" onAction="#onSawBoxAction" text="Sägezahn" />
             <CheckBox fx:id="squareBox" mnemonicParsing="false" onAction="#onSquareBoxAction" text="Rechteck" />
             <CheckBox fx:id="triangleBox" mnemonicParsing="false" onAction="#onTriangleBoxAction" text="Dreieck" />
+            <CheckBox fx:id="whiteNoiseBox" mnemonicParsing="false" onAction="#onWhiteNoiseBoxAction" text="White Noise" />
          </children>
       </VBox>
    </content>
