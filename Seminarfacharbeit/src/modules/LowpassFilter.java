@@ -1,6 +1,5 @@
 package modules;
 
-import utils.Constants;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -13,15 +12,11 @@ public class LowpassFilter extends Module
 
 	public static final int SAMPLE_OUTPUT = 0;
 
-	private double oldValue = 0;
-
-	private double alpha;
-
 	private float cutoffFrequency = 1000F;
 	private float resonance = 0.2F;
 
 	private double p = 0, q = 0, f = 0;
-	private double t0 = 0, t1 = 0, t2 = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0;
+	private double t1 = 0, t2 = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
 	public LowpassFilter(SynthesizerEngine parent, int id) 
 	{
@@ -53,7 +48,7 @@ public class LowpassFilter extends Module
 
 		
 		inputSample -= q * b4;                          //feedback
-		//System.out.println(q + "|" + b4);
+
 		t1 = b1;  
 		b1 = (inputSample + b0) * p - b1 * f;
 		t2 = b2;  
@@ -63,10 +58,6 @@ public class LowpassFilter extends Module
 		b4 = (b3 + t1) * p - b4 * f;
 		b4 = b4 - b4 * b4 * b4 * 0.166667f;    //clipping
 		b0 = inputSample;
-		
-		//		inputSample -= resonance * oldValue;
-		//		float value = (float) (alpha * inputSample + (1 - alpha) * oldValue);
-		//		oldValue = value;
 
 		return (float) b4 * Short.MAX_VALUE;
 	}
@@ -79,8 +70,6 @@ public class LowpassFilter extends Module
 			newValue = 0F;
 		
 		cutoffFrequency = newValue;
-		double timeDelta = 1 / parent.getSamplingRate();
-		alpha = (Constants.TWOPI * timeDelta * cutoffFrequency) / (Constants.TWOPI * timeDelta * cutoffFrequency + 1);
 		precalc();
 	}
 

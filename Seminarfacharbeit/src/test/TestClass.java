@@ -15,9 +15,6 @@ public class TestClass
 	private float sustainLevel = 0.8F;
 	private float peakLevel = 1F;
 	private float releaseTime = 1000;
-	
-	private float maxValue = Short.MAX_VALUE;
-	private float value = 0;
 
 	private float[] increases = new float[3];	
 	private float[] startAmplitudes = new float[3];

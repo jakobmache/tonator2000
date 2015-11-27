@@ -1,13 +1,7 @@
 package ui;
 
-import javax.sound.sampled.FloatControl;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
-import modules.Envelope;
-import containers.OscillatorContainer;
-import containers.StandardModuleContainer;
-import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class VolumeController 

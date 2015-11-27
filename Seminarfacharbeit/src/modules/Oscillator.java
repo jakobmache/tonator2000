@@ -59,7 +59,7 @@ public class Oscillator extends Module
 	@Override
 	public float calcNextDisabledSample(int index) 
 	{
-		return 0;
+		return 0F;
 	}
 	
 	public float calcNextSample(int index) 
