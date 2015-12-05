@@ -48,6 +48,8 @@ public abstract class ModuleController
 	}
 
 	protected abstract void update();
+	
+	public abstract void init();
 
 	public abstract void loadData();
 

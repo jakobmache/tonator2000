@@ -31,9 +31,9 @@ public class Oscillator extends Module
 	
 	private Random random;
 
-	public Oscillator(SynthesizerEngine parent, int id) 
+	public Oscillator(SynthesizerEngine parent, int id, String name) 
 	{
-		super(parent, 3, 1, id);
+		super(parent, 3, 1, id, name);
 		random = new Random(System.currentTimeMillis());
 	}
 

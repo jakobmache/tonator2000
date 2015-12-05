@@ -1,5 +1,6 @@
 package containers;
 
+import resources.Strings;
 import modules.BalancedMixer;
 import modules.Constant;
 import modules.Envelope;
@@ -13,50 +14,50 @@ import engine.SynthesizerEngine;
 
 public class OscillatorContainer extends ModuleContainer implements EnvelopeFinishedListener
 {
-	public OscillatorContainer(SynthesizerEngine parent) 
+	public OscillatorContainer(SynthesizerEngine parent, String name) 
 	{
-		super(parent, 1, 1, Ids.ID_CONTAINER);
+		super(parent, 1, 1, Ids.ID_CONTAINER, name);
 		initModules();
 	}
 	
 	private void initModules()
 	{
-		addModule(new Constant(parent, Ids.ID_CONSTANT_FREQUENCY_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_AMPLITUDE_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCITYPE_1));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_FREQUENCY_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_FREQUENCY_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_AMPLITUDE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_AMPLITUDE_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCITYPE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_OSCITYPE_1)));
 		
-		addModule(new Constant(parent, Ids.ID_CONSTANT_FREQUENCY_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_AMPLITUDE_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCITYPE_2));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_FREQUENCY_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_FREQUENCY_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_AMPLITUDE_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_AMPLITUDE_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCITYPE_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_OSCITYPE_2)));
 		
-		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCIBALANCE_1));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_OSCIBALANCE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_OSCIBALANCE_1)));
 		
-		addModule(new Constant(parent, Ids.ID_CONSTANT_ATTACK_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_DECAY_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_SUSTAIN_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_RELEASE_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_STEEPNESS_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_STARTLEVEL_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_PEAKLEVEL_1));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_ATTACK_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_ATTACK_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_DECAY_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_DECAY_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_SUSTAIN_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_SUSTAIN_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_RELEASE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_RELEASE_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_STEEPNESS_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_STEEPNESS_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_STARTLEVEL_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_STARTLEVEL_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_PEAKLEVEL_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_PEAKLEVEL_1)));
 
-		addModule(new Constant(parent, Ids.ID_CONSTANT_CUTOFF_1));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_RESONANCE_1));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_CUTOFF_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_CUTOFF_1)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_RESONANCE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_RESONANCE_1)));
 
-		addModule(new Constant(parent, Ids.ID_CONSTANT_ATTACK_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_DECAY_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_SUSTAIN_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_RELEASE_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_STEEPNESS_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_STARTLEVEL_2));
-		addModule(new Constant(parent, Ids.ID_CONSTANT_PEAKLEVEL_2));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_ATTACK_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_ATTACK_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_DECAY_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_DECAY_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_SUSTAIN_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_SUSTAIN_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_RELEASE_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_RELEASE_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_STEEPNESS_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_STEEPNESS_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_STARTLEVEL_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_STARTLEVEL_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_PEAKLEVEL_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_PEAKLEVEL_2)));
 		
 		
-		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_1));
-		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_2));
-		addModule(new Envelope(parent, Ids.ID_ENVELOPE_1, this));
-		addModule(new Envelope(parent, Ids.ID_ENVELOPE_2, this));
-		addModule(new LowpassFilter(parent, Ids.ID_LOWPASS_1));
-		addModule(new BalancedMixer(parent, Ids.ID_MIXER_2));
+		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_1, Strings.getStandardModuleName(Ids.ID_OSCILLATOR_1)));
+		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_2,  Strings.getStandardModuleName(Ids.ID_OSCILLATOR_2)));
+		addModule(new Envelope(parent, Ids.ID_ENVELOPE_1, this,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_1)));
+		addModule(new Envelope(parent, Ids.ID_ENVELOPE_2, this,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_2)));
+		addModule(new LowpassFilter(parent, Ids.ID_LOWPASS_1,  Strings.getStandardModuleName(Ids.ID_LOWPASS_1)));
+		addModule(new BalancedMixer(parent, Ids.ID_MIXER_2, Strings.getStandardModuleName(Ids.ID_MIXER_2)));
 				
 		addConnection(findModuleById(Ids.ID_CONSTANT_FREQUENCY_1), findModuleById(Ids.ID_OSCILLATOR_1), Constant.VALUE_OUTPUT, Oscillator.FREQUENCY_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_AMPLITUDE_1), findModuleById(Ids.ID_OSCILLATOR_1), Constant.VALUE_OUTPUT, Oscillator.AMPLITUDE_INPUT);

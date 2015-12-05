@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane collapsible="false" text="Oszillator" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <content>
-      <VBox>
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER_LEFT" spacing="5.0">
          <children>
             <CheckBox fx:id="sineBox" mnemonicParsing="false" onAction="#onSineBoxAction" text="Sinus" />
             <CheckBox fx:id="sawBox" mnemonicParsing="false" onAction="#onSawBoxAction" text="Sägezahn" />
@@ -16,6 +18,9 @@
             <CheckBox fx:id="triangleBox" mnemonicParsing="false" onAction="#onTriangleBoxAction" text="Dreieck" />
             <CheckBox fx:id="whiteNoiseBox" mnemonicParsing="false" onAction="#onWhiteNoiseBoxAction" text="White Noise" />
          </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </VBox>
-   </content>
-</TitledPane>
+   </children>
+</HBox>

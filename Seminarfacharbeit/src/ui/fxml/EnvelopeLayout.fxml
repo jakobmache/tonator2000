@@ -7,15 +7,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane collapsible="false" onMouseClicked="#onMouseClicked" text="ASDR - Hüllkurve" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <content>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="ALWAYS">
          <children>
             <VBox alignment="CENTER" spacing="5.0">
                <children>
                   <Label text="Attack" />
-                  <Slider fx:id="attackSlider" max="1000.0" maxHeight="200.0" minHeight="200.0" orientation="VERTICAL" prefHeight="200.0" showTickMarks="true" value="100.0" />
-                  <TextField fx:id="attackInput" minWidth="50.0" onAction="#onAttackInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <Slider fx:id="attackSlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="attackInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onAttackInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -24,8 +24,8 @@
             <VBox alignment="CENTER" spacing="5.0">
                <children>
                   <Label text="Decay" />
-                  <Slider fx:id="decaySlider" max="1000.0" maxHeight="200.0" minHeight="200.0" orientation="VERTICAL" prefHeight="200.0" showTickMarks="true" value="100.0" />
-                  <TextField fx:id="decayInput" minWidth="50.0" onAction="#onDecayInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <Slider fx:id="decaySlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="decayInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onDecayInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -34,8 +34,8 @@
             <VBox alignment="CENTER" spacing="5.0">
                <children>
                   <Label text="Sustain" />
-                  <Slider fx:id="sustainSlider" max="1.0" maxHeight="200.0" minHeight="200.0" orientation="VERTICAL" prefHeight="200.0" showTickMarks="true" value="0.8" />
-                  <TextField fx:id="sustainInput" minWidth="50.0" onAction="#onSustainInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <Slider fx:id="sustainSlider" max="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="0.8" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="sustainInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSustainInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -44,20 +44,27 @@
             <VBox alignment="CENTER" spacing="5.0">
                <children>
                   <Label text="Release" />
-                  <Slider fx:id="releaseSlider" max="1000.0" maxHeight="200.0" minHeight="200.0" orientation="VERTICAL" prefHeight="200.0" showTickMarks="true" value="100.0" />
-                  <TextField fx:id="releaseInput" minWidth="50.0" onAction="#onReleaseInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <Slider fx:id="releaseSlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="releaseInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onReleaseInputAction" prefHeight="25.0" prefWidth="50.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5.0">
+               <children>
+                  <Label text="Steilheit" />
+                  <Slider fx:id="steepnessSlider" max="-0.001" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="-10.0" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="steepnessInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSteepnessInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
          </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
          <opaqueInsets>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </opaqueInsets>
       </HBox>
-   </content>
-</TitledPane>
+   </children>
+</VBox>

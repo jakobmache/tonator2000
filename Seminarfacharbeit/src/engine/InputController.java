@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
+import resources.Strings;
 import midi.MidiUtils;
+import modules.Ids;
 import modules.Mixer;
 import modules.listener.ProgramListener;
 import containers.ModuleContainerListener;
@@ -39,6 +41,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 		
 		parent.getProgramManager().addListener(this);
+	}
+	
+	public ModuleContainer getReferenceContainer()
+	{
+		return new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 	}
 
 	public void handleMessage(ShortMessage message)
@@ -88,7 +95,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	
 		OscillatorContainer container;
 		
-		container = new OscillatorContainer(parent);
+		container = new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
 		container.addListener(this);
 		

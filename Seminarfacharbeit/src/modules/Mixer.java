@@ -13,9 +13,9 @@ public class Mixer extends Module{
 	private int numModules = 0;
 	private int maxPolyphony;
 
-	public Mixer(SynthesizerEngine parent, int numInputWires, int id) 
+	public Mixer(SynthesizerEngine parent, int numInputWires, int id, String name) 
 	{
-		super(parent, numInputWires, 1, id);
+		super(parent, numInputWires, 1, id, name);
 		setMaxPolyphony(numInputWires);
 	}
 

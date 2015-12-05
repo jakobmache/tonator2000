@@ -1,5 +1,6 @@
 package containers;
 
+import resources.Strings;
 import modules.Ids;
 import modules.SampleFilter;
 import engine.ModuleContainer;
@@ -12,11 +13,11 @@ public class StandardModuleContainer extends ModuleContainer
 	private SampleFilter filter;
 
 	public StandardModuleContainer(SynthesizerEngine parent, int numInputWires,
-			int numOutputWires, int id) 
+			int numOutputWires, int id, String name) 
 	{
-		super(parent, numInputWires, numOutputWires, id);
+		super(parent, numInputWires, numOutputWires, id, name);
 		
-		filter = new SampleFilter(parent, Ids.ID_SAMPLE_FILTER_1);
+		filter = new SampleFilter(parent, Ids.ID_SAMPLE_FILTER_1,  Strings.getStandardModuleName(Ids.ID_SAMPLE_FILTER_1));
 		addModule(filter);
 	}
 	

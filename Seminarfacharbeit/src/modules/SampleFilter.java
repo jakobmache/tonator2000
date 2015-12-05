@@ -17,9 +17,9 @@ public class SampleFilter extends Module
 	int stop = 10;
 	int count = 0;
 
-	public SampleFilter(SynthesizerEngine parent, int id) 
+	public SampleFilter(SynthesizerEngine parent, int id, String name) 
 	{
-		super(parent, 1, 1, id);
+		super(parent, 1, 1, id, name);
 		bufferList = new ArrayList<Float>();
 	}
 

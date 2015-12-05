@@ -25,9 +25,9 @@ public class OutputModule extends Module
 
 	private boolean stopPlaying = false;
 	
-	public OutputModule(SynthesizerEngine parent, int id) throws LineUnavailableException 
+	public OutputModule(SynthesizerEngine parent, int id, String name) throws LineUnavailableException 
 	{
-		super(parent, 1, 0, id);
+		super(parent, 1, 0, id, name);
 		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
 		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
 

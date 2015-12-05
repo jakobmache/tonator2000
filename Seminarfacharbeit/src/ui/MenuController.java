@@ -102,7 +102,7 @@ public class MenuController
 			VBox root = (VBox) loader.load();
 
 			midiSelectionStage = new Stage();
-			midiSelectionStage.setTitle("MIDI-Ger�t ausw�hlen");
+			midiSelectionStage.setTitle("MIDI-Ger " + Strings.ae + "t ausw" + Strings.ae + "hlen");
 			midiSelectionStage.setScene(new Scene(root));
 			midiSelectionStage.initStyle(StageStyle.UTILITY);
 
@@ -111,9 +111,6 @@ public class MenuController
 			availableMidiDevicesBox.getSelectionModel().selectFirst();
 
 			midiSelectionStage.show();
-			
-			
-
 		} 
 		catch (Exception e) 
 		{

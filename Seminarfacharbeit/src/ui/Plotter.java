@@ -5,17 +5,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import containers.StandardModuleContainer;
 import javafx.animation.AnimationTimer;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import modules.Ids;
 import modules.SampleFilter;
+import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 
-public class Plotter extends TitledPane
+public class Plotter extends VBox
 {
 
 	private int maxDataPoints = 500;
@@ -53,10 +54,13 @@ public class Plotter extends TitledPane
 		lineChart.setAnimated(false);
 		lineChart.setHorizontalGridLinesVisible(true);
 		lineChart.setLegendVisible(false);
+		
+		setVgrow(lineChart, Priority.ALWAYS);
+		lineChart.setMaxHeight(Double.MAX_VALUE);
 
 		lineChart.getData().add(series);
 
-		setContent(lineChart);
+		getChildren().add(lineChart);
 
 		executor = Executors.newCachedThreadPool(new ThreadFactory() 
 		{
@@ -73,10 +77,8 @@ public class Plotter extends TitledPane
 
 		prepareTimeline();
 
-		setText("Oszilloskop");
-		setCollapsible(false);
-		setMaxWidth(Double.MAX_VALUE);
-		setMaxHeight(Double.MAX_VALUE);
+		lineChart.setMaxWidth(Double.MAX_VALUE);
+		lineChart.setMaxHeight(Double.MAX_VALUE);
 		
 		setOnScroll((event) -> {
 			double upperBound = yAxis.getUpperBound() - 4 * event.getDeltaY();

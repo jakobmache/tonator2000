@@ -17,23 +17,26 @@ public class EnvelopeController extends ModuleController
 	@FXML private Slider decaySlider;
 	@FXML private Slider sustainSlider;
 	@FXML private Slider releaseSlider;
+	@FXML private Slider steepnessSlider;
 
 	@FXML private TextField attackInput;
 	@FXML private TextField decayInput;
 	@FXML private TextField sustainInput;
 	@FXML private TextField releaseInput;
+	@FXML private TextField steepnessInput;
 	
 	private int attackId;
 	private int decayId;
 	private int sustainId;
 	private int releaseId;
+	private int steepnessId;
 
 	private Slider sliderToUpdate;
 
 	private Map<Slider, TextField> inputs = new HashMap<Slider, TextField>();
 	private Map<Slider, Integer> ids = new HashMap<Slider, Integer>();
 
-	public EnvelopeController(SynthesizerEngine parent, int attackId, int decayId, int sustainId, int releaseId, int moduleId)
+	public EnvelopeController(SynthesizerEngine parent, int moduleId, int attackId, int decayId, int sustainId, int releaseId, int steepnessId)
 	{
 		super(parent, moduleId);
 		
@@ -41,6 +44,7 @@ public class EnvelopeController extends ModuleController
 		this.sustainId = sustainId;
 		this.releaseId = releaseId;
 		this.decayId = decayId;
+		this.steepnessId = steepnessId;
 	}
 
 	public void init()
@@ -49,11 +53,13 @@ public class EnvelopeController extends ModuleController
 		inputs.put(decaySlider, decayInput);
 		inputs.put(releaseSlider, releaseInput);
 		inputs.put(sustainSlider, sustainInput);
+		inputs.put(steepnessSlider, steepnessInput);
 
 		ids.put(attackSlider, attackId);
 		ids.put(decaySlider, decayId);
 		ids.put(releaseSlider, releaseId);
 		ids.put(sustainSlider, sustainId);
+		ids.put(steepnessSlider, steepnessId);
 		
 		attackSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
 		{
@@ -78,6 +84,12 @@ public class EnvelopeController extends ModuleController
 			sliderToUpdate = releaseSlider;
 			update();
 		});
+		
+		steepnessSlider.valueProperty().addListener((observableValue, oldValue, newValue) ->
+		{
+			sliderToUpdate = steepnessSlider;
+			update();
+		});
 
 		loadData();
 	}
@@ -98,7 +110,7 @@ public class EnvelopeController extends ModuleController
 	{
 		TextField input = inputs.get(sliderToUpdate);
 
-		float value = (float) sliderToUpdate.getValue();
+		float value = (float) sliderToUpdate.getValue();	
 		input.setText(Float.toString(Math.round(value * 100f) / 100f));
 		
 		int id = ids.get(sliderToUpdate);
@@ -127,6 +139,16 @@ public class EnvelopeController extends ModuleController
 	{
 		double value = Double.valueOf(releaseInput.getText());
 		releaseSlider.setValue(value);
+	}
+	
+	public void onSteepnessInputAction(ActionEvent event)
+	{
+		double value = Double.valueOf(steepnessInput.getText());
+		
+		if (sliderToUpdate == steepnessSlider && value == 0)
+			value = 0.0001F;
+		
+		steepnessSlider.setValue(value);
 	}
 
 	@Override

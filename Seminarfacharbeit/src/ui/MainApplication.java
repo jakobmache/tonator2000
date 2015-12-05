@@ -6,17 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -48,106 +43,75 @@ public class MainApplication extends Application {
 	private BorderPane rootLayout;
 	private SynthesizerEngine engine;
 
+	private HBox synthesizerLayout;
+
 	private SynthiStatusBar statusBar;
-	private NotificationPane notificationPane;
+	private NotificationPane overlayPane;
 
 	private MenuController menuController;
-
-	private List<ModuleController> controllers = new ArrayList<ModuleController>();
-
-	@FXML 
-	private CheckMenuItem monoMenuItem;
-	@FXML
-	private CheckMenuItem stereoMenuItem;
-
-	private HBox synthesizerLayout;
-	private VBox mainLayout;
+	private List<ModuleController> moduleControllers = new ArrayList<ModuleController>();
 
 	private int currProgram = 0;
 
 	@Override
 	public void start(Stage primaryStage)
 	{
-		try 
-		{
-			try 
-			{
-				this.engine = new SynthesizerEngine();
-			} 
-			catch (IOException e) 
-			{
-				Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_UNKNOWN], 
-						Strings.ERROR_EXPLANATIONS[Strings.ERROR_UNKNOWN]);
-				alert.showAndWait();
-			}
-		} 
-		catch (LineUnavailableException e) 
-		{
-			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
-					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
-			alert.showAndWait();
-		}
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle(Strings.APPLICATION_NAME + " - " + Strings.VERSION_NUMBER);
+		initStage(primaryStage);
+		initEngine();
 
-		synthesizerLayout = new HBox(5);
-		mainLayout = new VBox(5);
 		initRootLayout();
-
-		initStatusBarAndOverlay();
-
-		mainLayout.getChildren().add(notificationPane);
-
-		initOscillators();
-		initFilter();
-		initFilterEnvelope();
-		initEnvelope();
-		initVolume();
-		initPlotter();
-
+		
 		initEventHandlers();
 
 		updateStatusBar();
-
-		setCurrProgram(0);
-
+		
 		URL iconUrl = getClass().getClassLoader().getResource("resources/icon.png");
 		primaryStage.getIcons().add(new Image(iconUrl.toString()));
+		
+		showStandardConfiguration();
+		
+		setCurrProgram(0);
+		update();
 
 		primaryStage.show();
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.initOwner(primaryStage);
-		alert.setTitle(Strings.START_POPUP_TITLE);
-		alert.setContentText(Strings.START_POPUP_TEXT);
-		alert.setHeaderText(Strings.START_POPUP_HEADER);
-		alert.showAndWait();
+
+		//Alert alert = UiUtils.generateAlert(primaryStage, AlertType.INFORMATION, Strings.START_POPUP_TITLE, Strings.START_POPUP_TEXT, Strings.START_POPUP_HEADER);
+		//alert.showAndWait();
 
 		showOverlay(OVERLAY_MIDI);
 
 		engine.run();
 	}
 
-	public void showOverlay(int type)
+	private void initEngine()
 	{
-		if (type == OVERLAY_MIDI)
+		try 
 		{
-			notificationPane.setText(Strings.OVERLAY_MIDI_STRING);
-			notificationPane.getActions().add(new Action("MIDI-Ger" + Strings.ae + "t ausw" + Strings.ae + "hlen", ae ->
-			{
-				menuController.onSelectMidiDeviceAction(ae);	
-				notificationPane.hide();
-			}));
-			notificationPane.getActions().add(new Action("MIDI-Datei laden", ae ->
-			{
-				menuController.onSelectMidiFileAction(ae);	
-				notificationPane.hide();
-			}));
+			this.engine = new SynthesizerEngine();
+		} 
+
+		catch (LineUnavailableException e) 
+		{
+			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
+					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
+			alert.showAndWait();
 		}
 
-		notificationPane.show();
+		catch (IOException e) 
+		{
+			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_UNKNOWN], 
+					Strings.ERROR_EXPLANATIONS[Strings.ERROR_UNKNOWN]);
+			alert.showAndWait();
+		}
 	}
 
-	public void initRootLayout() 
+	private void initStage(Stage primaryStage)
+	{
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle(Strings.APPLICATION_NAME + " - " + Strings.VERSION_NUMBER);
+	}
+
+	private void initRootLayout() 
 	{
 		try 
 		{
@@ -159,182 +123,92 @@ public class MainApplication extends Application {
 			rootLayout = (BorderPane) loader.load();
 
 			menuController.loadData();
-
-			Scene scene = new Scene(rootLayout);
-			primaryStage.setScene(scene);
-
-			rootLayout.setCenter(mainLayout);
 		} 
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
+
+		synthesizerLayout = new HBox(5);
+		initStaticModules(rootLayout);
+
+		Scene scene = new Scene(rootLayout);
+		primaryStage.setScene(scene);
 	}
 
-	public void initStatusBarAndOverlay()
+	private void initStaticModules(BorderPane rootLayout)
 	{
+		VBox mainLayout = new VBox(5);
+		mainLayout.setMaxHeight(Double.MAX_VALUE);
+		mainLayout.setMaxWidth(Double.MAX_VALUE);
+		
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setContent(synthesizerLayout);
+		scrollPane.setMaxHeight(Double.MAX_VALUE);
+		scrollPane.setMaxWidth(Double.MAX_VALUE);
+		
+		VBox.setVgrow(scrollPane, Priority.ALWAYS);
+		
+		mainLayout.getChildren().add(scrollPane);
+
+		//Statusbar und Overlay initialisieren
 		statusBar = new SynthiStatusBar(engine, this);
 		rootLayout.setBottom(statusBar);
-		notificationPane = new NotificationPane(synthesizerLayout);
-	}
-	
-	public void initOscillators()
-	{
-		VBox vBox = new VBox();
-		vBox.setSpacing(5);
+		overlayPane = new NotificationPane(scrollPane);
+
+		mainLayout.getChildren().add(overlayPane);
+
+		//Plotter initialisieren
+		Node plotter = null;
 		try 
 		{
-			OscillatorController controller1 = new OscillatorController(engine, Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1);
+			plotter = UiUtils.generateModuleGui(engine, this, UiUtils.PLOTTER, null);
+			initMouseHandler(plotter, Strings.PLOTTER);
+			mainLayout.getChildren().add(plotter);
+			VBox.setVgrow(plotter, Priority.ALWAYS);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 
-			FXMLLoader loader1 = new FXMLLoader();
-			loader1.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
+		rootLayout.setCenter(mainLayout);
+	}
 
-			loader1.setController(controller1);
-			TitledPane oscillatorView1 = (TitledPane) loader1.load();
-			controller1.setMainPane(loader1);
-			vBox.getChildren().add(oscillatorView1);
+	private void showStandardConfiguration()
+	{
+		VBox osciBox = new VBox();
+		osciBox.setSpacing(5);
+		HBox balanceBox = new HBox();
+		balanceBox.setSpacing(5);
 
-			initMouseHandler(oscillatorView1, Strings.OSCILLATOR);
+		try
+		{
+			Node oscillator1 = UiUtils.generateModuleGui(engine, this, UiUtils.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1});
+			Node oscillator2 = UiUtils.generateModuleGui(engine, this, UiUtils.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2});
+			Node lowpass = UiUtils.generateModuleGui(engine, this, UiUtils.LOWPASS, new int[]{Ids.ID_LOWPASS_1, Ids.ID_CONSTANT_CUTOFF_1, Ids.ID_CONSTANT_RESONANCE_1});
+			Node envelope1 = UiUtils.generateModuleGui(engine, this, UiUtils.ENVELOPE, new int[]{Ids.ID_ENVELOPE_1, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1,
+					Ids.ID_CONSTANT_SUSTAIN_1, Ids.ID_CONSTANT_RELEASE_1, Ids.ID_CONSTANT_STEEPNESS_1});
+			Node envelope2 = UiUtils.generateModuleGui(engine, this, UiUtils.ENVELOPE, new int[]{Ids.ID_ENVELOPE_2, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2,
+					Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_CONSTANT_STEEPNESS_2});
+			Node volume = UiUtils.generateModuleGui(engine, this, UiUtils.VOLUME, new int[]{Ids.ID_VOLUME});
+			Node balance = UiUtils.generateModuleGui(engine, this, UiUtils.BALANCE, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
 
-			controllers.add(controller1);
+			osciBox.getChildren().add(oscillator1);
+			osciBox.getChildren().add(oscillator2);
 			
-			FXMLLoader loader2 = new FXMLLoader();
-			OscillatorController controller2 = new OscillatorController(engine, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2);
-			loader2.setLocation(MainApplication.class.getResource("fxml/OscillatorLayout.fxml"));
-
-			loader2.setController(controller2);
-			TitledPane oscillatorView2 = (TitledPane) loader2.load();
-			controller2.setMainPane(loader2);
-			vBox.getChildren().add(oscillatorView2);
-
-			initMouseHandler(oscillatorView2, Strings.OSCILLATOR);
-
-			controllers.add(controller2);
-		} 
-		catch (IOException e) 
+			balanceBox.getChildren().add(osciBox);
+			balanceBox.getChildren().add(balance);
+			synthesizerLayout.getChildren().add(balanceBox);
+			synthesizerLayout.getChildren().add(envelope1);
+			synthesizerLayout.getChildren().add(lowpass);
+			synthesizerLayout.getChildren().add(envelope2);
+			synthesizerLayout.getChildren().add(volume);
+		}
+		catch(IOException e)
 		{
 			e.printStackTrace();
-		}
-		
-		Slider balance = new Slider();
-		balance.setMin(0);
-		balance.setMax(1);
-		balance.setValue(0.5F);
-		balance.valueProperty().addListener((observableValue, oldValue, newValue) ->
-		{
-			
-			engine.getProgramManager().updateInstrumentPresetValue(currProgram, Ids.ID_CONSTANT_OSCIBALANCE_1, newValue.floatValue());
-		});
-		balance.setValue(engine.getProgramManager().getInstrumentPreset(currProgram).getParam(Ids.ID_CONSTANT_OSCIBALANCE_1));
-		vBox.getChildren().add(balance);
-		synthesizerLayout.getChildren().add(vBox);
-
-	}
-
-
-	public void initFilter()
-	{
-		try 
-		{
-			LowpassFilterController controller = new LowpassFilterController(engine, Ids.ID_LOWPASS_1);
-
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApplication.class.getResource("fxml/LowpassFilterLayout.fxml"));
-
-			loader.setController(controller);
-			TitledPane filterView = (TitledPane) loader.load();
-			controller.init();
-
-			initMouseHandler(filterView, Strings.LOWPASS);
-
-			synthesizerLayout.getChildren().add(filterView);
-			controllers.add(controller);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void initFilterEnvelope()
-	{
-		try 
-		{
-			EnvelopeController controller = new EnvelopeController(engine, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2, Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_ENVELOPE_2);
-
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApplication.class.getResource("fxml/EnvelopeLayout.fxml"));
-
-			loader.setController(controller);
-			TitledPane envelopeView = (TitledPane) loader.load();
-			envelopeView.setText("Hüllkurve - Tiefpassfilter");
-			controller.init();
-
-			initMouseHandler(envelopeView, Strings.ENVELOPE);
-
-			synthesizerLayout.getChildren().add(envelopeView);
-			controllers.add(controller);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void initEnvelope()
-	{
-		try 
-		{
-			EnvelopeController controller = new EnvelopeController(engine, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1, Ids.ID_CONSTANT_SUSTAIN_1, Ids.ID_CONSTANT_RELEASE_1, Ids.ID_ENVELOPE_1);
-
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApplication.class.getResource("fxml/EnvelopeLayout.fxml"));
-
-			loader.setController(controller);
-			TitledPane envelopeView = (TitledPane) loader.load();
-			controller.init();
-
-			initMouseHandler(envelopeView, Strings.ENVELOPE);
-
-			synthesizerLayout.getChildren().add(envelopeView);
-
-			controllers.add(controller);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void initPlotter()
-	{
-		Plotter plotter = new Plotter(engine);
-		mainLayout.getChildren().add(plotter);
-
-		initMouseHandler(plotter, Strings.PLOTTER);
-
-		VBox.setVgrow(plotter, Priority.ALWAYS);
-	}
-
-	public void initVolume()
-	{
-		try 
-		{
-			VolumeController controller = new VolumeController(engine);
-
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApplication.class.getResource("fxml/VolumeLayout.fxml"));
-
-			loader.setController(controller);
-			TitledPane volumeView = (TitledPane) loader.load();
-			controller.init();
-
-			synthesizerLayout.getChildren().add(volumeView);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
+		}	
 	}
 
 	public void updateStatusBar()
@@ -353,10 +227,30 @@ public class MainApplication extends Application {
 		return primaryStage;
 	}
 
+	public void showOverlay(int type)
+	{
+		if (type == OVERLAY_MIDI)
+		{
+			overlayPane.setText(Strings.OVERLAY_MIDI_STRING);
+			overlayPane.getActions().add(new Action("MIDI-Ger" + Strings.ae + "t ausw" + Strings.ae + "hlen", ae ->
+			{
+				menuController.onSelectMidiDeviceAction(ae);	
+				overlayPane.hide();
+			}));
+			overlayPane.getActions().add(new Action("MIDI-Datei laden", ae ->
+			{
+				menuController.onSelectMidiFileAction(ae);	
+				overlayPane.hide();
+			}));
+		}
+
+		overlayPane.show();
+	}
+
 	public void setCurrProgram(int newProgram)
 	{
 		currProgram = newProgram;
-		for (ModuleController controller:controllers)
+		for (ModuleController controller:moduleControllers)
 		{
 			controller.setCurrProgram(currProgram);
 		}
@@ -364,13 +258,13 @@ public class MainApplication extends Application {
 
 	public void update()
 	{
-		for (ModuleController controller:controllers)
+		for (ModuleController controller:moduleControllers)
 		{
 			controller.loadData();
 		}
 	}
 
-	private void initMouseHandler(Parent pane, int module)
+	public void initMouseHandler(Node pane, int module)
 	{
 		pane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> 
 		{
@@ -400,13 +294,11 @@ public class MainApplication extends Application {
 						content.getChildren().add(label);
 					}
 				}
-				
 				popOver.setContentNode(content);
 
 				popOver.show(pane);
 			}
 		});
-
 	}
 
 	private Node createTitledPane(String title, String text) 
@@ -418,7 +310,10 @@ public class MainApplication extends Application {
 		return borderedLabel;
 	}
 
-
+	public List<ModuleController> getModuleControllers()
+	{
+		return moduleControllers;
+	}
 
 	public int getCurrProgram()
 	{

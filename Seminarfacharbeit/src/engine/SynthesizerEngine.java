@@ -13,6 +13,7 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
+import resources.Strings;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.Mixer;
@@ -76,20 +77,20 @@ public class SynthesizerEngine implements Receiver
 	private void initModules() throws IOException
 	{
 		programManager = new ProgramManager();
-		outputMixer = new Mixer(this, maxPolyphony, Ids.ID_MIXER_1);
+		outputMixer = new Mixer(this, maxPolyphony, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
 		inputModule = new InputController(this);
 
 
 		try 
 		{
-			outputModule = new OutputModule(this, Ids.ID_OUTPUT_1);
+			outputModule = new OutputModule(this, Ids.ID_OUTPUT_1, Strings.getStandardModuleName(Ids.ID_OUTPUT_1));
 		} 
 		catch (LineUnavailableException e) 
 		{
 			e.printStackTrace();
 		}
 
-		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER);
+		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 		new Wire(allContainer, outputMixer, Mixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
 		new Wire(outputModule, allContainer, ModuleContainer.SAMPLE_OUTPUT, OutputModule.SAMPLE_INPUT);
 	}

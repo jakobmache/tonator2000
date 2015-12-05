@@ -18,9 +18,9 @@ public abstract class ModuleContainer extends Module
 	
 	private List<ModuleContainerListener> listeners = new ArrayList<ModuleContainerListener>();
 	
-	public ModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id)
+	public ModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name)
 	{
-		super(parent, numInputWires, numOutputWires, id);
+		super(parent, numInputWires, numOutputWires, id, name);
 		modules = new ArrayList<Module>();
 	}
 	

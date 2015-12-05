@@ -2,7 +2,6 @@ package ui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import modules.Oscillator;
 import engine.Module;
@@ -114,14 +113,8 @@ public class OscillatorController extends ModuleController
 		parent.getProgramManager().updateInstrumentPresetValue(currProgram, typeId, type);
 	}
 	
-	public void setMainPane(FXMLLoader loader)
+	public void init()
 	{
-		sineBox = (CheckBox) loader.getNamespace().get("sineBox");
-		sawBox = (CheckBox) loader.getNamespace().get("sawBox");
-		triangleBox = (CheckBox) loader.getNamespace().get("triangleBox");
-		squareBox = (CheckBox) loader.getNamespace().get("squareBox");	
-		whiteNoiseBox = (CheckBox) loader.getNamespace().get("whiteNoiseBox");	
-		
 		update();
 	}
 

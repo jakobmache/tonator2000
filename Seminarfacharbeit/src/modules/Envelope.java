@@ -46,9 +46,9 @@ public class Envelope extends Module
 	public final static int RELEASE = 2;
 	private final static int SUSTAIN = 3;
 
-	public Envelope(SynthesizerEngine parent, int id, EnvelopeFinishedListener listener)  
+	public Envelope(SynthesizerEngine parent, int id, EnvelopeFinishedListener listener, String name)  
 	{
-		super(parent, 8, 1, id);
+		super(parent, 8, 1, id, name);
 		this.listener = listener;
 	}
 
@@ -56,6 +56,8 @@ public class Envelope extends Module
 	@Override
 	public float calcNextSample(int index)
 	{	
+		if (moduleId == Ids.ID_ENVELOPE_1)
+			System.out.println(steepness);
 		float currValue = inputWires[SAMPLE_INPUT].getNextSample();
 		
 		if (attackTime != inputWires[ATTACK_INPUT].getNextSample() ||

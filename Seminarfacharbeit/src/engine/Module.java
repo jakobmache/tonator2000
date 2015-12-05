@@ -1,5 +1,6 @@
 package engine;
 
+//TODO:Modulname
 
 public abstract class Module 
 {
@@ -12,12 +13,15 @@ public abstract class Module
 	
 	protected boolean enabled = true;
 	
-	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id)
+	protected String name = "Modul";
+	
+	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String moduleName)
 	{
 		this.parent = parent;
 		this.inputWires = new Wire[numInputWires];
 		this.outputWires = new Wire[numOutputWires];
 		this.moduleId = id;
+		this.name = moduleName;
 	}
 	
 	public float requestNextSample(int index)
@@ -60,5 +64,10 @@ public abstract class Module
 	public boolean isEnabled()
 	{
 		return enabled;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 }
