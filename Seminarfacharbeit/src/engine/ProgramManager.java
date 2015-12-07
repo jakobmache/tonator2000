@@ -1,8 +1,8 @@
 package engine;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ProgramManager
 		programPresets = new ContainerPreset[NUM_PROGRAMS];
 		instrumentNames = new String[NUM_PROGRAMS];
 		
-		BufferedReader reader = new BufferedReader(new FileReader(this.getClass().getClassLoader().getResource("resources/generalmidi.txt").getPath()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/generalmidi.txt")));
 		
 		for (int i = 0; i < programPresets.length; i++)
 		{

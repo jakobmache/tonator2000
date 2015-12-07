@@ -1,6 +1,7 @@
 package modules;
 
 import modules.listener.EnvelopeFinishedListener;
+import resources.Strings;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -50,14 +51,13 @@ public class Envelope extends Module
 	{
 		super(parent, 8, 1, id, name);
 		this.listener = listener;
+		
+		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
 	}
 
-	
 	@Override
 	public float calcNextSample(int index)
 	{	
-		if (moduleId == Ids.ID_ENVELOPE_1)
-			System.out.println(steepness);
 		float currValue = inputWires[SAMPLE_INPUT].getNextSample();
 		
 		if (attackTime != inputWires[ATTACK_INPUT].getNextSample() ||

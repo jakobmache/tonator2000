@@ -43,4 +43,11 @@ public class Ids
 	
 	public static final int ID_CONTAINER = 200;
 	
+	private static int counter = 0;
+	
+	public static int getNextId()
+	{
+		return counter++;
+	}
+	
 }

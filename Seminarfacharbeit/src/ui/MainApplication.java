@@ -31,11 +31,14 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
+import ui.editor.SynthesizerEditor;
+import engine.Module;
 import engine.SynthesizerEngine;
 
 //TODO: Midi-Player Fenster
 //TODO: Fix disablen
-public class MainApplication extends Application {
+public class MainApplication extends Application 
+{
 
 	public static final int OVERLAY_MIDI = 0;
 
@@ -80,6 +83,8 @@ public class MainApplication extends Application {
 
 		showOverlay(OVERLAY_MIDI);
 
+		SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+		editor.show();
 		engine.run();
 	}
 
@@ -92,6 +97,7 @@ public class MainApplication extends Application {
 
 		catch (LineUnavailableException e) 
 		{
+			e.printStackTrace();
 			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
 					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
 			alert.showAndWait();
@@ -99,6 +105,7 @@ public class MainApplication extends Application {
 
 		catch (IOException e) 
 		{
+			e.printStackTrace();
 			Alert alert = UiUtils.generateExceptionDialog(primaryStage, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_UNKNOWN], 
 					Strings.ERROR_EXPLANATIONS[Strings.ERROR_UNKNOWN]);
 			alert.showAndWait();
@@ -162,8 +169,8 @@ public class MainApplication extends Application {
 		Node plotter = null;
 		try 
 		{
-			plotter = UiUtils.generateModuleGui(engine, this, UiUtils.PLOTTER, null);
-			initMouseHandler(plotter, Strings.PLOTTER);
+			plotter = UiUtils.generateModuleGui(engine, this, Module.PLOTTER, null);
+			initMouseHandler(plotter, Module.PLOTTER);
 			mainLayout.getChildren().add(plotter);
 			VBox.setVgrow(plotter, Priority.ALWAYS);
 		} 
@@ -184,15 +191,15 @@ public class MainApplication extends Application {
 
 		try
 		{
-			Node oscillator1 = UiUtils.generateModuleGui(engine, this, UiUtils.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1});
-			Node oscillator2 = UiUtils.generateModuleGui(engine, this, UiUtils.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2});
-			Node lowpass = UiUtils.generateModuleGui(engine, this, UiUtils.LOWPASS, new int[]{Ids.ID_LOWPASS_1, Ids.ID_CONSTANT_CUTOFF_1, Ids.ID_CONSTANT_RESONANCE_1});
-			Node envelope1 = UiUtils.generateModuleGui(engine, this, UiUtils.ENVELOPE, new int[]{Ids.ID_ENVELOPE_1, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1,
+			Node oscillator1 = UiUtils.generateModuleGui(engine, this, Module.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1});
+			Node oscillator2 = UiUtils.generateModuleGui(engine, this, Module.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2});
+			Node lowpass = UiUtils.generateModuleGui(engine, this, Module.LOWPASS, new int[]{Ids.ID_LOWPASS_1, Ids.ID_CONSTANT_CUTOFF_1, Ids.ID_CONSTANT_RESONANCE_1});
+			Node envelope1 = UiUtils.generateModuleGui(engine, this, Module.ENVELOPE, new int[]{Ids.ID_ENVELOPE_1, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1,
 					Ids.ID_CONSTANT_SUSTAIN_1, Ids.ID_CONSTANT_RELEASE_1, Ids.ID_CONSTANT_STEEPNESS_1});
-			Node envelope2 = UiUtils.generateModuleGui(engine, this, UiUtils.ENVELOPE, new int[]{Ids.ID_ENVELOPE_2, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2,
+			Node envelope2 = UiUtils.generateModuleGui(engine, this, Module.ENVELOPE, new int[]{Ids.ID_ENVELOPE_2, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2,
 					Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_CONSTANT_STEEPNESS_2});
-			Node volume = UiUtils.generateModuleGui(engine, this, UiUtils.VOLUME, new int[]{Ids.ID_VOLUME});
-			Node balance = UiUtils.generateModuleGui(engine, this, UiUtils.BALANCE, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
+			Node volume = UiUtils.generateModuleGui(engine, this, Module.VOLUME, new int[]{Ids.ID_VOLUME});
+			Node balance = UiUtils.generateModuleGui(engine, this, Module.BALANCED_MIXER, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
 
 			osciBox.getChildren().add(oscillator1);
 			osciBox.getChildren().add(oscillator2);
@@ -284,9 +291,9 @@ public class MainApplication extends Application {
 				content.getChildren().add(borderedInfo);
 
 				//Modul hat Parameter zum Darstellen
-				if (Strings.PARAM_NAMES.length > module)
+				if (Strings.PARAM_NAMES_MAIN.length > module)
 				{
-					String[] paramNames = Strings.PARAM_NAMES[module];
+					String[] paramNames = Strings.PARAM_NAMES_MAIN[module];
 					String[] paramDescriptions = Strings.PARAM_DESCRIPTIONS[module];
 					for (int i = 0; i < paramNames.length; i++)
 					{

@@ -19,22 +19,17 @@ import javafx.stage.Stage;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
+import engine.Module;
 import engine.SynthesizerEngine;
 
 public class UiUtils 
 {
 
-	public static final int OSCILLATOR = 0;
-	public static final int LOWPASS = 1;
-	public static final int ENVELOPE = 2;
-	public static final int PLOTTER = 3;
-	public static final int VOLUME = 4;
-	public static final int BALANCE = 5;
-
 	public static final String[] layoutPaths = new String[] {
 		"fxml/OscillatorLayout.fxml", "fxml/LowpassFilterLayout.fxml",
-		"fxml/EnvelopeLayout.fxml", "", "fxml/SimpleSliderLayout.fxml",
-		"fxml/BalancedMixerLayout.fxml"
+		"fxml/EnvelopeLayout.fxml", "", "", 
+		"fxml/BalancedMixerLayout.fxml", "", "", "", 
+		"fxml/SimpleSliderLayout.fxml"
 	};
 
 	public static Alert generateAlert(AlertType type, String title, String header, String text)
@@ -113,38 +108,38 @@ public class UiUtils
 
 		ModuleController controller = null;
 
-		if (type == PLOTTER)
+		if (type == Module.PLOTTER)
 		{
 			pane = new Plotter(engine);
 			thickness = 2;
 		}
 
-		else if (type == OSCILLATOR)
+		else if (type == Module.OSCILLATOR)
 		{
 			controller = new OscillatorController(engine, ids[0], ids[1]);
 		}
 		
-		else if (type == LOWPASS)
+		else if (type == Module.LOWPASS)
 		{
 			controller = new LowpassFilterController(engine, ids[0], ids[1], ids[2]);
 		}
 		
-		else if (type == ENVELOPE)
+		else if (type == Module.ENVELOPE)
 		{
 			controller = new EnvelopeController(engine, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5]);
 		}
 		
-		else if (type == VOLUME)
+		else if (type == Module.VOLUME)
 		{
 			controller = new VolumeController(engine);
 		}
 		
-		else if (type == BALANCE)
+		else if (type == Module.BALANCED_MIXER)
 		{
 			controller = new BalanceController(engine, ids[0], ids[1], ids[2], ids[3]);
 		}
 
-		if (type != PLOTTER)
+		if (type != Module.PLOTTER)
 		{	
 			title = Strings.getStandardModuleName(ids[0]);
 			FXMLLoader loader = new FXMLLoader();

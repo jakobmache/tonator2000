@@ -4,12 +4,6 @@ import modules.Ids;
 
 public class Strings 
 {
-	public static final int OSCILLATOR = 0;
-	public static final int LOWPASS = 1;
-	public static final int ENVELOPE = 2;
-	public static final int PLOTTER = 3;
-	public static final int VOLUME = 4;
-
 	public static final int ERROR_UNKNOWN = 0;
 	public static final int ERROR_AUDIO = 1;
 	public static final int ERROR_LOAD_ALL_PRESETS = 2;
@@ -45,12 +39,16 @@ public class Strings
 		"Oszillator",
 		"Tiefpassfilter",
 		"H" + ue + "llkurve",
+		"Verst" + ae + "rker",
+		"Mixer",
+		"Balance",
+		"Hochpassfilter",
+		"Konstante",
 		"Oszilloskop",
-		"Lautst" + ae + "rke",
-		"Balance"
+		"Lautst‰rke"
 			};
 
-	public static final String[][] PARAM_NAMES = new String[][]
+	public static final String[][] PARAM_NAMES_MAIN = new String[][]
 			{
 		{"Wellenform"},
 		{"Cutoff-Frequenz", "Resonanz"},
@@ -63,6 +61,30 @@ public class Strings
 		{"Das ist die Frequenz, ab der abgeschnitten wird.", "Gibt an, wie stark die Cutoff-Frequenz betont wird."},
 		{"Die Zeit, die der Ton ansteigt", "Die Zeit, die der Ton abf" + ae + "llt", "Das Level des Maximallevels, auf das der Ton abf‰llt", "Die Zeit, die der Ton verklingt."}
 			};
+	
+	public static final String[][] INPUT_NAMES = new String[][]
+			{
+		{"Sample-Input", "Wellenform"},
+		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
+		{"Sample-Input", "Attack-Zeit", "Decay-Zeit", "Sustain-Level", "Release-Zeit", "Steilheit", "Startlevel", "Peaklevel"},
+		{"Sample-Input", "Verst‰rkungsfaktor"},
+		{"Sample-Input"},
+		{"Modul 1", "Modul 2", "Balance"},
+		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
+		{}
+			};
+	
+	public static final String[][] OUTPUT_NAMES = new String[][]
+			{
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Sample-Output"},
+		{"Wert-Output"}
+			};
 
 	public static final String[] TOOLTIPS = new String[]
 			{
@@ -72,16 +94,6 @@ public class Strings
 		"Das Oszilloskop zeigt die entstehenden Kl" + ae + "nge.",
 		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert den entstehenden Klang nicht."
 			};
-
-
-	public static final String[] PARAM_NAMES_OSCILLATOR = new String[]{
-		"Sinus", "S" + ae + "gezahn", "Rechteck", "Dreieck"
-	};
-
-	public static final String[] PARAM_LABELS_OSCILLATOR = new String[]{
-		"die Wellenform, die der Oszillator erzeugt"
-	};
-
 
 	public static final String OVERLAY_MIDI_STRING = "Bitte schlieﬂen Sie ein MIDI-Ger" + ae + "t an oder laden Sie eine MIDI-Datei!";
 
