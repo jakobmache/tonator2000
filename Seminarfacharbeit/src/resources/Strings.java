@@ -101,17 +101,31 @@ public class Strings
 	public static final String STATUSBAR_NOT_RUNNING_STRING = "Engine gestoppt";
 	public static final String STATUSBAR_RUNNING_STRING = "Engine l" + ae + "uft!";
 
-	public static final String START_POPUP_TEXT = "Herzlich Willkommen zu " + APPLICATION_NAME + ", dem ersten und einzigen Programm, welches Sie jemals zum Erzeugen von T" + oe + "nen und zur Verzerrung bekannter Lieder benutzen werden!"
-			+ "\nViel Spaﬂ w" + ue 
-			+ "nschen Ihnen \n\nLeonhard von Braun, Chief Executive Officer bei Neumann Enterprises\nBarbara Ueltzen, Executive Chairman bei Neumann Enterprises\nJakob Mache, Chief Technical Officer bei Neumann Enterprises";
-	public static final String START_POPUP_TITLE = "Information";
-	public static final String START_POPUP_HEADER = "Herzlich Willkommen!";
 
-	public static final String VERSION_NUMBER = "v0.4.3 beta";
+	public static final String VERSION_NUMBER = "v0.4.4 beta";
 
 	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
 
+	public static final String NO_MIDI_FILE_LOADED_LABEL = "Keine MIDI-Datei geladen!";
+	
+	public static final String MIDI_PLAYER_TITLE = "MIDI-Player";
 
+	//------------------------Dialogerl‰uterungen-------------
+	
+	public static final String ABOUT_DIALOG_TITLE = UE + "ber das Programm";
+	public static final String ABOUT_DIALOG_TEXT =  "Entstanden in Rahmen der Seminarfacharbeit 2014/15 von Leonhard Braun, Barbara Ueltzen und Jakob Mache"
+			+ " mit dem Thema \"Digitale Simulation analoger Synthesizer\"."
+			+ " Herzlichen Dank an unseren Fachbetreuer Herr S" + ue + "pke!";
+	public static final String ABOUT_DIALOG_HEADER = "(c) 2015 by Leonhard Braun, Barbara Ueltzen, Jakob Mache";	
+	
+	public static final String LIBRARIES_DIALOG_TITLE = "Verwendete Ressourcen";
+	public static final String LIBRARIES_DIALOG_HEADER = "Folgende Bibliotheken und Grafiken wurden verwendet:";
+	public static final String LIBRARIES_DIALOG_TEXT = "Fehler beim Laden der Bibliotheken";
+	
+	public static final String POLYPHONY_DIALOG_TITLE = "Maximale Polyphonie";
+	public static final String POLYPHONY_DIALOG_HEADER = "Maximale Polyphonie eingeben";
+	public static final String POLYPHONY_DIALOG_TEXT = "Neue maximale Polyphonie:";
+	
 	//-------------------------Modulnamen---------------------
 
 	public static String getStandardModuleName(int id)

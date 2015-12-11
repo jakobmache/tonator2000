@@ -11,12 +11,10 @@ public class Mixer extends Module{
 	public static final int NEXT_FREE_INPUT = 0;
 
 	private int numModules = 0;
-	private int maxPolyphony;
 
-	public Mixer(SynthesizerEngine parent, int numInputWires, int id, String name) 
+	public Mixer(SynthesizerEngine parent, int id, String name) 
 	{
-		super(parent, numInputWires, 1, id, name);
-		setMaxPolyphony(numInputWires);
+		super(parent, SynthesizerEngine.MAX_POLYPHONY, 1, id, name);
 	}
 
 	@Override
@@ -35,30 +33,21 @@ public class Mixer extends Module{
 	private float calculateSum()
 	{
 		float sum = 0;
-		for (Wire inputWire:inputWires)
+		for (int i = 0; i < parent.getMaxPolyphony(); i++)
 		{
-			float value = 0;
-			
+			Wire inputWire = inputWires[i];
 			if (inputWire != null)
 			{
-				value = inputWire.getNextSample();
+				float value = inputWire.getNextSample();
+				sum += value;
 			}
 			else 
-				continue;
-
-			sum += value;
-			
+				continue;		
 		}
 
-		sum = sum / maxPolyphony;
+		sum = sum /parent.getMaxPolyphony();
 
 		return sum;
-
-	}
-
-	public void setMaxPolyphony(int value)
-	{
-		this.maxPolyphony = value;	
 	}
 
 	@Override

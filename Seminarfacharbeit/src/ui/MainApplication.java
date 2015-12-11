@@ -31,7 +31,6 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
-import ui.editor.SynthesizerEditor;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -78,13 +77,10 @@ public class MainApplication extends Application
 
 		primaryStage.show();
 
-		//Alert alert = UiUtils.generateAlert(primaryStage, AlertType.INFORMATION, Strings.START_POPUP_TITLE, Strings.START_POPUP_TEXT, Strings.START_POPUP_HEADER);
-		//alert.showAndWait();
-
 		showOverlay(OVERLAY_MIDI);
 
-		SynthesizerEditor editor = new SynthesizerEditor(this, engine);
-		editor.show();
+//		SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+//		editor.show();
 		engine.run();
 	}
 
@@ -128,8 +124,6 @@ public class MainApplication extends Application
 
 			loader.setController(menuController);
 			rootLayout = (BorderPane) loader.load();
-
-			menuController.loadData();
 		} 
 		catch (IOException e) 
 		{
@@ -246,7 +240,9 @@ public class MainApplication extends Application
 			}));
 			overlayPane.getActions().add(new Action("MIDI-Datei laden", ae ->
 			{
-				menuController.onSelectMidiFileAction(ae);	
+				menuController.onOpenMidiPlayer(ae);
+				menuController.getMidiPlayerController().onOpenAction(ae);
+				
 				overlayPane.hide();
 			}));
 		}

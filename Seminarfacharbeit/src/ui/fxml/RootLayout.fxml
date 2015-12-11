@@ -15,18 +15,14 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="sampleRateMenuItem" mnemonicParsing="false" onAction="#onSetSampleRateMenuAction" text="Samplerate" />
                   <MenuItem fx:id="bufferTimeMenuItem" mnemonicParsing="false" onAction="#onSetBufferTimeMenuAction" text="Pufferzeit (Latenz)" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <CheckMenuItem fx:id="monoMenuItem" mnemonicParsing="false" onAction="#onSetNumberChannelsAction" text="Mono" />
-                  <CheckMenuItem fx:id="stereoMenuItem" disable="true" mnemonicParsing="false" onAction="#onSetNumberChannelsAction" text="Stereo (funktioniert nicht)" />
+                  <MenuItem fx:id="polpyhonyMenuItem" mnemonicParsing="false" onAction="#onSetMaxPolyphony" text="Maximale Polyphonie" />
               </items>
             </Menu>
           <Menu fx:id="midiMenu" mnemonicParsing="false" text="MIDI">
             <items>
               <MenuItem fx:id="selectMidiDeviceMenuItem" mnemonicParsing="false" onAction="#onSelectMidiDeviceAction" text="Gerät auswählen" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="selectMidiFileMenuItem" mnemonicParsing="false" onAction="#onSelectMidiFileAction" text="MIDI-Datei laden" />
-                  <MenuItem fx:id="playMidiFileMenuItem" mnemonicParsing="false" onAction="#onPlayMidiFileAction" text="MIDI-Datei abspielen" />
-                  <MenuItem fx:id="pauseMidiFileMenuItem" mnemonicParsing="false" onAction="#onPauseMidiFileAction" text="MIDI-Datei pausieren" />
+                  <MenuItem fx:id="midiPlayerMenuItem" mnemonicParsing="false" onAction="#onOpenMidiPlayer" text="MIDI-Player" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="resetMidiMenuItem" mnemonicParsing="false" onAction="#onResetMidiAction" text="MIDI zurücksetzen" />
             </items>
@@ -41,6 +37,12 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="onSavePresetMenuItem" mnemonicParsing="false" onAction="#onSavePreset" text="Speichern" />
                   <MenuItem fx:id="onLoadPresetMenuItem" mnemonicParsing="false" onAction="#onLoadPreset" text="Laden" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Hilfe">
+              <items>
+                <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="Über das Programm" />
+                  <MenuItem fx:id="aboutLibrariesMenuItem" mnemonicParsing="false" onAction="#onAboutLibraries" text="Verwendete Ressourcen" />
               </items>
             </Menu>
         </menus>

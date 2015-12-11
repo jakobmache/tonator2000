@@ -20,25 +20,30 @@ import engine.SynthesizerEngine;
 
 public class MidiPlayer 
 {
-	
+
 	private Sequencer sequencer;
 	private Sequence sequence;
 	private SynthesizerEngine engine;
 	
+	private File midiFile;
+
 	public MidiPlayer(SynthesizerEngine engine)
 	{
 		this.engine = engine;
 	}
+
 	
+
 	public void loadMidiFile(File midiFile) throws MidiUnavailableException, InvalidMidiDataException, IOException
 	{
 		sequencer = MidiSystem.getSequencer();
 		sequence = MidiSystem.getSequence(midiFile);
 		sequencer.setSequence(sequence);
+
 		engine.connectMidiDevice(sequencer);
-		
+
 		sequencer.open();
-		
+
 		for (Transmitter trans:sequencer.getTransmitters())
 		{
 			Receiver receiver = trans.getReceiver();
@@ -47,44 +52,64 @@ public class MidiPlayer
 				trans.close();
 			}
 		}
+
+		this.midiFile = midiFile;
 		
 		System.out.println("All programs: " + getAllPrograms());
 	}
-	
+
 	public void startPlayingMidiFile()
 	{
 		if (sequencer != null)
 		{
+			if (sequencer.getTickPosition() == sequencer.getTickLength())
+				sequencer.setTickPosition(0);
 			sequencer.start();
 		}
 	}
-	
-	public void stopPlayingMidiFile()
+
+	public void pausePlayingMidiFile()
 	{
 		if (sequencer != null)
 		{
 			sequencer.stop();
 		}
 	}
-	
+
+	public void stopPlayingMidiFile()
+	{
+		if (sequencer != null)
+		{
+			pausePlayingMidiFile();
+			sequencer.setTickPosition(0);
+		}
+	}
+
 	public List<Integer> getAllPrograms()
 	{
 		List<Integer> programs = new ArrayList<Integer>();
-        for (Track track :  sequence.getTracks()) 
-        {
-            for (int i = 0; i < track.size(); i++) 
-            { 
-                MidiMessage message = track.get(i).getMessage();
-                if (message instanceof ShortMessage) 
-                {
-                	if (((ShortMessage) message).getCommand() == ShortMessage.PROGRAM_CHANGE)
-                	{
-                		if (!programs.contains(((ShortMessage) message).getData1()))
-                			programs.add(((ShortMessage) message).getData1());
-                	}
-                }
-            }
-        }
-        return programs;
+		for (Track track :  sequence.getTracks()) 
+		{
+			for (int i = 0; i < track.size(); i++) 
+			{ 
+				MidiMessage message = track.get(i).getMessage();
+				if (message instanceof ShortMessage) 
+				{
+					if (((ShortMessage) message).getCommand() == ShortMessage.PROGRAM_CHANGE)
+					{
+						if (!programs.contains(((ShortMessage) message).getData1()))
+							programs.add(((ShortMessage) message).getData1());
+					}
+				}
+			}
+		}
+		return programs;
+	}
+	
+	public File getMidiFile()
+	{
+		if (sequencer.getSequence() == null)
+			midiFile = null;
+		return midiFile;
 	}
 }

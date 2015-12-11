@@ -23,6 +23,7 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 	private Button midiDeviceLabel;
 	private Button currProgramLabel;
 	private Button engineRunningLabel;
+	private Button maxPolyphonyLabel;
 
 	private SynthesizerEngine engine;
 
@@ -42,6 +43,7 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 	{
 		sampleRateLabel.setText(Float.toString(engine.getSamplingRate()));
 		latencyLabel.setText(Double.toString(engine.getBufferTime()) + "s");
+		maxPolyphonyLabel.setText(Integer.toString(engine.getMaxPolyphony()));
 
 		if (engine.getConnectedMidiDevice() != null)
 		{
@@ -75,12 +77,14 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 		latencyLabel = new Button();
 		midiDeviceLabel = new Button();
 		currProgramLabel = new Button();
+		maxPolyphonyLabel = new Button();
 
 		sampleRateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		latencyLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		midiDeviceLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		currProgramLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		engineRunningLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
+		maxPolyphonyLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		
 		getLeftItems().add(sampleRateLabel);
 		getLeftItems().add(new Separator(Orientation.VERTICAL));
@@ -88,6 +92,7 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 		getLeftItems().add(new Separator(Orientation.VERTICAL));
 		getLeftItems().add(engineRunningLabel);
 		getLeftItems().add(new Separator(Orientation.VERTICAL));
+		getLeftItems().add(maxPolyphonyLabel);
 
 		getRightItems().add(new Separator(Orientation.VERTICAL));
 		getRightItems().add(midiDeviceLabel);

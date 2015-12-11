@@ -14,7 +14,7 @@ public class BalancedMixer extends Mixer
 
 	public BalancedMixer(SynthesizerEngine parent, int id, String name) 
 	{
-		super(parent, 3, id, name);
+		super(parent, id, name);
 	}
 	
 	@Override

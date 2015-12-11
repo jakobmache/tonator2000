@@ -30,15 +30,17 @@ public class SynthesizerEngine implements Receiver
 	private boolean signed = true;
 	private boolean bigEndian = true;
 
+	public static final int MAX_POLYPHONY = 1000;
+
 	private int sampleSizeInBits = 16;
 	private int sampleSizeInBytes = 2;
 
 	private double bufferTime = 0.02;
-	
+
 	private boolean isRunning = false;
-	
+
 	private int maxPolyphony = 45;
-	
+
 	private MidiPlayer midiPlayer;
 
 	private OutputModule outputModule;
@@ -48,9 +50,9 @@ public class SynthesizerEngine implements Receiver
 	private ModuleContainer allContainer;
 	private ModuleContainer osciContainer;
 	private ProgramManager programManager;
-	
+
 	private MidiDevice connectedMidiDevice;
-	
+
 	private List<EngineListener> listeners = new ArrayList<EngineListener>();
 
 	public SynthesizerEngine() throws LineUnavailableException, IOException
@@ -59,25 +61,25 @@ public class SynthesizerEngine implements Receiver
 		initModules();
 		midiPlayer = new MidiPlayer(this);
 	}
-	
+
 	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
 	{
 		if (connectedMidiDevice != null)
 			connectedMidiDevice.close();
-		
+
 		Transmitter transmitter = device.getTransmitter();
 		transmitter.setReceiver(this);
-		
+
 		if (transmitter.getReceiver() == this)
 			connectedMidiDevice = device;
-		
+
 		notifyListeners();
 	}
 
 	private void initModules() throws IOException
 	{
 		programManager = new ProgramManager();
-		outputMixer = new Mixer(this, maxPolyphony, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
+		outputMixer = new Mixer(this, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
 		inputModule = new InputController(this);
 
 
@@ -101,10 +103,10 @@ public class SynthesizerEngine implements Receiver
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 		if (outputModule != null)
 			outputModule.updateFormat();
-		
+
 		notifyListeners();
 	}
-	
+
 	private void notifyListeners()
 	{
 		for (EngineListener listener:listeners)
@@ -122,7 +124,7 @@ public class SynthesizerEngine implements Receiver
 		}
 
 	}
-	
+
 	public void stop()
 	{
 		if (outputModule != null)
@@ -131,20 +133,20 @@ public class SynthesizerEngine implements Receiver
 		reset();
 		notifyListeners();
 	}
-	
+
 	public void close()
 	{
 		stop();
 		disconnectMidiDevice();
 	}
-	
+
 	public void disconnectMidiDevice()
 	{
 		if (connectedMidiDevice != null)
 			connectedMidiDevice.close();
 		notifyListeners();
 	}
-	
+
 	public void reset()
 	{
 		try 
@@ -156,13 +158,13 @@ public class SynthesizerEngine implements Receiver
 		{
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void run()
 	{
 		Thread thread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() 
 			{
@@ -180,27 +182,27 @@ public class SynthesizerEngine implements Receiver
 		isRunning = true;
 		notifyListeners();
 	}
-	
+
 	public ModuleContainer getAllContainer() 
 	{
 		return allContainer;
 	}
-	
+
 	public ModuleContainer getOsciContainer()
 	{
 		return osciContainer;
 	}
-	
+
 	public Mixer getOutputMixer()
 	{
 		return outputMixer;
 	}
-	
+
 	public OutputModule getOutputModule()
 	{
 		return outputModule;
 	}
-	
+
 	public AudioFormat getAudioFormat() {
 		return audioFormat;
 	}
@@ -267,32 +269,32 @@ public class SynthesizerEngine implements Receiver
 		this.bufferTime = bufferTime;
 		updateAudioFormat();
 	}
-	
+
 	public void addListener(EngineListener listener)
 	{
 		listeners.add(listener);
 	}
-	
+
 	public InputController getInputController()
 	{
 		return inputModule;
 	}
-	
+
 	public MidiDevice getConnectedMidiDevice()
 	{
 		return connectedMidiDevice;
 	}
-	
+
 	public boolean isRunning()
 	{
 		return isRunning;
 	}
-	
+
 	public int getMaxPolyphony()
 	{
 		return maxPolyphony;
 	}
-	
+
 	public MidiPlayer getMidiPlayer()
 	{
 		return midiPlayer;
@@ -300,5 +302,14 @@ public class SynthesizerEngine implements Receiver
 
 	public ProgramManager getProgramManager() {
 		return programManager;
+	}
+
+	public void setMaxPolyphony(int newValue)
+	{
+		if (newValue <= MAX_POLYPHONY && newValue > 0)
+		{
+			maxPolyphony = newValue;
+			notifyListeners();
+		}
 	}
 }
