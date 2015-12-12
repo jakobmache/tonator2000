@@ -19,6 +19,8 @@ import engine.SynthesizerEngine;
 public class Plotter extends VBox
 {
 
+	public static final int Y_START_BOUND = 4000;
+
 	private int maxDataPoints = 500;
 
 	private SampleFilter sampleFilter;
@@ -81,22 +83,25 @@ public class Plotter extends VBox
 		lineChart.setMaxHeight(Double.MAX_VALUE);
 		
 		setOnScroll((event) -> {
-			double upperBound = yAxis.getUpperBound() - 4 * event.getDeltaY();
-			double lowerBound = yAxis.getLowerBound() + 4 * event.getDeltaY();
+			double upperBound = yAxis.getUpperBound() - 5 * event.getDeltaY();
+			double lowerBound = yAxis.getLowerBound() + 5 * event.getDeltaY();
 			if (upperBound > Short.MAX_VALUE)
 				yAxis.setUpperBound(Short.MAX_VALUE);
-			else if (upperBound < 0)
+			else if (upperBound <= 0)
 				yAxis.setUpperBound(yAxis.getUpperBound());
 			else
 				yAxis.setUpperBound(upperBound);
 			
 			if (lowerBound < Short.MIN_VALUE)
 				yAxis.setLowerBound(Short.MIN_VALUE);
-			else if (lowerBound > 0)
+			else if (lowerBound >= 0)
 				yAxis.setLowerBound(yAxis.getLowerBound());
 			else
 				yAxis.setLowerBound(lowerBound);
 		});
+		
+		yAxis.setUpperBound(Y_START_BOUND);
+		yAxis.setLowerBound(-1 * Y_START_BOUND);
 
 	}
 

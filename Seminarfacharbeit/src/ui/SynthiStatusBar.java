@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -17,6 +18,13 @@ import engine.SynthesizerEngine;
 
 public class SynthiStatusBar extends StatusBar implements EngineListener
 {
+	
+	public static final int SAMPLINGRATE = 0;
+	public static final int LATENCY = 1;
+	public static final int ENGINE_STATUS = 2;
+	public static final int MAX_POLYPHONY = 3;
+	public static final int MIDI_DEVICE = 4;
+	public static final int CURR_INSTRUMENT = 5;
 
 	private Button sampleRateLabel;
 	private Button latencyLabel;
@@ -73,11 +81,17 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 	private void initElements()
 	{
 		sampleRateLabel = new Button();
+		sampleRateLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[SAMPLINGRATE]));
 		engineRunningLabel = new Button();
+		engineRunningLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[ENGINE_STATUS]));
 		latencyLabel = new Button();
+		latencyLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[LATENCY]));
 		midiDeviceLabel = new Button();
+		midiDeviceLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[MIDI_DEVICE]));
 		currProgramLabel = new Button();
+		currProgramLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[CURR_INSTRUMENT]));
 		maxPolyphonyLabel = new Button();
+		maxPolyphonyLabel.setTooltip(new Tooltip(Strings.STATUSBAR_TOOLTIPS[MAX_POLYPHONY]));
 
 		sampleRateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));
 		latencyLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(2), new Insets(4))));

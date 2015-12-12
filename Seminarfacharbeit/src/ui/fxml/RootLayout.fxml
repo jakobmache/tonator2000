@@ -23,6 +23,7 @@
               <MenuItem fx:id="selectMidiDeviceMenuItem" mnemonicParsing="false" onAction="#onSelectMidiDeviceAction" text="Gerät auswählen" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="midiPlayerMenuItem" mnemonicParsing="false" onAction="#onOpenMidiPlayer" text="MIDI-Player" />
+                  <MenuItem fx:id="midiLoggerMenuItem" mnemonicParsing="false" onAction="#onShowMidiLogger" text="MIDI-Logger" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="resetMidiMenuItem" mnemonicParsing="false" onAction="#onResetMidiAction" text="MIDI zurücksetzen" />
             </items>

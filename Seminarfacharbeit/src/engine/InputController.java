@@ -80,8 +80,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		int velocity = message.getData2();
 		int channel = message.getChannel();
 		float frequency = MidiUtils.midiNoteNumberToFrequency(key);
-		
-		System.out.println("Note on! - " + key + " - " + velocity + " - " + frequency + "Hz | Programm " + channelPrograms.get(channel));
+
 		
 		//Wird die Note auf diesem Kanal schon abgespielt?
 		if (channelNotes.get(channel).containsKey(key))

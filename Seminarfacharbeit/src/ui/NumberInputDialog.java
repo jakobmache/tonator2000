@@ -12,17 +12,23 @@ import javafx.stage.Window;
 public class NumberInputDialog extends TextInputDialog
 {
 
-	public NumberInputDialog(Window owner, String title, String header, String text)
+	private int min;
+	private int max;
+	
+	public NumberInputDialog(Window owner, String title, String header, String text, int min, int max)
 	{
 		initOwner(owner);
 		setTitle(title);
 		setHeaderText(header);
 		setContentText(text);
 		
+		this.min = min;
+		this.max = max;
+		
 		Button btOk = (Button) getDialogPane().lookupButton(ButtonType.OK);
 		btOk.addEventFilter(ActionEvent.ACTION, event -> 
 		{
-			if (!isValid(getEditor().getText()))
+			if (!isValid())
 				event.consume();
 		});
 		
@@ -32,7 +38,7 @@ public class NumberInputDialog extends TextInputDialog
 		{
 			try
 			{
-				if (Integer.valueOf(newValue) <= 0)
+				if (Integer.valueOf(newValue) < min || Integer.valueOf(newValue) > max)
 				{
 					DropShadow borderGlow = new DropShadow();
 					borderGlow.setColor(Color.RED);
@@ -55,13 +61,13 @@ public class NumberInputDialog extends TextInputDialog
 		});
 	}
 	
-	public static boolean isValid(String text)
+	public boolean isValid()
 	{
 		try
 		{
-			if (Integer.valueOf(text) > 0)
-				return true;
-			return false;
+			if (Integer.valueOf(getEditor().getText()) < min || Integer.valueOf(getEditor().getText()) > max)
+				return false;
+			return true;
 		}
 		catch(Exception e)
 		{

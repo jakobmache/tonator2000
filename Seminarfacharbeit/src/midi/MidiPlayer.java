@@ -72,7 +72,8 @@ public class MidiPlayer
 	{
 		if (sequencer != null)
 		{
-			sequencer.stop();
+			if (sequencer.isOpen())
+				sequencer.stop();
 		}
 	}
 

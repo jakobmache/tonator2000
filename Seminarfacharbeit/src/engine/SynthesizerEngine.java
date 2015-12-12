@@ -14,6 +14,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
 import resources.Strings;
+import midi.MidiLogger;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.Mixer;
@@ -23,7 +24,6 @@ import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
-
 	private AudioFormat audioFormat;
 	private float samplingRate = 22050;
 	private int numChannels = 1;
@@ -31,6 +31,7 @@ public class SynthesizerEngine implements Receiver
 	private boolean bigEndian = true;
 
 	public static final int MAX_POLYPHONY = 1000;
+	public static final double MAX_BUFFERTIME = 0.5;
 
 	private int sampleSizeInBits = 16;
 	private int sampleSizeInBytes = 2;
@@ -50,6 +51,7 @@ public class SynthesizerEngine implements Receiver
 	private ModuleContainer allContainer;
 	private ModuleContainer osciContainer;
 	private ProgramManager programManager;
+	private MidiLogger logger;
 
 	private MidiDevice connectedMidiDevice;
 
@@ -60,6 +62,7 @@ public class SynthesizerEngine implements Receiver
 		updateAudioFormat();
 		initModules();
 		midiPlayer = new MidiPlayer(this);
+		logger = new MidiLogger();
 	}
 
 	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
@@ -100,6 +103,9 @@ public class SynthesizerEngine implements Receiver
 	private void updateAudioFormat() throws LineUnavailableException
 	{
 		stop();
+		if (bufferTime > MAX_BUFFERTIME)
+			throw new LineUnavailableException();
+		
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
 		if (outputModule != null)
 			outputModule.updateFormat();
@@ -122,7 +128,8 @@ public class SynthesizerEngine implements Receiver
 		{
 			inputModule.handleMessage((ShortMessage) message);
 		}
-
+		
+		logger.receiveEvent(message, timeStamp);
 	}
 
 	public void stop()
@@ -211,9 +218,20 @@ public class SynthesizerEngine implements Receiver
 		return samplingRate;
 	}
 
-	public void setSamplingRate(float samplingRate) throws LineUnavailableException {
-		this.samplingRate = samplingRate;
-		updateAudioFormat();
+	public void setSamplingRate(float samplingRate) throws LineUnavailableException 
+	{
+		float oldSamplingrate = this.samplingRate;
+		try
+		{
+			this.samplingRate = samplingRate;
+			updateAudioFormat();
+		}
+		catch(LineUnavailableException e)
+		{
+			samplingRate = oldSamplingrate;
+			updateAudioFormat();
+			throw new LineUnavailableException();
+		}
 	}
 
 	public int getNumChannels() {
@@ -266,8 +284,18 @@ public class SynthesizerEngine implements Receiver
 	}
 
 	public void setBufferTime(double bufferTime) throws LineUnavailableException {
-		this.bufferTime = bufferTime;
-		updateAudioFormat();
+		double oldBufferTime = this.bufferTime;
+		try
+		{
+			this.bufferTime = bufferTime;
+			updateAudioFormat();
+		}
+		catch(LineUnavailableException e)
+		{
+			bufferTime = oldBufferTime;
+			updateAudioFormat();
+			throw new LineUnavailableException();
+		}
 	}
 
 	public void addListener(EngineListener listener)
@@ -311,5 +339,10 @@ public class SynthesizerEngine implements Receiver
 			maxPolyphony = newValue;
 			notifyListeners();
 		}
+	}
+	
+	public MidiLogger getMidiLogger()
+	{
+		return logger;
 	}
 }

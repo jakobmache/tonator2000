@@ -76,7 +76,7 @@ public class MainApplication extends Application
 		update();
 
 		primaryStage.show();
-
+		
 		showOverlay(OVERLAY_MIDI);
 
 //		SynthesizerEditor editor = new SynthesizerEditor(this, engine);
@@ -280,7 +280,7 @@ public class MainApplication extends Application
 				popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
 
 				VBox content = new VBox();
-				Label mainInfo = new Label(Strings.TOOLTIPS[module]);
+				Label mainInfo = new Label(Strings.MODULE_DESCRIPTIONS[module]);
 				mainInfo.setMaxWidth(500);
 				mainInfo.setWrapText(true);
 				Node borderedInfo = Borders.wrap(mainInfo).lineBorder().buildAll();

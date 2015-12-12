@@ -16,19 +16,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
@@ -39,9 +36,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import midi.MidiUtils;
-
-import org.xml.sax.SAXException;
-
 import resources.Strings;
 import containers.ContainerPreset;
 import engine.ProgramManager;
@@ -49,31 +43,15 @@ import engine.SynthesizerEngine;
 
 public class MenuController 
 {
-
 	private MainApplication parent;
 
 	private SynthesizerEngine engine;
 	private List<Info> deviceInfos;
 
 	private Stage midiPlayerStage;
+	private Stage midiLoggerStage;
 
 	private MidiPlayerController midiPlayerController;
-
-	private Stage midiSelectionStage;
-	@FXML
-	private ChoiceBox<String> availableMidiDevicesBox;
-
-	private Stage sampleRateStage;	
-	@FXML
-	private TextField samplingRateInput;
-
-	private Stage bufferTimeStage;
-	@FXML
-	private TextField bufferTimeInput;
-
-	private Stage channelSelectionStage;
-	@FXML 
-	private ChoiceBox<String> availableChannelsBox;
 
 	@FXML
 	private MenuItem changeEngineStateMenuItem;
@@ -84,11 +62,13 @@ public class MenuController
 		this.parent = parent;
 
 		initMidiPlayer();
+		initMidiLogger();
 	}
 
 	private void initMidiPlayer()
 	{
 		midiPlayerStage = new Stage();
+		midiPlayerStage.initOwner(parent.getPrimaryStage());
 
 		BorderPane layout = null;
 		try 
@@ -110,8 +90,6 @@ public class MenuController
 		Scene scene = new Scene(layout);
 		midiPlayerStage.setScene(scene);
 
-		midiPlayerStage.show();
-
 		URL iconUrl = getClass().getClassLoader().getResource("resources/icon.png");
 		midiPlayerStage.getIcons().add(new Image(iconUrl.toString()));
 
@@ -123,6 +101,19 @@ public class MenuController
 			engine.getMidiPlayer().stopPlayingMidiFile();
 			event.consume();
 		});
+	}
+	
+	private void initMidiLogger()
+	{
+		midiLoggerStage = new Stage();
+		midiLoggerStage.initOwner(parent.getPrimaryStage());
+		
+		Scene scene = new Scene(new MidiLoggerUI(engine.getMidiLogger()));
+		midiLoggerStage.setScene(scene);
+		
+		midiLoggerStage.setTitle(Strings.MIDI_LOGGER_TITLE);
+		URL iconUrl = getClass().getClassLoader().getResource("resources/icon.png");
+		midiLoggerStage.getIcons().add(new Image(iconUrl.toString()));
 	}
 
 	private ObservableList<String> getMidiDevices()
@@ -139,104 +130,75 @@ public class MenuController
 
 	public void onSelectMidiDeviceAction(ActionEvent event)
 	{
-		try 
+
+		List<String> devices = getMidiDevices();
+
+		if (!devices.isEmpty())
 		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MenuController.class.getResource("fxml/SelectMidiDeviceLayout.fxml"));
+			ChoiceDialog<String> dialog = new ChoiceDialog<String>(devices.get(0), devices);
+			dialog.initOwner(parent.getPrimaryStage());
+			dialog.setTitle(Strings.MIDI_DEVICE_DIALOG_TITLE);
+			dialog.setHeaderText(Strings.MIDI_DEVICE_DIALOG_HEADER);
+			dialog.setContentText(Strings.MIDI_DEVICE_DIALOG_TEXT);
+			String result = dialog.showAndWait().get();
+			int index = devices.indexOf(result);
 
-			loader.setController(this);
-			VBox root = (VBox) loader.load();
-
-			midiSelectionStage = new Stage();
-			midiSelectionStage.setTitle("MIDI-Ger " + Strings.ae + "t ausw" + Strings.ae + "hlen");
-			midiSelectionStage.setScene(new Scene(root));
-			midiSelectionStage.initStyle(StageStyle.UTILITY);
-
-			ObservableList<String> midiDevices = getMidiDevices();
-			availableMidiDevicesBox.getItems().addAll(midiDevices);
-			availableMidiDevicesBox.getSelectionModel().selectFirst();
-
-			midiSelectionStage.show();
-		} 
-		catch (Exception e) 
+			try 
+			{
+				MidiDevice device = MidiSystem.getMidiDevice(deviceInfos.get(index));
+				engine.connectMidiDevice(device);
+				device.open();
+			} 
+			catch (MidiUnavailableException e) 
+			{
+				Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
+						Strings.ERROR_HEADERS[Strings.ERROR_CONNECT_MIDI_DEVICE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_CONNECT_MIDI_DEVICE]);
+				alert.showAndWait();
+			}
+		}
+		else
 		{
-			e.printStackTrace();
+			Alert alert = UiUtils.generateAlert(parent.getPrimaryStage(), AlertType.ERROR, Strings.ERROR_TITLE, 
+					Strings.ERROR_HEADERS[Strings.ERROR_NO_MIDI_DEVICE_AVAILABLE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_NO_MIDI_DEVICE_AVAILABLE]);
+			alert.showAndWait();
 		}
 	}
 
 	public void onSetSampleRateMenuAction(ActionEvent event)
 	{
+		NumberInputDialog dialog = new NumberInputDialog(parent.getPrimaryStage(), Strings.SAMPLERATE_DIALOG_TITLE, 
+				Strings.SAMPLERATE_DIALOG_HEADER, Strings.SAMPLINGRATE_DIALOG_TEXT, 1, 100000);
+		String result = dialog.showAndWait().get();
 		try 
 		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MenuController.class.getResource("fxml/SelectSampleRateLayout.fxml"));
-
-			loader.setController(this);
-			VBox root = (VBox) loader.load();
-
-			sampleRateStage = new Stage();
-			sampleRateStage.setTitle("Samplingrate auswï¿½hlen");
-			sampleRateStage.setScene(new Scene(root));
-
-			sampleRateStage.show();
-
-
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
+			engine.setSamplingRate(Float.valueOf(result));
 		}
-	}
-
-	public void onSetSampleRateAction(ActionEvent event)
-	{
-		float samplingRate = Float.valueOf(samplingRateInput.getText());
-		try 
-		{
-			engine.setSamplingRate(samplingRate);
-		} 
 		catch (LineUnavailableException e) 
 		{
 			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
 					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
 			alert.showAndWait();
 		}
-		sampleRateStage.close();
 	}
+
 
 	public void onSetBufferTimeMenuAction(ActionEvent event)
 	{
+		NumberInputDialog dialog = new NumberInputDialog(parent.getPrimaryStage(), Strings.BUFFERTIME_DIALOG_TITLE, 
+				Strings.BUFFERTIME_DIALOG_HEADER, Strings.BUFFERTIME_DIALOG_TEXT, 1, (int) (SynthesizerEngine.MAX_BUFFERTIME * 1000));
+		String result = dialog.showAndWait().get();
 		try 
 		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MenuController.class.getResource("fxml/SelectBufferTimeLayout.fxml"));
-
-			loader.setController(this);
-			VBox root = (VBox) loader.load();
-
-			bufferTimeStage = new Stage();
-			bufferTimeStage.setTitle("Pufferzeit auswï¿½hlen");
-			bufferTimeStage.setScene(new Scene(root));
-
-			bufferTimeStage.show();
-		} 
-		catch (IOException e) 
+			engine.setBufferTime(Double.valueOf(result) / 1000);
+		}
+		catch (LineUnavailableException e) 
 		{
-			e.printStackTrace();
+			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_AUDIO], 
+					Strings.ERROR_EXPLANATIONS[Strings.ERROR_AUDIO]);
+			alert.showAndWait();
 		}
 	}
 
-	public void onSetBufferTimeAction(ActionEvent event)
-	{
-		double bufferTime = Double.valueOf(bufferTimeInput.getText());
-		try {
-			engine.setBufferTime(bufferTime);
-		} catch (LineUnavailableException e) 
-		{
-			e.printStackTrace();
-		} 
-		bufferTimeStage.close();
-	}
 
 	public void onEngineMenuAction()
 	{
@@ -265,24 +227,6 @@ public class MenuController
 
 	//MIDI-Handler
 
-	public void onConnectMidiDeviceAction(ActionEvent event)
-	{
-		int index = availableMidiDevicesBox.getSelectionModel().getSelectedIndex();
-
-		try 
-		{
-			MidiDevice device = MidiSystem.getMidiDevice(deviceInfos.get(index));
-			engine.connectMidiDevice(device);
-			device.open();
-		} 
-		catch (MidiUnavailableException e) 
-		{
-			e.printStackTrace();
-		}
-
-		midiSelectionStage.close();
-	}
-
 	public void onOpenMidiPlayer(ActionEvent event)
 	{
 		if (!midiPlayerStage.isShowing())
@@ -302,37 +246,19 @@ public class MenuController
 
 	public void onSelectCurrentProgramAction(ActionEvent event)
 	{
-		try 
-		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MenuController.class.getResource("fxml/SelectCurrentChannelLayout.fxml"));
+		ChoiceDialog<String> dialog = new ChoiceDialog<String>();
+		dialog.initOwner(parent.getPrimaryStage());
+		dialog.setTitle(Strings.CURR_INSTRUMENT_DIALOG_TITLE);
+		dialog.setHeaderText(Strings.CURR_INSTRUMENT_DIALOG_HEADER);
+		dialog.setContentText(Strings.CURR_INSTRUMENT_DIALOG_TEXT);
 
-			loader.setController(this);
-			VBox root = (VBox) loader.load();
+		for (int i = 0; i < ProgramManager.NUM_PROGRAMS; i++)
+			dialog.getItems().add(engine.getProgramManager().getInstrumentName(i));
 
-			channelSelectionStage = new Stage();
-			channelSelectionStage.setTitle("Akuellen MIDI-Kanal auswählen");
-			channelSelectionStage.setScene(new Scene(root));
-			channelSelectionStage.initStyle(StageStyle.UTILITY);
-
-			for (int i = 0; i < ProgramManager.NUM_PROGRAMS; i++)
-				availableChannelsBox.getItems().add(engine.getProgramManager().getInstrumentName(i));
-
-			availableChannelsBox.getSelectionModel().select(parent.getCurrProgram());
-
-			channelSelectionStage.show();
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-
-	}
-
-	public void onConfirmCurrentProgramAction(ActionEvent event)
-	{
-		parent.setCurrProgram(availableChannelsBox.getSelectionModel().getSelectedIndex());
-		channelSelectionStage.close();
+		dialog.setSelectedItem(dialog.getItems().get(parent.getCurrProgram()));
+		
+		String result = dialog.showAndWait().get();
+		parent.setCurrProgram(dialog.getItems().indexOf(result));
 		parent.updateStatusBar();
 	}
 
@@ -401,17 +327,27 @@ public class MenuController
 
 	private void savePreset(ContainerPreset preset, String path)
 	{
-		try {
+		try 
+		{
 			preset.writeToFile(path);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
+					Strings.ERROR_HEADERS[Strings.ERROR_FILE_NOT_FOUND], Strings.ERROR_EXPLANATIONS[Strings.ERROR_FILE_NOT_FOUND]);
+			alert.showAndWait();
+		} 
+		catch (ParserConfigurationException e) 
+		{
+			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
+					Strings.ERROR_HEADERS[Strings.ERROR_WRITING_FILE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_WRITING_FILE]);
+			alert.showAndWait();
+		} 
+		catch (TransformerException e) 
+		{
+			Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
+					Strings.ERROR_HEADERS[Strings.ERROR_WRITING_FILE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_WRITING_FILE]);
+			alert.showAndWait();
 		}
 	}
 
@@ -425,21 +361,22 @@ public class MenuController
 
 		if (file != null)
 		{
-			try {
+			try 
+			{
 				engine.getProgramManager().setInstrumentPreset(parent.getCurrProgram(), new ContainerPreset(file.getPath()));
 				parent.update();
 			} 
-			catch (ParserConfigurationException e) 
+			catch (NullPointerException e)
 			{
-				e.printStackTrace();
-			} 
-			catch (SAXException e) 
+				Alert alert = UiUtils.generateAlert(parent.getPrimaryStage(), AlertType.WARNING, Strings.WARNING_TITLE, 
+						Strings.ERROR_HEADERS[Strings.ERROR_TOO_LESS_DATA], Strings.ERROR_EXPLANATIONS[Strings.ERROR_TOO_LESS_DATA]);
+				alert.showAndWait();
+			}
+			catch (Exception e) 
 			{
-				e.printStackTrace();
-			} 
-			catch (IOException e) 
-			{
-				e.printStackTrace();
+				Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
+						Strings.ERROR_HEADERS[Strings.ERROR_READING_FILE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_READING_FILE]);
+				alert.showAndWait();
 			}
 		}
 	}
@@ -481,14 +418,31 @@ public class MenuController
 
 	public void onSetMaxPolyphony(ActionEvent event)
 	{
-		NumberInputDialog dialog = new NumberInputDialog(parent.getPrimaryStage(), Strings.POLYPHONY_DIALOG_TITLE, Strings.POLYPHONY_DIALOG_HEADER, Strings.POLYPHONY_DIALOG_TEXT);
+		NumberInputDialog dialog = new NumberInputDialog(parent.getPrimaryStage(), Strings.POLYPHONY_DIALOG_TITLE, Strings.POLYPHONY_DIALOG_HEADER, Strings.POLYPHONY_DIALOG_TEXT, 1, SynthesizerEngine.MAX_POLYPHONY);
 		String result = dialog.showAndWait().get();
 		engine.setMaxPolyphony(Integer.valueOf(result));
+	}
+	
+	public void onShowMidiLogger(ActionEvent event)
+	{
+		if (!midiLoggerStage.isShowing())
+		{
+			midiLoggerStage.show();
+		}
+		else
+		{
+			midiLoggerStage.requestFocus();
+		}
 	}
 
 	public MidiPlayerController getMidiPlayerController()
 	{
 		return midiPlayerController;
+	}
+	
+	public Stage getMidiPlayerStage()
+	{
+		return midiPlayerStage;
 	}
 
 }
