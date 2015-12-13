@@ -142,10 +142,12 @@ public class Strings
 	public static final String MIDI_LOGGER_TITLE = "MIDI-Logger";
 	public static final String CLEAR_MIDI_LOGGER_MENU_ITEM = "Alles l" + oe + "schen";
 	
-	public static final String MIDI_PLAYER_TITLE_SONG = "Titel:";
-	public static final String MIDI_PLAYER_AUTHOR_SONG = "Autor:";
-	public static final String MIDI_PLAYER_DATE_SONG = "Datum:";
-	public static final String MIDI_PLAYER_COMMENT_SONG = "Kommentar:";
+	public static final String MIDI_PLAYER_INFO = "Info:\n";
+	public static final String MIDI_PLAYER_COPYRIGHT = "Copyright:\n";
+	public static final String MIDI_PLAYER_INSTRUMENTS = "Instrumente:\n";
+	
+	public static final String STATUSBAR_CONNECTING_DEVICE = "Verbinde mit MIDI-Ger" + ae + "t";
+	
 	//------------------------Dialogerläuterungen-------------
 	
 	public static final String ABOUT_DIALOG_TITLE = UE + "ber das Programm";

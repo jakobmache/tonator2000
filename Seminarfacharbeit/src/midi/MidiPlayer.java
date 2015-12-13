@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
@@ -105,6 +106,23 @@ public class MidiPlayer
 			}
 		}
 		return programs;
+	}
+	
+	public List<MetaMessage> getMetaMessages()
+	{
+		List<MetaMessage> messages = new ArrayList<MetaMessage>();
+		for (Track track :  sequence.getTracks()) 
+		{
+			for (int i = 0; i < track.size(); i++) 
+			{ 
+				MidiMessage message = track.get(i).getMessage();
+				if (message instanceof MetaMessage) 
+				{
+					messages.add((MetaMessage) message);
+				}
+			}
+		}
+		return messages;
 	}
 	
 	public File getMidiFile()

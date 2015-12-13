@@ -68,14 +68,20 @@ public class SynthesizerEngine implements Receiver
 	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
 	{
 		if (connectedMidiDevice != null)
+		{
 			connectedMidiDevice.close();
+			connectedMidiDevice = null;
+			notifyListeners();
+		}
 
 		Transmitter transmitter = device.getTransmitter();
 		transmitter.setReceiver(this);
 
+		device.open();
+		
 		if (transmitter.getReceiver() == this)
 			connectedMidiDevice = device;
-
+		
 		notifyListeners();
 	}
 

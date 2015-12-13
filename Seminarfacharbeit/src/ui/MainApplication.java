@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -31,6 +32,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
+import ui.editor.SynthesizerEditor;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -79,9 +81,16 @@ public class MainApplication extends Application
 		
 		showOverlay(OVERLAY_MIDI);
 
-//		SynthesizerEditor editor = new SynthesizerEditor(this, engine);
-//		editor.show();
 		engine.run();
+		
+		rootLayout.setOnKeyPressed((event) ->
+		{
+			if (event.getCode() == KeyCode.E)
+			{
+				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+				editor.show();
+			}
+		});
 	}
 
 	private void initEngine()
@@ -321,6 +330,11 @@ public class MainApplication extends Application
 	public int getCurrProgram()
 	{
 		return currProgram;
+	}
+	
+	public SynthiStatusBar getStatusBar()
+	{
+		return statusBar;
 	}
 
 	public static void main(String[] args) {

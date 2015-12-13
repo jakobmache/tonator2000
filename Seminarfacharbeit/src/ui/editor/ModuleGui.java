@@ -25,8 +25,8 @@ public class ModuleGui
 	private int width;
 	private int height;
 	
-	private double dragX;
-	private double dragY;
+	private double oldX;
+	private double oldY;
 
 	private Pane gui;
 
@@ -80,8 +80,8 @@ public class ModuleGui
 			if (event.getButton() == MouseButton.PRIMARY)
 			{
 				gui.getScene().setCursor(Cursor.CLOSED_HAND);
-				dragX = gui.getLayoutX() - event.getX();
-				dragY = gui.getLayoutY() - event.getY();
+				oldX = gui.getLayoutX();
+				oldY = gui.getLayoutY();
 			}
 		});
 
@@ -94,17 +94,17 @@ public class ModuleGui
 		{
 			if (event.getButton() == MouseButton.PRIMARY && owner.getBoundLine() == null)
 			{
-				double newX = event.getX() + dragX;
+				double newX = event.getX() + oldX;
 				if (newX > 0 && newX < gui.getScene().getWidth()) 
 				{
 					gui.setLayoutX(newX);
-					dragX = newX;
+					oldX = newX;
 				}  
-				double newY = event.getY() + dragY;
+				double newY = event.getY() + oldY;
 				if (newY > 0 && newY < gui.getScene().getHeight()) 
 				{
 					gui.setLayoutY(newY);
-					dragY = newY;
+					oldY = newY;
 				}  
 			}
 		});

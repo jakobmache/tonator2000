@@ -73,7 +73,7 @@ public class MenuController
 		BorderPane layout = null;
 		try 
 		{
-			MidiPlayerController controller = new MidiPlayerController(engine, midiPlayerStage, parent.getPrimaryStage());
+			MidiPlayerController controller = new MidiPlayerController(engine, midiPlayerStage, parent.getPrimaryStage(), parent);
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApplication.class.getResource("fxml/MidiPlayerLayout.fxml"));
 
@@ -130,7 +130,6 @@ public class MenuController
 
 	public void onSelectMidiDeviceAction(ActionEvent event)
 	{
-
 		List<String> devices = getMidiDevices();
 
 		if (!devices.isEmpty())
@@ -446,3 +445,6 @@ public class MenuController
 	}
 
 }
+
+
+
