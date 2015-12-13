@@ -18,6 +18,8 @@ public class OscillatorContainerPreset extends ContainerPreset
 		setParam(Ids.ID_CONSTANT_RELEASE_1, 100F);
 		setParam(Ids.ID_CONSTANT_CUTOFF_1, 1.0F);
 		setParam(Ids.ID_CONSTANT_RESONANCE_1, 0.0F);
+		setParam(Ids.ID_CONSTANT_CUTOFF_2, 0.0F);
+		setParam(Ids.ID_CONSTANT_RESONANCE_2, 0.0F);
 		setParam(Ids.ID_CONSTANT_OSCIBALANCE_1, 0.5F);
 		
 		setParam(Ids.ID_CONSTANT_STEEPNESS_2, -3.0F);

@@ -2,6 +2,7 @@ package ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -74,15 +75,22 @@ public class MidiPlayerController
 		{
 			engine.getMidiPlayer().loadMidiFile(midiFile);
 			loadTextAreaData();
-		} catch (MidiUnavailableException e) 
+			stage.setTitle(Strings.MIDI_PLAYER_TITLE + " - " + midiFile.getName());
+		} 
+		catch (MidiUnavailableException e) 
 		{
 			e.printStackTrace();
-		} catch (InvalidMidiDataException e) 
+			stage.setTitle(Strings.MIDI_PLAYER_TITLE + "- " + Strings.NO_MIDI_FILE_LOADED_LABEL);
+		} 
+		catch (InvalidMidiDataException e) 
 		{
 			e.printStackTrace();
-		} catch (IOException e) 
+			stage.setTitle(Strings.MIDI_PLAYER_TITLE + "- " + Strings.NO_MIDI_FILE_LOADED_LABEL);
+		} 
+		catch (IOException e) 
 		{
 			e.printStackTrace();
+			stage.setTitle(Strings.MIDI_PLAYER_TITLE + "- " + Strings.NO_MIDI_FILE_LOADED_LABEL);
 		}
 
 		updateLabel();
@@ -181,12 +189,10 @@ class LoadFileTask extends Task<Void>
 	@Override
 	protected Void call() throws Exception 
 	{
-		System.out.println("call is called!");
 		Platform.runLater(() -> {
 			controller.block(true);
 			infoArea.clear();
 		});
-
 
 
 		updateMessage("Lade MIDI-Datei...");
@@ -195,17 +201,18 @@ class LoadFileTask extends Task<Void>
 
 		List<MetaMessage> messages = engine.getMidiPlayer().getMetaMessages();
 
+		Charset encoding = StandardCharsets.UTF_8;
 		writeToTextField(Strings.MIDI_PLAYER_INFO);
 		for (MetaMessage message:messages)
 		{
 			if (message.getType() == MidiPlayerController.META_TEXT)
-				writeToTextField("\t" + new String(message.getMessage(), StandardCharsets.UTF_8) + sep);	
+				writeToTextField("\t" + new String(message.getMessage(), encoding) + sep);	
 		}
 		writeToTextField(Strings.MIDI_PLAYER_COPYRIGHT);
 		for (MetaMessage message:messages)
 		{
 			if (message.getType() == MidiPlayerController.META_COPYRIGHT)
-				writeToTextField("\t" + new String(message.getMessage(), StandardCharsets.UTF_8) + sep);
+				writeToTextField("\t" + new String(message.getMessage(), encoding) + sep);
 		}
 
 		writeToTextField(Strings.MIDI_PLAYER_INSTRUMENTS);	

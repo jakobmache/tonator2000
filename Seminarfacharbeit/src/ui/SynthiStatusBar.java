@@ -107,6 +107,7 @@ public class SynthiStatusBar extends StatusBar implements EngineListener
 		getLeftItems().add(engineRunningLabel);
 		getLeftItems().add(new Separator(Orientation.VERTICAL));
 		getLeftItems().add(maxPolyphonyLabel);
+		getLeftItems().add(new Separator(Orientation.VERTICAL));
 
 		getRightItems().add(new Separator(Orientation.VERTICAL));
 		getRightItems().add(midiDeviceLabel);

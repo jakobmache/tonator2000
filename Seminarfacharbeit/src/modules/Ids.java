@@ -37,7 +37,12 @@ public class Ids
 	public static final int ID_CONSTANT_PEAKLEVEL_1 = 120;
 	public static final int ID_CONSTANT_PEAKLEVEL_2 = 121;
 	
+	public static final int ID_CONSTANT_RESONANCE_2 = 123;
+	public static final int ID_CONSTANT_CUTOFF_2 = 124;
+	
 	public static final int ID_VOLUME = 122;
+	
+	public static final int ID_HIGHPASS_1 = 125;
 	
 	public static final int ID_CONSTANT_OSCIBALANCE_1 = 1000;
 	

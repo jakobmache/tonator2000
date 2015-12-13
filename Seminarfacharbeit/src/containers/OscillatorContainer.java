@@ -4,6 +4,7 @@ import resources.Strings;
 import modules.BalancedMixer;
 import modules.Constant;
 import modules.Envelope;
+import modules.HighpassFilter;
 import modules.Ids;
 import modules.LowpassFilter;
 import modules.Mixer;
@@ -42,6 +43,9 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 
 		addModule(new Constant(parent, Ids.ID_CONSTANT_CUTOFF_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_CUTOFF_1)));
 		addModule(new Constant(parent, Ids.ID_CONSTANT_RESONANCE_1, Strings.getStandardModuleName(Ids.ID_CONSTANT_RESONANCE_1)));
+		
+		addModule(new Constant(parent, Ids.ID_CONSTANT_CUTOFF_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_CUTOFF_2)));
+		addModule(new Constant(parent, Ids.ID_CONSTANT_RESONANCE_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_RESONANCE_2)));
 
 		addModule(new Constant(parent, Ids.ID_CONSTANT_ATTACK_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_ATTACK_2)));
 		addModule(new Constant(parent, Ids.ID_CONSTANT_DECAY_2, Strings.getStandardModuleName(Ids.ID_CONSTANT_DECAY_2)));
@@ -58,6 +62,7 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		addModule(new Envelope(parent, Ids.ID_ENVELOPE_2, this,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_2)));
 		addModule(new LowpassFilter(parent, Ids.ID_LOWPASS_1,  Strings.getStandardModuleName(Ids.ID_LOWPASS_1)));
 		addModule(new BalancedMixer(parent, Ids.ID_MIXER_2, Strings.getStandardModuleName(Ids.ID_MIXER_2)));
+		addModule(new HighpassFilter(parent, Ids.ID_HIGHPASS_1, Strings.getStandardModuleName(Ids.ID_HIGHPASS_1)));
 				
 		addConnection(findModuleById(Ids.ID_CONSTANT_FREQUENCY_1), findModuleById(Ids.ID_OSCILLATOR_1), Constant.VALUE_OUTPUT, Oscillator.FREQUENCY_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_AMPLITUDE_1), findModuleById(Ids.ID_OSCILLATOR_1), Constant.VALUE_OUTPUT, Oscillator.AMPLITUDE_INPUT);
@@ -79,6 +84,9 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		addConnection(findModuleById(Ids.ID_ENVELOPE_2), findModuleById(Ids.ID_LOWPASS_1), Envelope.SAMPLE_OUTPUT, LowpassFilter.CUTOFF_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_RESONANCE_1), findModuleById(Ids.ID_LOWPASS_1), Constant.VALUE_OUTPUT, LowpassFilter.RESONANCE_INPUT);
 		
+		addConnection(findModuleById(Ids.ID_CONSTANT_CUTOFF_2), findModuleById(Ids.ID_HIGHPASS_1), Constant.VALUE_OUTPUT, HighpassFilter.CUTOFF_INPUT);
+		addConnection(findModuleById(Ids.ID_CONSTANT_RESONANCE_2), findModuleById(Ids.ID_HIGHPASS_1), Constant.VALUE_OUTPUT, HighpassFilter.RESONANCE_INPUT);
+		
 		addConnection(findModuleById(Ids.ID_CONSTANT_ATTACK_2), findModuleById(Ids.ID_ENVELOPE_2), Constant.VALUE_OUTPUT, Envelope.ATTACK_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_DECAY_2), findModuleById(Ids.ID_ENVELOPE_2), Constant.VALUE_OUTPUT, Envelope.DECAY_INPUT);
 		addConnection(findModuleById(Ids.ID_CONSTANT_SUSTAIN_2), findModuleById(Ids.ID_ENVELOPE_2), Constant.VALUE_OUTPUT, Envelope.SUSTAIN_INPUT);
@@ -91,7 +99,8 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		
 		addConnection(findModuleById(Ids.ID_OSCILLATOR_1), findModuleById(Ids.ID_MIXER_2), Oscillator.SAMPLE_OUTPUT, BalancedMixer.SAMPLE_INPUT_1);
 		addConnection(findModuleById(Ids.ID_OSCILLATOR_2), findModuleById(Ids.ID_MIXER_2), Oscillator.SAMPLE_OUTPUT, BalancedMixer.SAMPLE_INPUT_2);
-		addConnection(findModuleById(Ids.ID_MIXER_2), findModuleById(Ids.ID_LOWPASS_1), Mixer.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
+		addConnection(findModuleById(Ids.ID_MIXER_2), findModuleById(Ids.ID_HIGHPASS_1), Mixer.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
+		addConnection(findModuleById(Ids.ID_HIGHPASS_1), findModuleById(Ids.ID_LOWPASS_1), HighpassFilter.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_LOWPASS_1), findModuleById(Ids.ID_ENVELOPE_1), LowpassFilter.SAMPLE_OUTPUT, Envelope.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_ENVELOPE_1), this, Envelope.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
 	}

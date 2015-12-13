@@ -52,6 +52,12 @@ public class MidiLogger
 				builder.append("New program on channel " + message.getChannel());
 				builder.append(" - program number " + message.getData1());
 			}
+			else if (message.getCommand() == ShortMessage.CONTROL_CHANGE)
+			{
+				builder.append("Control change on channel " + message.getChannel());
+				builder.append(" with data: " + message.getData1() + " | ");
+				builder.append(message.getData2());
+			}
 			else
 			{
 				builder.append("ShortMessage " + message.getCommand() + " with Data: ");

@@ -180,6 +180,11 @@ public class Strings
 	public static final String CURR_INSTRUMENT_DIALOG_HEADER = "Aktuelles Instrument / Programm ausw" + ae + "hlen";
 	public static final String CURR_INSTRUMENT_DIALOG_TEXT = "Verf" + ue + "gbare Instrumente:";
 	
+	public static final String CHANNEL_INSTRUMENT_DIALOG_TITLE = "Instrumentenzuweisung";
+	public static final String CHANNEL_INSTRUMENT_DIALOG_HEADER = "Einem MIDI-Kanal ein Instrument(Programm) zuweisen";
+	
+	public static final String BUTTON_TYPE_RESET_ALL = "Alles zur" + ue + "cksetzen";
+	
 	//-------------------------Modulnamen---------------------
 
 	public static String getStandardModuleName(int id)
@@ -193,13 +198,15 @@ public class Strings
 		else if (id == Ids.ID_OSCILLATOR_2)
 			return "Oszillator 2";
 		else if (id == Ids.ID_ENVELOPE_1)
-			return "Amplituden-Hüllkurve";
+			return "Amplituden-H" + ue + "llkurve";
 		else if (id == Ids.ID_ENVELOPE_2)
-			return "Tiefpass-Hüllkurve";
+			return "Tiefpass-H" + ue + "llkurve";
 		else if (id == Ids.ID_LOWPASS_1)
 			return "Tiefpassfilter";
 		else if (id == Ids.ID_VOLUME)
-			return "Lautstärke";
+			return "Lautst" + ae + "rke";
+		else if (id == Ids.ID_HIGHPASS_1)
+			return "Hochpassfilter";
 		else 
 			return "Modul";	
 	}

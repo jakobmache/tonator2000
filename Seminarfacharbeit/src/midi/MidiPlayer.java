@@ -55,8 +55,6 @@ public class MidiPlayer
 		}
 
 		this.midiFile = midiFile;
-		
-		System.out.println("All programs: " + getAllPrograms());
 	}
 
 	public void startPlayingMidiFile()

@@ -8,11 +8,11 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
-import resources.Strings;
 import midi.MidiUtils;
 import modules.Ids;
 import modules.Mixer;
 import modules.listener.ProgramListener;
+import resources.Strings;
 import containers.ModuleContainerListener;
 import containers.OscillatorContainer;
 
@@ -23,10 +23,16 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	private SynthesizerEngine parent;
 	
 	private List<Integer> channelPrograms = new ArrayList<Integer>();
+	private List<Float> channelVolumes = new ArrayList<Float>();
 
 	private final int NOTE_ON_START = 144;
 	private final int NOTE_OFF_START = 128;
-	private final int NUM_CHANNELS = 16;
+	public final static int NUM_CHANNELS = 16;
+	
+	public static final float INITIAL_CHANNEL_VOLUME = 100F;
+	public static final int CHANNEL_VOLUME = 7;
+	
+	public static final int DEFAULT_PROGRAM = 0;
 
 	public InputController(SynthesizerEngine parent)
 	{
@@ -38,6 +44,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		{
 			channelPrograms.add(0);
 			channelNotes.put(i, new HashMap<Integer, ModuleContainer>());
+			channelVolumes.add(INITIAL_CHANNEL_VOLUME / 127F);
 		}
 		
 		parent.getProgramManager().addListener(this);
@@ -70,6 +77,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		else if (message.getCommand() == ShortMessage.PROGRAM_CHANGE)
 		{
 			setProgram(message);
+		}
+		
+		else if (message.getCommand() == ShortMessage.CONTROL_CHANGE && message.getData1() == CHANNEL_VOLUME)
+		{
+			setChannelVolume(message);
 		}
 	}
 
@@ -104,8 +116,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		allContainers.add(container);
 		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
 		noteMap.put(key, container);
-
-		container.startPlaying(frequency,(velocity / 127.0F) * Short.MAX_VALUE);
+		container.startPlaying(frequency, channelVolumes.get(channel) * (velocity / 127.0F) * Short.MAX_VALUE);
 	}
 
 	private void playNoteOff(ShortMessage message)
@@ -139,9 +150,15 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		int channel = message.getChannel();
 		int program = message.getData1();
 		
-		System.out.printf("New program on channel %d:%d\n", channel, program);
-		
 		channelPrograms.set(channel, program);
+	}
+	
+	private void setChannelVolume(ShortMessage message)
+	{
+		int channel = message.getChannel();
+		int volume = message.getData2();
+		
+		channelVolumes.set(channel, volume / 127F);
 	}
 
 	public void resetMidi() throws InvalidMidiDataException
@@ -182,6 +199,16 @@ public class InputController implements ModuleContainerListener, ProgramListener
 				}		
 			}
 		}
+	}
+	
+	public void setChannelProgram(int channel, int newProgram)
+	{
+		channelPrograms.set(channel, newProgram);
+	}
+	
+	public int getChannelProgram(int channel)
+	{
+		return channelPrograms.get(channel);
 	}
 
 }

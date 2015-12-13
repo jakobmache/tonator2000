@@ -203,16 +203,18 @@ public class MainApplication extends Application
 					Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_CONSTANT_STEEPNESS_2});
 			Node volume = UiUtils.generateModuleGui(engine, this, Module.VOLUME, new int[]{Ids.ID_VOLUME});
 			Node balance = UiUtils.generateModuleGui(engine, this, Module.BALANCED_MIXER, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
-
+			Node highpass = UiUtils.generateModuleGui(engine, this, Module.LOWPASS, new int[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
+			
 			osciBox.getChildren().add(oscillator1);
 			osciBox.getChildren().add(oscillator2);
 			
 			balanceBox.getChildren().add(osciBox);
 			balanceBox.getChildren().add(balance);
 			synthesizerLayout.getChildren().add(balanceBox);
-			synthesizerLayout.getChildren().add(envelope1);
+			synthesizerLayout.getChildren().add(highpass);
 			synthesizerLayout.getChildren().add(lowpass);
 			synthesizerLayout.getChildren().add(envelope2);
+			synthesizerLayout.getChildren().add(envelope1);
 			synthesizerLayout.getChildren().add(volume);
 		}
 		catch(IOException e)

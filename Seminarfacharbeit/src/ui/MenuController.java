@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -263,7 +265,13 @@ public class MenuController
 
 	public void onAssignPresetToChannelAction(ActionEvent event)
 	{
-		//TODO:das hier
+		ChannelInstrumentAlert alert = new ChannelInstrumentAlert(AlertType.CONFIRMATION, engine);
+		alert.initOwner(parent.getPrimaryStage());
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK)
+		{
+			engine.getInputController().setChannelProgram(alert.getChannelBox().getValue() - 1, alert.getProgramBox().getSelectionModel().getSelectedIndex());
+		}
 	}
 
 	public void onSavePreset(ActionEvent event)
