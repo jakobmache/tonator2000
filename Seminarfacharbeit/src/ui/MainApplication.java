@@ -286,7 +286,7 @@ public class MainApplication extends Application
 			{
 				PopOver popOver = new PopOver();
 				popOver.setDetachable(true);
-				popOver.setDetachedTitle(Strings.MODULE_NAMES[module]);
+				popOver.setTitle(Strings.MODULE_NAMES[module]);
 				popOver.setDetached(true);
 				popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
 
