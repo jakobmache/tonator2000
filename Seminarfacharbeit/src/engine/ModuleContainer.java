@@ -3,32 +3,25 @@ package engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.sampled.LineUnavailableException;
+import modules.Constant;
+import containers.ContainerPreset;
+import containers.ModuleContainerListener;
 
-import modules.OutputModule;
-
-public abstract class ModuleContainer 
+public abstract class ModuleContainer extends Module
 {
-	private OutputModule outputModule;
+	public static final int SAMPLE_INPUT = 0;
+	public static final int SAMPLE_OUTPUT = 0;
 	
-	private List<Module> modules = new ArrayList<Module>();
-	private SynthesizerEngine engine;
+	protected List<Module> modules;
 	
-	public ModuleContainer(SynthesizerEngine parent) throws LineUnavailableException
-	{
-		engine = parent;
-		outputModule = new OutputModule(this);
-		addModule(outputModule);
-	}
+	protected ContainerPreset preset;
 	
-	public OutputModule getOutputModule() 
+	private List<ModuleContainerListener> listeners = new ArrayList<ModuleContainerListener>();
+	
+	public ModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name)
 	{
-		return outputModule;
-	}
-
-	public SynthesizerEngine getEngine()
-	{
-		return engine;
+		super(parent, numInputWires, numOutputWires, id, name);
+		modules = new ArrayList<Module>();
 	}
 	
 	public void addModule(Module module)
@@ -36,8 +29,69 @@ public abstract class ModuleContainer
 		modules.add(module);
 	}
 	
-	public Module getModule(int index)
+	public void addConnection(Module moduleDataIsGrabbedFrom, Module moduleDataIsSentTo, int indexDataIsGrabbedFrom, int indexDataIsSentTo)
 	{
-		return modules.get(index);
+		new Wire(moduleDataIsSentTo, moduleDataIsGrabbedFrom, indexDataIsGrabbedFrom, indexDataIsSentTo);
+	}
+	
+	public List<Module> findModulesById(int id)
+	{
+		List<Module> result = new ArrayList<Module>();
+		for (Module module:modules)
+		{
+			if (module.getId() == id)
+				result.add(module);
+		}
+		return result;
+	}
+	
+	public Module findModuleById(int id)
+	{
+		for (Module module:modules)
+		{
+			if (module.getId() == id)
+				return module;
+		}
+		return null;
+	}
+	
+	public void applyContainerPreset(ContainerPreset preset)
+	{
+		this.preset = preset;
+		for (Integer id:preset.getIds())
+		{
+			Constant module = (Constant) findModuleById(id);
+			module.setValue(preset.getParam(id));
+		}
+	}
+	
+	public ContainerPreset getPreset()
+	{
+		return preset;
+	}
+	
+	public void updatePreset(Integer id, float value)
+	{
+		preset.setParam(id, value);
+		Constant module = (Constant) findModuleById(id);
+		module.setValue(value);
+	}
+	
+	public void addListener(ModuleContainerListener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	public void onFinished() 
+	{
+		for (ModuleContainerListener listener:listeners)
+		{
+			listener.onContainerFinished(this);
+		}
+	}
+	
+	public Wire getOutputWire()
+	{
+		return outputWires[SAMPLE_OUTPUT];
 	}
 }

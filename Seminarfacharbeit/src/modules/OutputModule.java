@@ -4,15 +4,18 @@ import java.nio.ByteBuffer;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import engine.Module;
-import engine.ModuleContainer;
+import engine.SynthesizerEngine;
 
 //Grundlage: http://www.wolinlabs.com/blog/java.sine.wave.html
 public class OutputModule extends Module
 {
+	public static final int SAMPLE_INPUT = 0;
+	
 	private SourceDataLine dataLine; 
 	private ByteBuffer buffer;
 
@@ -21,15 +24,15 @@ public class OutputModule extends Module
 	private int packetSize;
 
 	private boolean stopPlaying = false;
-
-	public OutputModule(ModuleContainer parent) throws LineUnavailableException 
+	
+	public OutputModule(SynthesizerEngine parent, int id, String name) throws LineUnavailableException 
 	{
-		super(parent, 1, 0);
+		super(parent, 1, 0, id, name);
 		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
-		packetSize = (int) (getEngine().getBufferTime() * getEngine().getSamplingRate() * getEngine().getSampleSizeInBytes());
+		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
 
 		//Buffergröße der SourceDataLine = 2 * Paketgröße
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, getEngine().getAudioFormat(), packetSize * 2);
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, parent.getAudioFormat(), packetSize * 2);
 
 		if (!AudioSystem.isLineSupported(info))
 		{
@@ -37,15 +40,15 @@ public class OutputModule extends Module
 		}
 
 		dataLine = (SourceDataLine) AudioSystem.getLine(info);
-		dataLine.open(getEngine().getAudioFormat());
-
-		samplesPerPacket = packetSize / getEngine().getSampleSizeInBytes();
+		dataLine.open(parent.getAudioFormat());
+		dataLine.start();
+		
+		samplesPerPacket = packetSize / parent.getSampleSizeInBytes();
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
 	public void startPlaying() throws InterruptedException
 	{
-		dataLine.start();
 		stopPlaying = false;
 
 		while (!stopPlaying)
@@ -55,7 +58,8 @@ public class OutputModule extends Module
 			//Wir berechnen soviele Samples, dass ein Paket voll ist --> Hälfte des Buffers der SourceDataLine
 			for (int i = 0; i < samplesPerPacket; i++)
 			{
-				buffer.putShort(requestNextSample());
+				float value = requestNextSample(0);
+				buffer.putShort((short) value);
 			}
 
 			dataLine.write(buffer.array(), 0, buffer.position());
@@ -65,21 +69,33 @@ public class OutputModule extends Module
 			{
 				Thread.sleep(1);
 			}
-
 		}
 
 		dataLine.drain();
-		dataLine.close();
 	}
-
+	
+	@Override
+	public float calcNextDisabledSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
 
 	@Override
-	public short requestNextSample() 
+	public float calcNextSample(int index) 
 	{
-		short sampleValue = inputWires[0].getNextSample();
+		float sampleValue = inputWires[SAMPLE_INPUT].getNextSample();
 		return sampleValue;
 	}
-
+	
+	public void setVolume(float newValue)
+	{
+	      if (dataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) 
+	      {
+	            FloatControl volume = (FloatControl) dataLine.getControl(FloatControl.Type.MASTER_GAIN);
+	            volume.setValue(newValue);
+	      }
+	}
+	
 	private int getLineSampleCount() 
 	{
 		return dataLine.getBufferSize() - dataLine.available();
@@ -88,6 +104,39 @@ public class OutputModule extends Module
 	public void stopPlaying()
 	{
 		stopPlaying = true;
+	}
+	
+	public void close()
+	{
+		dataLine.close();
+	}
+	
+	public SourceDataLine getAudioLine()
+	{
+		return dataLine;
+	}
+	
+	public void updateFormat() throws LineUnavailableException
+	{
+		stopPlaying();
+		
+		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
+		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
+
+		//Buffergröße der SourceDataLine = 2 * Paketgröße
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, parent.getAudioFormat(), packetSize * 2);
+
+		if (!AudioSystem.isLineSupported(info))
+		{
+			throw new LineUnavailableException();
+		}
+
+		dataLine = (SourceDataLine) AudioSystem.getLine(info);
+		dataLine.open(parent.getAudioFormat());
+		dataLine.start();
+		
+		samplesPerPacket = packetSize / parent.getSampleSizeInBytes();
+		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
 }

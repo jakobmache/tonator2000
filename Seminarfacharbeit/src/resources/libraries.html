@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Jakob Mache">
+	<META NAME="CREATED" CONTENT="20151211;17435520">
+	<META NAME="CHANGEDBY" CONTENT="Jakob Mache">
+	<META NAME="CHANGED" CONTENT="20151211;18205813">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin: 2cm }
+		P { margin-bottom: 0.21cm }
+		PRE.cjk { font-family: "NSimSun", monospace }
+		A:link { so-language: zxx }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="de-DE" DIR="LTR">
+<PRE CLASS="western">
+<FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Dieses Projekt verwendet ControlsFX 8.40.9:</FONT></FONT></FONT><br><br>
+
+<FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>/**</FONT></FONT></FONT>
+<A NAME="license.txt-2"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* Copyright (c) 2013, 2014, ControlsFX</FONT></FONT></FONT><br>
+<A NAME="license.txt-3"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* All rights reserved.</FONT></FONT></FONT><br>
+<A NAME="license.txt-4"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*</FONT></FONT></FONT>
+<A NAME="license.txt-5"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* Redistribution and use in source and binary forms, with or without</FONT></FONT></FONT><br>
+<A NAME="license.txt-6"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* modification, are permitted provided that the following conditions are met:</FONT></FONT></FONT><br>
+<A NAME="license.txt-7"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*     * Redistributions of source code must retain the above copyright</FONT></FONT></FONT><br>
+<A NAME="license.txt-8"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* notice, this list of conditions and the following disclaimer.</FONT></FONT></FONT><br>
+<A NAME="license.txt-9"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*     * Redistributions in binary form must reproduce the above copyright</FONT></FONT></FONT><br>
+<A NAME="license.txt-10"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* notice, this list of conditions and the following disclaimer in the</FONT></FONT></FONT><br>
+<A NAME="license.txt-11"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* documentation and/or other materials provided with the distribution.</FONT></FONT></FONT><br>
+<A NAME="license.txt-12"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*     * Neither the name of ControlsFX, any associated website, nor the</FONT></FONT></FONT><br>
+<A NAME="license.txt-13"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* names of its contributors may be used to endorse or promote products</FONT></FONT></FONT><br>
+<A NAME="license.txt-14"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* derived from this software without specific prior written permission.</FONT></FONT></FONT><br>
+<A NAME="license.txt-15"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*</FONT></FONT></FONT>
+<A NAME="license.txt-16"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</FONT></FONT></FONT><br>
+<A NAME="license.txt-17"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</FONT></FONT></FONT><br>
+<A NAME="license.txt-18"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</FONT></FONT></FONT><br>
+<A NAME="license.txt-19"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* DISCLAIMED. IN NO EVENT SHALL CONTROLSFX BE LIABLE FOR ANY</FONT></FONT></FONT><br>
+<A NAME="license.txt-20"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</FONT></FONT></FONT><br>
+<A NAME="license.txt-21"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</FONT></FONT></FONT><br>
+<A NAME="license.txt-22"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</FONT></FONT></FONT><br>
+<A NAME="license.txt-23"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</FONT></FONT></FONT><br>
+<A NAME="license.txt-24"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</FONT></FONT></FONT><br>
+<A NAME="license.txt-25"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</FONT></FONT></FONT><br>
+<A NAME="license.txt-26"></A><FONT COLOR="#000000"> <FONT FACE="Courier New, monospace"><FONT SIZE=2>*/</FONT></FONT></FONT><br><br><br><br>
+
+<FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Verwendete Grafiken (MIDI-Player):</FONT></FONT></FONT></PRE>
+<UL>
+	<LI><PRE CLASS="western" STYLE="margin-bottom: 0.5cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Icons made by <A HREF="http://www.flaticon.com/authors/elegant-themes">Elegant Themes</A>, <A HREF="http://www.flaticon.com/authors/icomoon">Icomoon</A> from <A HREF="http://www.flaticon.com/">www.flaticon.com</A>, is licensed by <A HREF="http://creativecommons.org/licenses/by/3.0/">Creative Commons BY 3.0</A></FONT></FONT></FONT></PRE>
+</UL>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Verwendete
+Grafiken (Icon):</FONT></FONT></FONT></P>
+<UL>
+	<LI><PRE CLASS="western"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=2>Icon made by <A HREF="http://www.iconarchive.com/artist/iconleak.html">Iconleak</A> from <A HREF="http://www.iconarchive.com/">http://www.iconarchive.com</A> </FONT></FONT></FONT></PRE>
+</UL>
+<PRE CLASS="western"></PRE>
+</BODY>
+</HTML>

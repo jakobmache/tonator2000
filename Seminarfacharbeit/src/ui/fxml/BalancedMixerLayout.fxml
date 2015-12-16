@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox alignment="CENTER" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="module1Label" text="Modul 1" />
+      <Slider fx:id="balanceSlider" max="1.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
+      <Label fx:id="module2Label" text="Modul 2" />
+      <TextField fx:id="balanceInput" maxHeight="25.0" maxWidth="50.0" onAction="#onBalanceInputAction" prefHeight="25.0" prefWidth="50.0" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

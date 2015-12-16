@@ -1,4 +1,3 @@
-
 package midi;
 
 import java.util.ArrayList;
@@ -8,9 +7,6 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Transmitter;
-
 
 public class MidiUtils {
 
@@ -19,15 +15,48 @@ public class MidiUtils {
 
 	public static int NOTE_OFF_START = 128;
 	public static int NOTE_OFF_END = 143;
+	
+	public static List<String > channelNames = new ArrayList<String>()
+	{
+		private static final long serialVersionUID = 1L;
+		
+		{
+			add("Klavier");
+			add("Perkussion 1");
+			add("Orgel");
+			add("Gitarre");
+			add("Bass");
+			add("Streicher");
+			add("Ensemble");
+			add("Blechbläser");
+			add("Holzbläser");
+			add("Flöten");
+			add("Synth Lead");
+			add("Synth Pad");
+			add("Synth Effekte");
+			add("Ethnic");
+			add("Perkussion 2");
+			add("Soundeffekte");
+		}
+		
+	};
 
-	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>(){{
+	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	{
 		for (int i = NOTE_ON_START; i <= NOTE_ON_END; i++)
 		{
 			add(i);
 		}
 	}};
 
-	public static List<Integer> NOTE_OFF_COMMANDS = new ArrayList<Integer>(){{
+	public static List<Integer> NOTE_OFF_COMMANDS = new ArrayList<Integer>()
+	{
+		private static final long serialVersionUID = 1L;
+
+	{
 		for (int i = NOTE_OFF_START; i <= NOTE_OFF_END; i++)
 		{
 			add(i);
@@ -50,24 +79,18 @@ public class MidiUtils {
 			{
 				MidiDevice device = MidiSystem.getMidiDevice(info);
 
-				// Wenn das Gerät einen Transmitter hat, muss es hinzugefügt werden
+				// Wenn das Gerï¿½t einen Transmitter hat, muss es hinzugefï¿½gt werden
 				device.getTransmitter();
 				inputDeviceInfo.add(info);
 			}
 
 			catch (MidiUnavailableException e)
 			{
-				// Das Gerät hat keinen Transmitter, muss also nicht hinzugefügt werden
+				// Das Gerï¿½t hat keinen Transmitter, muss also nicht hinzugefï¿½gt werden
 			}
 		}
 
 		return inputDeviceInfo;
-	}
-
-	public static void connectTransmitterToReceiver(MidiDevice device, Receiver receiver) throws MidiUnavailableException
-	{
-		Transmitter transmitter = device.getTransmitter();
-		transmitter.setReceiver(receiver);
 	}
 
 	public static float midiNoteNumberToFrequency(int mnn) {

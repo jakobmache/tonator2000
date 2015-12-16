@@ -1,35 +1,42 @@
 package containers;
 
-import javax.sound.sampled.LineUnavailableException;
-
-import modules.Oscillator;
+import resources.Strings;
+import modules.Ids;
+import modules.SampleFilter;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
 public class StandardModuleContainer extends ModuleContainer 
 {
-	private Oscillator osci;
+	
+	private SampleFilter filter;
 
-	public StandardModuleContainer(SynthesizerEngine parent) throws LineUnavailableException 
+	public StandardModuleContainer(SynthesizerEngine parent, int numInputWires,
+			int numOutputWires, int id, String name) 
 	{
-		super(parent);
-		initModules();
-		initWires();
+		super(parent, numInputWires, numOutputWires, id, name);
+		
+		filter = new SampleFilter(parent, Ids.ID_SAMPLE_FILTER_1,  Strings.getStandardModuleName(Ids.ID_SAMPLE_FILTER_1));
+		addModule(filter);
 	}
 	
-	private void initModules()
+	@Override
+	public void connectInputWire(int index, Wire wire)
 	{
-		osci = new Oscillator(this);
+		findModuleById(Ids.ID_SAMPLE_FILTER_1).connectInputWire(index, wire);
 	}
-	
-	private void initWires()
-	{
-		Wire wire = new Wire(getOutputModule(), osci);
+
+	@Override
+	public float calcNextSample(int index) {
+		float sample = filter.requestNextSample(SampleFilter.SAMPLE_OUTPUT);
+		return sample;
 	}
-	
-	public Oscillator getOscillator()
-	{
-		return osci;
+
+	@Override
+	public float calcNextDisabledSample(int index) {
+		float sample = filter.requestNextSample(SampleFilter.SAMPLE_OUTPUT);
+		return sample;
 	}
+
 }

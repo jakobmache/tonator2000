@@ -1,43 +1,219 @@
 package engine;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
-import midi.MidiUtils;
-import modules.Oscillator;
-import threads.PlayThread;
+import resources.Strings;
+import midi.MidiLogger;
+import midi.MidiPlayer;
+import modules.Ids;
+import modules.Mixer;
+import modules.OutputModule;
+import modules.listener.EngineListener;
 import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
 {
-
 	private AudioFormat audioFormat;
-	private float samplingRate = 44100;
+	private float samplingRate = 22050;
 	private int numChannels = 1;
 	private boolean signed = true;
 	private boolean bigEndian = true;
 
+	public static final int MAX_POLYPHONY = 1000;
+	public static final double MAX_BUFFERTIME = 0.5;
+
 	private int sampleSizeInBits = 16;
 	private int sampleSizeInBytes = 2;
 
-	private double bufferTime = 0.01;
-	
-	private Map <Integer, ModuleContainer> currentNotes = new HashMap<Integer, ModuleContainer>();
+	private double bufferTime = 0.02;
 
-	public SynthesizerEngine()
+	private boolean isRunning = false;
+
+	private int maxPolyphony = 45;
+
+	private MidiPlayer midiPlayer;
+
+	private OutputModule outputModule;
+
+	private InputController inputModule;
+	private Mixer outputMixer;
+	private ModuleContainer allContainer;
+	private ModuleContainer osciContainer;
+	private ProgramManager programManager;
+	private MidiLogger logger;
+
+	private MidiDevice connectedMidiDevice;
+
+	private List<EngineListener> listeners = new ArrayList<EngineListener>();
+
+	public SynthesizerEngine() throws LineUnavailableException, IOException
 	{
 		updateAudioFormat();
+		initModules();
+		midiPlayer = new MidiPlayer(this);
+		logger = new MidiLogger();
 	}
 
-	private void updateAudioFormat()
+	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
 	{
+		if (connectedMidiDevice != null)
+		{
+			connectedMidiDevice.close();
+			connectedMidiDevice = null;
+			notifyListeners();
+		}
+
+		Transmitter transmitter = device.getTransmitter();
+		transmitter.setReceiver(this);
+
+		device.open();
+		
+		if (transmitter.getReceiver() == this)
+			connectedMidiDevice = device;
+		
+		notifyListeners();
+	}
+
+	private void initModules() throws IOException
+	{
+		programManager = new ProgramManager();
+		outputMixer = new Mixer(this, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
+		inputModule = new InputController(this);
+
+
+		try 
+		{
+			outputModule = new OutputModule(this, Ids.ID_OUTPUT_1, Strings.getStandardModuleName(Ids.ID_OUTPUT_1));
+		} 
+		catch (LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}
+
+		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER, Strings.getStandardModuleName(Ids.ID_CONTAINER));
+		new Wire(allContainer, outputMixer, Mixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
+		new Wire(outputModule, allContainer, ModuleContainer.SAMPLE_OUTPUT, OutputModule.SAMPLE_INPUT);
+	}
+
+	private void updateAudioFormat() throws LineUnavailableException
+	{
+		stop();
+		if (bufferTime > MAX_BUFFERTIME)
+			throw new LineUnavailableException();
+		
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
+		if (outputModule != null)
+			outputModule.updateFormat();
+
+		notifyListeners();
+	}
+
+	private void notifyListeners()
+	{
+		for (EngineListener listener:listeners)
+		{
+			listener.onValueChanged();
+		}
+	}
+
+	@Override
+	public void send(MidiMessage message, long timeStamp) 
+	{
+		if (message instanceof ShortMessage)
+		{
+			inputModule.handleMessage((ShortMessage) message);
+		}
+		
+		logger.receiveEvent(message, timeStamp);
+	}
+
+	public void stop()
+	{
+		if (outputModule != null)
+			outputModule.stopPlaying();
+		isRunning = false;
+		reset();
+		notifyListeners();
+	}
+
+	public void close()
+	{
+		stop();
+		disconnectMidiDevice();
+	}
+
+	public void disconnectMidiDevice()
+	{
+		if (connectedMidiDevice != null)
+			connectedMidiDevice.close();
+		notifyListeners();
+	}
+
+	public void reset()
+	{
+		try 
+		{
+			if (inputModule != null)
+				inputModule.resetMidi();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	public void run()
+	{
+		Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() 
+			{
+				try 
+				{
+					outputModule.startPlaying();
+				} 
+				catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		thread.start();
+		isRunning = true;
+		notifyListeners();
+	}
+
+	public ModuleContainer getAllContainer() 
+	{
+		return allContainer;
+	}
+
+	public ModuleContainer getOsciContainer()
+	{
+		return osciContainer;
+	}
+
+	public Mixer getOutputMixer()
+	{
+		return outputMixer;
+	}
+
+	public OutputModule getOutputModule()
+	{
+		return outputModule;
 	}
 
 	public AudioFormat getAudioFormat() {
@@ -48,16 +224,27 @@ public class SynthesizerEngine implements Receiver
 		return samplingRate;
 	}
 
-	public void setSamplingRate(float samplingRate) {
-		this.samplingRate = samplingRate;
-		updateAudioFormat();
+	public void setSamplingRate(float samplingRate) throws LineUnavailableException 
+	{
+		float oldSamplingrate = this.samplingRate;
+		try
+		{
+			this.samplingRate = samplingRate;
+			updateAudioFormat();
+		}
+		catch(LineUnavailableException e)
+		{
+			samplingRate = oldSamplingrate;
+			updateAudioFormat();
+			throw new LineUnavailableException();
+		}
 	}
 
 	public int getNumChannels() {
 		return numChannels;
 	}
 
-	public void setNumChannels(int numChannels) {
+	public void setNumChannels(int numChannels) throws LineUnavailableException {
 		this.numChannels = numChannels;
 		updateAudioFormat();
 	}
@@ -66,7 +253,7 @@ public class SynthesizerEngine implements Receiver
 		return signed;
 	}
 
-	public void setSigned(boolean signed) {
+	public void setSigned(boolean signed) throws LineUnavailableException {
 		this.signed = signed;
 		updateAudioFormat();
 	}
@@ -75,7 +262,7 @@ public class SynthesizerEngine implements Receiver
 		return bigEndian;
 	}
 
-	public void setBigEndian(boolean bigEndian) {
+	public void setBigEndian(boolean bigEndian) throws LineUnavailableException {
 		this.bigEndian = bigEndian;
 		updateAudioFormat();
 	}
@@ -84,7 +271,7 @@ public class SynthesizerEngine implements Receiver
 		return sampleSizeInBits;
 	}
 
-	public void setSampleSizeInBits(int sampleSizeInBits) {
+	public void setSampleSizeInBits(int sampleSizeInBits) throws LineUnavailableException {
 		this.sampleSizeInBits = sampleSizeInBits;
 		updateAudioFormat();
 	}
@@ -93,7 +280,7 @@ public class SynthesizerEngine implements Receiver
 		return sampleSizeInBytes;
 	}
 
-	public void setSampleSizeInBytes(int sampleSizeInBytes) {
+	public void setSampleSizeInBytes(int sampleSizeInBytes) throws LineUnavailableException {
 		this.sampleSizeInBytes = sampleSizeInBytes;
 		updateAudioFormat();
 	}
@@ -102,78 +289,66 @@ public class SynthesizerEngine implements Receiver
 		return bufferTime;
 	}
 
-	public void setBufferTime(double bufferTime) {
-		this.bufferTime = bufferTime;updateAudioFormat();
+	public void setBufferTime(double bufferTime) throws LineUnavailableException {
+		double oldBufferTime = this.bufferTime;
+		try
+		{
+			this.bufferTime = bufferTime;
+			updateAudioFormat();
+		}
+		catch(LineUnavailableException e)
+		{
+			bufferTime = oldBufferTime;
+			updateAudioFormat();
+			throw new LineUnavailableException();
+		}
 	}
 
-	@Override
-	public void send(MidiMessage message, long timeStamp) 
+	public void addListener(EngineListener listener)
 	{
-		if (message instanceof ShortMessage)
-		{
-			handleMessage((ShortMessage) message); 
-		}
-
+		listeners.add(listener);
 	}
 
-	private void handleMessage(ShortMessage message)
+	public InputController getInputController()
 	{
-		if (message.getCommand() == ShortMessage.NOTE_ON)
+		return inputModule;
+	}
+
+	public MidiDevice getConnectedMidiDevice()
+	{
+		return connectedMidiDevice;
+	}
+
+	public boolean isRunning()
+	{
+		return isRunning;
+	}
+
+	public int getMaxPolyphony()
+	{
+		return maxPolyphony;
+	}
+
+	public MidiPlayer getMidiPlayer()
+	{
+		return midiPlayer;
+	}
+
+	public ProgramManager getProgramManager() {
+		return programManager;
+	}
+
+	public void setMaxPolyphony(int newValue)
+	{
+		if (newValue <= MAX_POLYPHONY && newValue > 0)
 		{
-			int key = message.getData1();
-			int velocity = message.getData2();
-			
-			System.out.println("Note on! - " + key + " - " + velocity);
-			float frequency = MidiUtils.midiNoteNumberToFrequency(key);
-			
-			if (currentNotes.keySet().contains(key))
-			{
-				System.out.println("Note wird schon abgespielt - Fehler!");
-				return;
-			}
-			
-			StandardModuleContainer container = null;
-
-			try 
-			{
-				container = new StandardModuleContainer(this);
-			} 
-			catch (LineUnavailableException e) 
-			{
-				e.printStackTrace();
-			}
-			
-			container.getOscillator().setFrequency((double) frequency);
-			container.getOscillator().setAmplitude((velocity / 127.0) * Short.MAX_VALUE);
-			container.getOscillator().setType(Oscillator.TYPE_SQUARE);
-			currentNotes.put(key, container);
-
-			PlayThread thread = new PlayThread(container.getOutputModule());
-			thread.start();
-		}
-
-		else if (message.getCommand() == ShortMessage.NOTE_OFF)
-		{
-			int key = message.getData1();
-			System.out.println("Note off! - " + key);
-			
-			if (!currentNotes.containsKey(key))
-			{
-				System.out.println("Note wird nicht abgespielt - Fehler!");
-				return;
-			}
-			StandardModuleContainer container = (StandardModuleContainer) currentNotes.get(key);
-			container.getOutputModule().stopPlaying();
-			currentNotes.remove(message.getData1());
+			maxPolyphony = newValue;
+			notifyListeners();
 		}
 	}
 	
-	public void close()
+	public MidiLogger getMidiLogger()
 	{
-		for (ModuleContainer container:currentNotes.values())
-		{
-			container.getOutputModule().stopPlaying();
-		}
+		return logger;
 	}
-
 }

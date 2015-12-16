@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+            <Menu fx:id="engineMenu" mnemonicParsing="false" onShowing="#onEngineMenuAction" text="Engine">
+              <items>
+                  <MenuItem fx:id="changeEngineStateMenuItem" mnemonicParsing="false" onAction="#onChangeEngineStateAction" text="Starten" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="sampleRateMenuItem" mnemonicParsing="false" onAction="#onSetSampleRateMenuAction" text="Samplerate" />
+                  <MenuItem fx:id="bufferTimeMenuItem" mnemonicParsing="false" onAction="#onSetBufferTimeMenuAction" text="Pufferzeit (Latenz)" />
+                  <MenuItem fx:id="polpyhonyMenuItem" mnemonicParsing="false" onAction="#onSetMaxPolyphony" text="Maximale Polyphonie" />
+              </items>
+            </Menu>
+          <Menu fx:id="midiMenu" mnemonicParsing="false" text="MIDI">
+            <items>
+              <MenuItem fx:id="selectMidiDeviceMenuItem" mnemonicParsing="false" onAction="#onSelectMidiDeviceAction" text="Gerät auswählen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="midiPlayerMenuItem" mnemonicParsing="false" onAction="#onOpenMidiPlayer" text="MIDI-Player" />
+                  <MenuItem fx:id="midiLoggerMenuItem" mnemonicParsing="false" onAction="#onShowMidiLogger" text="MIDI-Logger" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="resetMidiMenuItem" mnemonicParsing="false" onAction="#onResetMidiAction" text="MIDI zurücksetzen" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Presets">
+              <items>
+                <MenuItem fx:id="selectCurrentProgramMenuItem" mnemonicParsing="false" onAction="#onSelectCurrentProgramAction" text="Instrument bearbeiten" />
+                  <MenuItem fx:id="assignPresetToChannelMenuItem" mnemonicParsing="false" onAction="#onAssignPresetToChannelAction" text="Instrument einem Kanal zuweisen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="onSaveAllPresetsMenuAction" mnemonicParsing="false" onAction="#onSaveAllMenuPresets" text="Alle speichern" />
+                  <MenuItem fx:id="onLoadAllPresetsMenuItem" mnemonicParsing="false" onAction="#onLoadAllPresets" text="Alle laden" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="onSavePresetMenuItem" mnemonicParsing="false" onAction="#onSavePreset" text="Speichern" />
+                  <MenuItem fx:id="onLoadPresetMenuItem" mnemonicParsing="false" onAction="#onLoadPreset" text="Laden" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Hilfe">
+              <items>
+                <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="Über das Programm" />
+                  <MenuItem fx:id="aboutLibrariesMenuItem" mnemonicParsing="false" onAction="#onAboutLibraries" text="Verwendete Ressourcen" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>
