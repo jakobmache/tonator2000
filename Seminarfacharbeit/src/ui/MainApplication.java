@@ -36,7 +36,6 @@ import ui.editor.SynthesizerEditor;
 import engine.Module;
 import engine.SynthesizerEngine;
 
-//TODO: Midi-Player Fenster
 //TODO: Fix disablen
 public class MainApplication extends Application 
 {
@@ -64,25 +63,25 @@ public class MainApplication extends Application
 		initEngine();
 
 		initRootLayout();
-		
+
 		initEventHandlers();
 
 		updateStatusBar();
-		
+
 		URL iconUrl = getClass().getClassLoader().getResource("resources/icon.png");
 		primaryStage.getIcons().add(new Image(iconUrl.toString()));
-		
+
 		showStandardConfiguration();
-		
-		setCurrProgram(0);
-		update();
+
+		showProgram(0);
+		updateModules();
 
 		primaryStage.show();
-		
+
 		showOverlay(OVERLAY_MIDI);
 
 		engine.run();
-		
+
 		rootLayout.setOnKeyPressed((event) ->
 		{
 			if (event.getCode() == KeyCode.E)
@@ -151,14 +150,14 @@ public class MainApplication extends Application
 		VBox mainLayout = new VBox(5);
 		mainLayout.setMaxHeight(Double.MAX_VALUE);
 		mainLayout.setMaxWidth(Double.MAX_VALUE);
-		
+
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setContent(synthesizerLayout);
 		scrollPane.setMaxHeight(Double.MAX_VALUE);
 		scrollPane.setMaxWidth(Double.MAX_VALUE);
-		
+
 		VBox.setVgrow(scrollPane, Priority.ALWAYS);
-		
+
 		mainLayout.getChildren().add(scrollPane);
 
 		//Statusbar und Overlay initialisieren
@@ -204,10 +203,10 @@ public class MainApplication extends Application
 			Node volume = UiUtils.generateModuleGui(engine, this, Module.VOLUME, new int[]{Ids.ID_VOLUME});
 			Node balance = UiUtils.generateModuleGui(engine, this, Module.BALANCED_MIXER, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
 			Node highpass = UiUtils.generateModuleGui(engine, this, Module.LOWPASS, new int[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
-			
+
 			osciBox.getChildren().add(oscillator1);
 			osciBox.getChildren().add(oscillator2);
-			
+
 			balanceBox.getChildren().add(osciBox);
 			balanceBox.getChildren().add(balance);
 			synthesizerLayout.getChildren().add(balanceBox);
@@ -253,7 +252,7 @@ public class MainApplication extends Application
 			{
 				menuController.onOpenMidiPlayer(ae);
 				menuController.getMidiPlayerController().onOpenAction(ae);
-				
+
 				overlayPane.hide();
 			}));
 		}
@@ -261,20 +260,40 @@ public class MainApplication extends Application
 		overlayPane.show();
 	}
 
-	public void setCurrProgram(int newProgram)
+	public void showProgram(int newProgram)
 	{
 		currProgram = newProgram;
 		for (ModuleController controller:moduleControllers)
 		{
-			controller.setCurrProgram(currProgram);
+			try
+			{
+				controller.setCurrProgram(currProgram);
+				controller.loadData();
+			}
+			catch (Exception e)
+			{
+				Alert alert = UiUtils.generateExceptionDialog(e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS], 
+						Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOAD_ALL_PRESETS]);
+				alert.showAndWait();
+			}
 		}
+		updateStatusBar();
 	}
 
-	public void update()
+	public void updateModules()
 	{
 		for (ModuleController controller:moduleControllers)
 		{
-			controller.loadData();
+			try
+			{
+				controller.loadData();
+			}
+			catch (Exception e)
+			{
+				Alert alert = UiUtils.generateExceptionDialog(e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS], 
+						Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOAD_ALL_PRESETS]);
+				alert.showAndWait();
+			}
 		}
 	}
 
@@ -333,7 +352,7 @@ public class MainApplication extends Application
 	{
 		return currProgram;
 	}
-	
+
 	public SynthiStatusBar getStatusBar()
 	{
 		return statusBar;

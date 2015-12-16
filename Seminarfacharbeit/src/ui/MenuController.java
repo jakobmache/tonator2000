@@ -259,7 +259,7 @@ public class MenuController
 		dialog.setSelectedItem(dialog.getItems().get(parent.getCurrProgram()));
 		
 		String result = dialog.showAndWait().get();
-		parent.setCurrProgram(dialog.getItems().indexOf(result));
+		parent.showProgram(dialog.getItems().indexOf(result));
 		parent.updateStatusBar();
 	}
 
@@ -270,7 +270,11 @@ public class MenuController
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK)
 		{
-			engine.getInputController().setChannelProgram(alert.getChannelBox().getValue() - 1, alert.getProgramBox().getSelectionModel().getSelectedIndex());
+			int[] choices = alert.getChoices();
+			for (int i = 0; i < choices.length; i++)
+			{
+				engine.getInputController().setChannelProgram(i, choices[i]);
+			}
 		}
 	}
 
@@ -371,7 +375,7 @@ public class MenuController
 			try 
 			{
 				engine.getProgramManager().setInstrumentPreset(parent.getCurrProgram(), new ContainerPreset(file.getPath()));
-				parent.update();
+				parent.updateModules();
 			} 
 			catch (NullPointerException e)
 			{

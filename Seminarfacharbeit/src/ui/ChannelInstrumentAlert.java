@@ -2,8 +2,6 @@ package ui;
 
 import java.io.IOException;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -44,8 +42,9 @@ public class ChannelInstrumentAlert extends Alert
 			for (Integer channel:channelBox.getItems())
 			{
 				engine.getInputController().setChannelProgram(channel - 1, InputController.DEFAULT_PROGRAM);
+				choices[channel - 1] = InputController.DEFAULT_PROGRAM;
 			}
-			
+			updateData();
 			event.consume();
 		});
 	}
@@ -71,8 +70,12 @@ public class ChannelInstrumentAlert extends Alert
 		
 		channelBox.valueProperty().addListener((observable) ->
 		{
-			programBox.setValue(engine.getProgramManager().getInstrumentName(
-					engine.getInputController().getChannelProgram(channelBox.getValue() - 1)));
+			programBox.getSelectionModel().select(choices[channelBox.getValue() - 1]);
+		});
+		
+		programBox.valueProperty().addListener((observable) ->
+		{
+			choices[channelBox.getValue() - 1] = programBox.getSelectionModel().getSelectedIndex();
 		});
 
 		
@@ -92,9 +95,21 @@ public class ChannelInstrumentAlert extends Alert
 		for (int i = 0; i < InputController.NUM_CHANNELS; i++)
 		{
 			channelBox.getItems().add(i + 1);
+			choices[i] = engine.getInputController().getChannelProgram(i);
 		}
 		
 		channelBox.getSelectionModel().selectFirst();
+	}
+	
+	public void updateData()
+	{	
+		programBox.getSelectionModel().select(engine.getInputController().getChannelProgram(
+				channelBox.getSelectionModel().getSelectedIndex()));
+		
+		for (int i = 0; i < InputController.NUM_CHANNELS; i++)
+		{
+			choices[i] = engine.getInputController().getChannelProgram(i);
+		}
 	}
 	
 	public ChoiceBox<Integer> getChannelBox()
@@ -105,5 +120,10 @@ public class ChannelInstrumentAlert extends Alert
 	public ChoiceBox<String> getProgramBox()
 	{
 		return programBox;
+	}
+	
+	public int[] getChoices()
+	{
+		return choices;
 	}
 }

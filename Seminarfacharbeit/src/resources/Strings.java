@@ -22,7 +22,8 @@ public class Strings
 	public static final String OE = "\u00d6";
 	public static final String SS = "\u00df";
 
-	public static final String APPLICATION_NAME = "Ton Total 2000";
+	//public static final String APPLICATION_NAME = "Ton Total 2000";
+	public static final String APPLICATION_NAME = "Seminarfacharbeit";
 
 	public static final String ERROR_TITLE = "Fehler";
 	public static final String WARNING_TITLE = "Warnung";
@@ -132,7 +133,8 @@ public class Strings
 	public static final String STATUSBAR_RUNNING_STRING = "Engine l" + ae + "uft!";
 
 
-	public static final String VERSION_NUMBER = "v0.4.4 beta";
+	//public static final String VERSION_NUMBER = "v0.4.4 beta";
+	public static final String VERSION_NUMBER = "v1.0";
 
 	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
 

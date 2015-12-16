@@ -64,7 +64,7 @@ public class ContainerPreset
 		params.put(id, value);
 	}
 	
-	public float getParam(int id)
+	public float getParam(int id) throws NullPointerException
 	{
 		return params.get(id);
 	}
