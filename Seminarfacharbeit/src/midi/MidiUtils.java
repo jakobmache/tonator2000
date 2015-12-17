@@ -15,31 +15,6 @@ public class MidiUtils {
 
 	public static int NOTE_OFF_START = 128;
 	public static int NOTE_OFF_END = 143;
-	
-	public static List<String > channelNames = new ArrayList<String>()
-	{
-		private static final long serialVersionUID = 1L;
-		
-		{
-			add("Klavier");
-			add("Perkussion 1");
-			add("Orgel");
-			add("Gitarre");
-			add("Bass");
-			add("Streicher");
-			add("Ensemble");
-			add("Blechbläser");
-			add("Holzbläser");
-			add("Flöten");
-			add("Synth Lead");
-			add("Synth Pad");
-			add("Synth Effekte");
-			add("Ethnic");
-			add("Perkussion 2");
-			add("Soundeffekte");
-		}
-		
-	};
 
 	public static List<Integer> NOTE_ON_COMMANDS = new ArrayList<Integer>()
 	{
@@ -67,6 +42,11 @@ public class MidiUtils {
 	private static final int REFERENCE_NOTE_FREQ = 440;
 	private static final int NOTES_PER_OCTAVE = 12;
 
+	/**
+	 * Liest alle verfügbaren MIDI-Geräte.
+	 * 
+	 * @return Liste der Infos aller verfügbaren MIDI-Geräte
+	 */
 	public static List<Info> getAvailableInputDevices()
 	{
 		Info[] infos = MidiSystem.getMidiDeviceInfo();
@@ -79,20 +59,26 @@ public class MidiUtils {
 			{
 				MidiDevice device = MidiSystem.getMidiDevice(info);
 
-				// Wenn das Gerï¿½t einen Transmitter hat, muss es hinzugefï¿½gt werden
+				// Wenn das Gerät einen Transmitter hat, muss es hinzugefügt werden
 				device.getTransmitter();
 				inputDeviceInfo.add(info);
 			}
 
 			catch (MidiUnavailableException e)
 			{
-				// Das Gerï¿½t hat keinen Transmitter, muss also nicht hinzugefï¿½gt werden
+				// Das Gerät hat keinen Transmitter, muss also nicht hinzugefügt werden
 			}
 		}
 
 		return inputDeviceInfo;
 	}
 
+	/**
+	 * Konvertiert eine MIDI-Notennummer zu einer Frequenz des dazugehörigen Tones.
+	 * 
+	 * @param mnn Notennummer
+	 * @return Frequenz des zugehörigen Tones
+	 */
 	public static float midiNoteNumberToFrequency(int mnn) {
 
 		float soundOffset = (mnn - REFERENCE_NOTE_NUMBER) / (float) NOTES_PER_OCTAVE;

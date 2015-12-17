@@ -12,6 +12,15 @@ public class StandardModuleContainer extends ModuleContainer
 	
 	private SampleFilter filter;
 
+	/**
+	 * Der Container mit den Modulen, die in jedem Synthesizer sind (bei uns nur ein Samplefilter)
+	 * 
+	 * @param parent die Engine des Containers
+	 * @param numInputWires Anzahl der Eingänge
+	 * @param numOutputWires Anzahl der Ausgänge
+	 * @param id ID des Containers
+	 * @param name Name des Containers
+	 */
 	public StandardModuleContainer(SynthesizerEngine parent, int numInputWires,
 			int numOutputWires, int id, String name) 
 	{

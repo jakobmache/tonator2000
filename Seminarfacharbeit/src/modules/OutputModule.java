@@ -25,6 +25,14 @@ public class OutputModule extends Module
 
 	private boolean stopPlaying = false;
 	
+	/**
+	 * Das OutputModule verwaltet die Audioausgabe in einem Modul.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name 
+	 * @throws LineUnavailableException wenn die Audioausgabe nicht erzeugt werden kann
+	 */
 	public OutputModule(SynthesizerEngine parent, int id, String name) throws LineUnavailableException 
 	{
 		super(parent, 1, 0, id, name);
@@ -47,6 +55,11 @@ public class OutputModule extends Module
 		buffer = ByteBuffer.allocate(dataLine.getBufferSize());
 	}
 
+	/**
+	 * Startet das Abspielen von Audio.
+	 * 
+	 * @throws InterruptedException bei Unterbrechung des Thread.sleep
+	 */
 	public void startPlaying() throws InterruptedException
 	{
 		stopPlaying = false;
@@ -116,6 +129,11 @@ public class OutputModule extends Module
 		return dataLine;
 	}
 	
+	/**
+	 * Aktualisiert die Parameter der Audioausgabe.
+	 * 
+	 * @throws LineUnavailableException wenn die Audioausgabe nicht mit den entsprechend gewünschten Werten erzeugt werden kann
+	 */
 	public void updateFormat() throws LineUnavailableException
 	{
 		stopPlaying();

@@ -15,7 +15,7 @@
                <children>
                   <Label text="Attack" />
                   <Slider fx:id="attackSlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="attackInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onAttackInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <TextField fx:id="attackInput" editable="false" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onAttackInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -25,7 +25,7 @@
                <children>
                   <Label text="Decay" />
                   <Slider fx:id="decaySlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="decayInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onDecayInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <TextField fx:id="decayInput" editable="false" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onDecayInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -35,7 +35,7 @@
                <children>
                   <Label text="Sustain" />
                   <Slider fx:id="sustainSlider" max="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="0.8" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="sustainInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSustainInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <TextField fx:id="sustainInput" editable="false" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSustainInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -45,7 +45,7 @@
                <children>
                   <Label text="Release" />
                   <Slider fx:id="releaseSlider" max="1000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="releaseInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onReleaseInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <TextField fx:id="releaseInput" editable="false" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onReleaseInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -55,7 +55,7 @@
                <children>
                   <Label text="Steilheit" />
                   <Slider fx:id="steepnessSlider" max="-0.001" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="-10.0" orientation="VERTICAL" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="steepnessInput" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSteepnessInputAction" prefHeight="25.0" prefWidth="50.0" />
+                  <TextField fx:id="steepnessInput" editable="false" maxHeight="25.0" maxWidth="50.0" minWidth="50.0" onAction="#onSteepnessInputAction" prefHeight="25.0" prefWidth="50.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

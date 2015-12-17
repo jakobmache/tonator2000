@@ -31,6 +31,13 @@ public class Oscillator extends Module
 	
 	private Random random;
 
+	/**
+	 * Ein Oszillator erzeugt eine Grundwellenform.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public Oscillator(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);
@@ -75,6 +82,7 @@ public class Oscillator extends Module
 		
 		setAmplitude(inputWires[AMPLITUDE_INPUT].getNextSample());
 		
+		//ZeroDivision verhindern!
 		if (frequency == 0)
 			return 0;
 

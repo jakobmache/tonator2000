@@ -12,6 +12,13 @@ public class BalancedMixer extends Mixer
 	//Balance --> 0 bedeutet, dass komplett Input 1 "durchkommt", bei 0.5 beide, bei 1 Input 2
 	private float balance = 0.5F;
 
+	/**
+	 * Dies ist ein Mixer, der zwei Inputs hat und diese unterschiedlich wichten kann,
+	 * 
+	 * @param parent Engine
+	 * @param id ID 
+	 * @param name Name
+	 */
 	public BalancedMixer(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, id, name);

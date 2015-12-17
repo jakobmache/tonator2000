@@ -2,6 +2,7 @@ package modules;
 
 public class Ids 
 {
+	//Enthält die Ids für den Standardaufbau
 	public static final int ID_AMPLIFIER_1 = 0;
 	public static final int ID_ENVELOPE_1 = 1;
 	public static final int ID_LOWPASS_1 = 2;

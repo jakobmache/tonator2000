@@ -17,6 +17,13 @@ public class LowpassFilter extends Module
 	private double p = 0, q = 0, f = 0;
 	private double t1 = 0, t2 = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
+	/**
+	 * Der Tiefpassfilter filtert alle Frequenzen unter der Grenzfrequenz.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public LowpassFilter(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);

@@ -28,13 +28,24 @@ public class MidiPlayer
 	
 	private File midiFile;
 
+	/**
+	 * Erstellt einen Midi-Player, der MIDI-Dateien wiedergeben kann.
+	 * 
+	 * @param engine die Engine, in der der Player wiedergeben soll
+	 */
 	public MidiPlayer(SynthesizerEngine engine)
 	{
 		this.engine = engine;
 	}
 
-	
-
+	/**
+	 * Lädt ein MIDI-File in den Player.
+	 * 
+	 * @param midiFile die MIDI-Datei
+	 * @throws MidiUnavailableException wenn das Verbinden mit der Engine scheitert
+	 * @throws InvalidMidiDataException wenn die MIDI-Datei ungültige Daten enthält
+	 * @throws IOException wenn die MIDI-Datei nicht gelesen werden kann
+	 */
 	public void loadMidiFile(File midiFile) throws MidiUnavailableException, InvalidMidiDataException, IOException
 	{
 		sequencer = MidiSystem.getSequencer();
@@ -45,6 +56,8 @@ public class MidiPlayer
 
 		sequencer.open();
 
+		//Wir müssen alle anderen Transmitter und Receiver vom Sequencer (dem Wiedergabegerät) entfernen
+		//Sonst werden die Daten nicht an die Engine weitergegegeben
 		for (Transmitter trans:sequencer.getTransmitters())
 		{
 			Receiver receiver = trans.getReceiver();
@@ -57,16 +70,23 @@ public class MidiPlayer
 		this.midiFile = midiFile;
 	}
 
+	/**
+	 * Startet das Abspielen der geladenen MIDI-Datei.
+	 */
 	public void startPlayingMidiFile()
 	{
 		if (sequencer != null)
 		{
+			//Wenn wir am Ende sind, von vorne weitermachen
 			if (sequencer.getTickPosition() == sequencer.getTickLength())
 				sequencer.setTickPosition(0);
 			sequencer.start();
 		}
 	}
 
+	/**
+	 * Pausiert das Abspielen der geladenen Datei.
+	 */
 	public void pausePlayingMidiFile()
 	{
 		if (sequencer != null)
@@ -76,6 +96,9 @@ public class MidiPlayer
 		}
 	}
 
+	/**
+	 * Stoppt das Abspielen der geladenen Datei. Das heißt, beim nächsten Abspielen beginnt es von vorne.
+	 */
 	public void stopPlayingMidiFile()
 	{
 		if (sequencer != null)
@@ -85,6 +108,11 @@ public class MidiPlayer
 		}
 	}
 
+	/**
+	 * Liest alle Instrumente aus, die in der Datei vorkommen.
+	 * 
+	 * @return Liste alle vorkommenden Instrumente
+	 */
 	public List<Integer> getAllPrograms()
 	{
 		List<Integer> programs = new ArrayList<Integer>();
@@ -106,6 +134,11 @@ public class MidiPlayer
 		return programs;
 	}
 	
+	/**
+	 * Liest alle MetaMessages in der geladenen Datei aus.
+	 * 
+	 * @return Liste aller MetaMessages in der Datei
+	 */
 	public List<MetaMessage> getMetaMessages()
 	{
 		List<MetaMessage> messages = new ArrayList<MetaMessage>();
@@ -123,6 +156,11 @@ public class MidiPlayer
 		return messages;
 	}
 	
+	/**
+	 * Gibt die aktuell geladenen Datei zurück.
+	 * 
+	 * @return die aktuell geladene Datei
+	 */
 	public File getMidiFile()
 	{
 		if (sequencer.getSequence() == null)

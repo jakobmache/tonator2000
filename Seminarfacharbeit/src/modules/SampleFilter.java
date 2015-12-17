@@ -17,6 +17,13 @@ public class SampleFilter extends Module
 	int stop = 10;
 	int count = 0;
 
+	/**
+	 * Der Samplefilter speichert jedes n-te Sample und hält die gespeicherten Samples abrufbar.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public SampleFilter(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 1, 1, id, name);

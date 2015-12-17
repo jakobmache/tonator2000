@@ -21,6 +21,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -215,7 +216,7 @@ public class MenuController
 		MenuItem source = (MenuItem) event.getSource();
 		if (engine.isRunning())
 		{
-			engine.stop();
+			engine.stopAudio();
 			source.setText("Starten");		
 		}
 
@@ -238,6 +239,15 @@ public class MenuController
 		{
 			midiPlayerStage.requestFocus();
 		}
+	}
+	
+	public void onNoiseHelp(ActionEvent event)
+	{
+		Alert alert = UiUtils.generateAlert(parent.getPrimaryStage(), AlertType.WARNING, Strings.NOISE_HELP_DIALOG_TITLE, Strings.NOISE_HELP_DIALOG_HEADER, Strings.NOISE_HELP_DIALOG_TEXT);
+		Image image = new Image(getClass().getClassLoader().getResource("resources/icon2.JPG").toString(), 50, 50, false, false);
+		ImageView view = new ImageView(image);
+		alert.setGraphic(view);
+		alert.showAndWait();
 	}
 
 	public void onResetMidiAction(ActionEvent event)

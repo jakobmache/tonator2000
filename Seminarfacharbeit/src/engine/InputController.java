@@ -8,20 +8,23 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
+import listener.ModuleContainerListener;
+import listener.ProgramListener;
 import midi.MidiUtils;
 import modules.Ids;
 import modules.Mixer;
-import modules.listener.ProgramListener;
 import resources.Strings;
-import containers.ModuleContainerListener;
 import containers.OscillatorContainer;
 
 public class InputController implements ModuleContainerListener, ProgramListener{
 
+	//Liste mit allen gerade aktiven, spielenden Containern
 	private List<ModuleContainer> allContainers;
+	//Hier ist jedem MIDI-Kanal eine Map zugeordnet, in welcher der entsprechenden Notennummer die Container zugeordnet sind, die sie gerade abspielen
 	private Map<Integer, Map<Integer, ModuleContainer>> channelNotes;
 	private SynthesizerEngine parent;
 	
+	//Speichert die Programme und Lautstärken für jeden MIDI-Kanal
 	private List<Integer> channelPrograms = new ArrayList<Integer>();
 	private List<Float> channelVolumes = new ArrayList<Float>();
 
@@ -34,12 +37,18 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	
 	public static final int DEFAULT_PROGRAM = 0;
 
+	/**
+	 * Instanziert einen neuen InputController. Dieses verarbeitet eingehende MIDI-Events für eine Engine.
+	 * 
+	 * @param parent die Engine zum Verarbeiten.
+	 */
 	public InputController(SynthesizerEngine parent)
 	{
 		this.parent = parent;
 		channelNotes = new HashMap<Integer, Map<Integer, ModuleContainer>>();
 		allContainers = new ArrayList<ModuleContainer>();
 		
+		//Standardwerte initialisieren
 		for (int i = 0; i < NUM_CHANNELS; i++)
 		{
 			channelPrograms.add(0);
@@ -50,41 +59,61 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		parent.getProgramManager().addListener(this);
 	}
 	
+	/**
+	 * Gibt den Containertyp an, mit dem alle Töne erzeugt werden.
+	 * Diese Container werden also neu erzeugt, wenn ein neuer Ton abgespielt werden soll, und 
+	 * enthalten die Module zum Modifizieren des Tones. Ist damit äquivalent zum frei konfigurierbaren
+	 * Teil des Synthesizers. (Noch nicht implementiert, erst für den Editor wichtig)
+	 * 
+	 * @return den Referenzcontainer, mit dem jeder Ton erzeugt wird
+	 */
 	public ModuleContainer getReferenceContainer()
 	{
 		return new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 	}
 
+	/**
+	 * Verarbeitet MIDI-Messages.
+	 * 
+	 * @param message die eingehende MIDI-Nachricht.
+	 */
 	public void handleMessage(ShortMessage message)
 	{
-		if (message.getChannel() == 9)
-			return;
 		
+		//Note-On Event
 		if ((NOTE_ON_START <= message.getCommand()) && (message.getCommand() < NOTE_ON_START + NUM_CHANNELS))
 		{
+			//Velocity = 0 --> Anschlagsstärke = 0 --> es ist ein Note-off Event
 			if (message.getData2() == 0)
 				playNoteOff(message);
 			else 
 				playNoteOn(message);
 		}
 
-
+		//Note-Off Event
 		else if ((NOTE_OFF_START <= message.getCommand()) && (message.getCommand() < NOTE_OFF_START + NUM_CHANNELS))
 		{
 			playNoteOff(message);
 		}
 		
+		//Programm für den Kanal wechselt
 		else if (message.getCommand() == ShortMessage.PROGRAM_CHANGE)
 		{
 			setProgram(message);
 		}
 		
+		//Lautstärke für den Kanal wechselt
 		else if (message.getCommand() == ShortMessage.CONTROL_CHANGE && message.getData1() == CHANNEL_VOLUME)
 		{
 			setChannelVolume(message);
 		}
 	}
 
+	/**
+	 * Beginnt das Abspielen eines Tons.
+	 * 
+	 * @param message eingehendes MIDI-Event
+	 */
 	private void playNoteOn(ShortMessage message)
 	{
 		//Daten aus der MIDI-Message auslesen
@@ -119,6 +148,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		container.startPlaying(frequency, channelVolumes.get(channel) * (velocity / 127.0F) * Short.MAX_VALUE);
 	}
 
+	/**
+	 * Stoppt das Abspielen einer Note.
+	 * 
+	 * @param message das eingehende MIDI-Event
+	 */
 	private void playNoteOff(ShortMessage message)
 	{
 		int key = message.getData1();
@@ -145,6 +179,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 
 	}
 	
+	/**
+	 * Verändert das Programm auf dem entsprechenden Kanal.
+	 * 
+	 * @param message das eingehende MIDI-Event
+	 */
 	private void setProgram(ShortMessage message)
 	{
 		int channel = message.getChannel();
@@ -153,6 +192,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		channelPrograms.set(channel, program);
 	}
 	
+	/**
+	 * Verändert die Lautstärke auf dem entsprechenden Kanal.
+	 * 
+	 * @param message das eingehende MIDI-Event
+	 */
 	private void setChannelVolume(ShortMessage message)
 	{
 		int channel = message.getChannel();
@@ -161,6 +205,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		channelVolumes.set(channel, volume / 127F);
 	}
 
+	/**
+	 * Setzt alle MIDI-Daten zurück. Das bedeutet, sämtliche Container hören auf zu spielen.
+	 * 
+	 * @throws InvalidMidiDataException wenn ein falsches Note-Off-Event generiert wurde - sollte nicht passieren!
+	 */
 	public void resetMidi() throws InvalidMidiDataException
 	{
 		for (ModuleContainer container:allContainers)
@@ -169,11 +218,19 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 	}
 
+	/**
+	 * Gibt alle Container zurück, die zur Zeit spielen.
+	 * 
+	 * @return alle Container, die aktuell einen Ton spielen
+	 */
 	public List<ModuleContainer> getAllContainers()
 	{
 		return allContainers;
 	}
 
+	/**
+	 * Ein InputController ist auch ein ModuleContainerListener. Wenn ein Container fertig mit Abspielen ist, muss er gelöscht werden.
+	 */
 	@Override
 	public void onContainerFinished(ModuleContainer container) 
 	{
@@ -186,6 +243,14 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		return NUM_CHANNELS;
 	}
 
+	/**
+	 * Ein InputController ist auch ein ProgramListener. Wenn sich bei einem Programm / Instrument ein Parameter ändert,
+	 * muss bei allen Containern, die mit diesem Instrument spielen, der entsprechende Parameter auch geändert werden.
+	 * 
+	 * @param program das Programm, welches sich verändert hat
+	 * @param id ID des veränderten Parameters
+	 * @param newValue neuer Wert des Parameters
+	 */
 	@Override
 	public void programValueChanged(int program, int id, float newValue) 
 	{
@@ -201,6 +266,12 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 	}
 	
+	/**
+	 * Weist einem MIDI-Kanal ein neues Programm zu.
+	 * 
+	 * @param channel der MIDI-Kanal
+	 * @param newProgram das neue Programm
+	 */
 	public void setChannelProgram(int channel, int newProgram)
 	{
 		channelPrograms.set(channel, newProgram);

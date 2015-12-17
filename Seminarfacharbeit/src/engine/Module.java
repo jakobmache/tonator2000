@@ -1,12 +1,9 @@
 package engine;
 
-
-// TODO: Auto-generated Javadoc
-/**
- * The Class Module.
- */
 public abstract class Module 
 {
+	//Die Typen aller Module. Damit kann man, wenn man Daten Modulen zuordnet, zum Beispiel in Arrays
+	//auf diese zugreifen (Index = Module.MODULNAME)
 	public static final int OSCILLATOR = 0;
 	public static final int LOWPASS = 1;
 	public static final int ENVELOPE = 2;
@@ -18,6 +15,7 @@ public abstract class Module
 	public static final int PLOTTER = 8;
 	public static final int VOLUME = 9;
 	
+	//Alle Module, die im Editor vom Benutzer erstellt werden können
 	public static final int[] CREATABLE_MODULES = new int[]{
 		OSCILLATOR, LOWPASS, ENVELOPE, AMPLIFIER, MIXER, BALANCED_MIXER, CONSTANT
 	};

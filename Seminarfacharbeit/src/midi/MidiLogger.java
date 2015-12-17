@@ -6,13 +6,19 @@ import java.util.List;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 
-import modules.listener.MidiLoggerListener;
+import listener.MidiLoggerListener;
 
 public class MidiLogger 
 {	
 	public static final String SEPARATOR = " : ";
 	private List<MidiLoggerListener> listeners = new ArrayList<MidiLoggerListener>();
-	
+
+	/**
+	 * Wird aufgerufen, wenn ein Event eingeht.
+	 * 
+	 * @param event das Event
+	 * @param timeStamp der Zeitstempel
+	 */
 	public void receiveEvent(MidiMessage event, long timeStamp)
 	{
 		for (MidiLoggerListener listener:listeners)
@@ -20,12 +26,23 @@ public class MidiLogger
 			listener.eventReceived(eventToDescription(event, timeStamp));
 		}
 	}
-
+	
+	/**
+	 * Fügt einen Listener zum Logger hinzu, der über neue Einträge benachrichtigt wird.
+	 * @param listener der hinzzufügender Listener
+	 */
 	public void addListener(MidiLoggerListener listener)
 	{
 		listeners.add(listener);
 	}
 
+	/**
+	 * Wandelt ein MIDI-Event in seine textuelle Repräsentation um.
+	 * 
+	 * @param event das Event
+	 * @param timeStamp Zeitstempel des Events
+	 * @return die textuelle Repräsentation
+	 */
 	public String eventToDescription(MidiMessage event, long timeStamp)
 	{
 		StringBuilder builder = new StringBuilder();

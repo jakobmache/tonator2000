@@ -44,6 +44,8 @@
               <items>
                 <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="Über das Programm" />
                   <MenuItem fx:id="aboutLibrariesMenuItem" mnemonicParsing="false" onAction="#onAboutLibraries" text="Verwendete Ressourcen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="noiseHelpMenuItem" mnemonicParsing="false" onAction="#onNoiseHelp" text="Verhalten bei Störgeräuschen" />
               </items>
             </Menu>
         </menus>

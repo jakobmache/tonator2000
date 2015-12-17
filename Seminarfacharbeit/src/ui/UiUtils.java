@@ -28,18 +28,9 @@ public class UiUtils
 	public static final String[] layoutPaths = new String[] {
 		"fxml/OscillatorLayout.fxml", "fxml/LowpassFilterLayout.fxml",
 		"fxml/EnvelopeLayout.fxml", "", "", 
-		"fxml/BalancedMixerLayout.fxml", "", "", "", 
+		"fxml/BalancedMixerLayout.fxml", "fxml/LowpassFilterLayout.fxml", "", "", 
 		"fxml/SimpleSliderLayout.fxml"
 	};
-
-	public static Alert generateAlert(AlertType type, String title, String header, String text)
-	{
-		Alert alert = new Alert(type);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(text);
-		return alert;
-	}
 
 	public static Alert generateAlert(Stage owner, AlertType type, String title, String header, String text)
 	{
@@ -97,7 +88,7 @@ public class UiUtils
 	{
 		//Ids ist ein Array mit den Ids: Sie müssen folgende Form haben:
 		//	-Oszillator: 	0: Oszillator-ID; 1: Oszillatortyp-ID
-		//  -Lowpass: 		0: Lowpass-ID; 1: Cutoffkonstanten-ID; 2: Resonanzkonstanten-ID
+		//  -Lowpass/Highpass: 		0: Lowpass-ID; 1: Cutoffkonstanten-ID; 2: Resonanzkonstanten-ID
 		//	-Envelope:		0: Envelope-ID; 1: Attack-ID; 2: Decay-ID; 3: Sustain-ID; 4: Release-ID, 5:Steilheit-ID
 		//	-BalancedMixer:	0: Mixer-ID; 1: Modul1-ID; 2:Module2-ID; : Balancekonstanten-ID
 
@@ -119,7 +110,7 @@ public class UiUtils
 			controller = new OscillatorController(engine, ids[0], ids[1]);
 		}
 		
-		else if (type == Module.LOWPASS)
+		else if (type == Module.LOWPASS || type == Module.HIGHPASS)
 		{
 			controller = new LowpassFilterController(engine, ids[0], ids[1], ids[2]);
 		}

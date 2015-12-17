@@ -9,6 +9,13 @@ public class Constant extends Module
 	
 	private float value = 100;
 	
+	/**
+	 * Eine Konstante hält einen konstanten Wert.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public Constant(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 0, 1, id, name);

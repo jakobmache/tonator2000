@@ -9,6 +9,13 @@ public class Amplifier extends Module
 	public static final int FACTOR_INPUT = 1;
 	public static final int SAMPLE_OUTPUT = 0;
 
+	/**
+	 * Der Verstärker verstärkt das Eingangssample um einen bestimmten Faktor.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public Amplifier(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 2, 1, id, name);

@@ -17,6 +17,13 @@ public class HighpassFilter extends Module
 	private double p = 0, q = 0, f = 0;
 	private double t1 = 0, t2 = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
+	/**
+	 * Der Hochpassfilter filtert alle Obertöne unter der Grenzfrequenz
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param name Name
+	 */
 	public HighpassFilter(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);

@@ -5,8 +5,8 @@ import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import listener.MidiLoggerListener;
 import midi.MidiLogger;
-import modules.listener.MidiLoggerListener;
 
 public class MidiLoggerUI extends ListView<String> implements MidiLoggerListener
 {

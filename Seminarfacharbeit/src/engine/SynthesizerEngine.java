@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
@@ -14,12 +15,12 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
 import resources.Strings;
+import listener.EngineListener;
 import midi.MidiLogger;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.Mixer;
 import modules.OutputModule;
-import modules.listener.EngineListener;
 import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
@@ -30,6 +31,7 @@ public class SynthesizerEngine implements Receiver
 	private boolean signed = true;
 	private boolean bigEndian = true;
 
+	//Maximalwerte für maximale Polyphonie bzw. Pufferzeit
 	public static final int MAX_POLYPHONY = 1000;
 	public static final double MAX_BUFFERTIME = 0.5;
 
@@ -57,6 +59,12 @@ public class SynthesizerEngine implements Receiver
 
 	private List<EngineListener> listeners = new ArrayList<EngineListener>();
 
+	/**
+	 * Instanziert eine neue SynthesizerEngine. Diese ist die Containerklasse für alle Parameter und Module des Synthesizers.
+	 * 
+	 * @throws LineUnavailableException wenn die Audioausgabe nicht erzeugt werden kann
+	 * @throws IOException wenn der ProgramManager die Namen der Instrumente nicht auslesen kann
+	 */
 	public SynthesizerEngine() throws LineUnavailableException, IOException
 	{
 		updateAudioFormat();
@@ -65,6 +73,12 @@ public class SynthesizerEngine implements Receiver
 		logger = new MidiLogger();
 	}
 
+	/**
+	 * Verbindet ein MIDI-Gerät mit der Engine.
+	 * 
+	 * @param device das MIDI-Gerät, welches verbunden werden soll
+	 * @throws MidiUnavailableException wenn das Verbinden scheitert
+	 */
 	public void connectMidiDevice(MidiDevice device) throws MidiUnavailableException
 	{
 		if (connectedMidiDevice != null)
@@ -85,40 +99,48 @@ public class SynthesizerEngine implements Receiver
 		notifyListeners();
 	}
 
-	private void initModules() throws IOException
+	/**
+	 * Initialisiert alle Module.
+	 * 
+	 * @throws LineUnavailableException wenn die Audioausgabe nicht erzeugt werden kann
+	 * @throws IOException wenn der ProgramManager die Namen der Instrumente nicht auslesen kann
+	 */
+	private void initModules() throws LineUnavailableException, IOException
 	{
 		programManager = new ProgramManager();
 		outputMixer = new Mixer(this, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
 		inputModule = new InputController(this);
 
-
-		try 
-		{
-			outputModule = new OutputModule(this, Ids.ID_OUTPUT_1, Strings.getStandardModuleName(Ids.ID_OUTPUT_1));
-		} 
-		catch (LineUnavailableException e) 
-		{
-			e.printStackTrace();
-		}
-
+		outputModule = new OutputModule(this, Ids.ID_OUTPUT_1, Strings.getStandardModuleName(Ids.ID_OUTPUT_1));
+	
 		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 		new Wire(allContainer, outputMixer, Mixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
 		new Wire(outputModule, allContainer, ModuleContainer.SAMPLE_OUTPUT, OutputModule.SAMPLE_INPUT);
 	}
 
+	/**
+	 * Aktualisiert das AudioFormat und damit die Parameter der Audioausgabe, wenn man zum Beispiel die Samplingrate ändert.
+	 * 
+	 * @throws LineUnavailableException wenn die Audioausgabe nicht mit den gewünschten Parametern erzeugt werden kann
+	 */
 	private void updateAudioFormat() throws LineUnavailableException
 	{
-		stop();
+		stopAudio();
+		
 		if (bufferTime > MAX_BUFFERTIME)
 			throw new LineUnavailableException();
 		
 		audioFormat = new AudioFormat(samplingRate, sampleSizeInBits, numChannels, signed, bigEndian);
+		
 		if (outputModule != null)
 			outputModule.updateFormat();
 
 		notifyListeners();
 	}
 
+	/**
+	 * Benachrichtigt alle verbundenen EngineListener, dass sich ein Parameter der Engine verändert hat.
+	 */
 	private void notifyListeners()
 	{
 		for (EngineListener listener:listeners)
@@ -127,9 +149,16 @@ public class SynthesizerEngine implements Receiver
 		}
 	}
 
+	/**
+	 * Wird aufgerufen, wenn ein MIDI-Event eingeht.
+	 * 
+	 * @param message das eingehende MIDI-Event
+	 * @param timeStamp Zeitstempel des Events
+	 */
 	@Override
 	public void send(MidiMessage message, long timeStamp) 
 	{
+		//Und gleich weiter zum InputManager und Logger
 		if (message instanceof ShortMessage)
 		{
 			inputModule.handleMessage((ShortMessage) message);
@@ -138,7 +167,10 @@ public class SynthesizerEngine implements Receiver
 		logger.receiveEvent(message, timeStamp);
 	}
 
-	public void stop()
+	/**
+	 * Stoppt die Audiowiedergabe der Engine. MIDI-Events werden weiter empfangen!
+	 */
+	public void stopAudio()
 	{
 		if (outputModule != null)
 			outputModule.stopPlaying();
@@ -147,12 +179,18 @@ public class SynthesizerEngine implements Receiver
 		notifyListeners();
 	}
 
+	/**
+	 * Schließt die Engine, stoppt also die Audiowiedergabe und trennt das MIDI-Gerät.
+	 */
 	public void close()
 	{
-		stop();
+		stopAudio();
 		disconnectMidiDevice();
 	}
 
+	/**
+	 * Trennt das aktuell verbundene MIDI-Gerät, wenn eines verbunden ist.
+	 */
 	public void disconnectMidiDevice()
 	{
 		if (connectedMidiDevice != null)
@@ -160,6 +198,9 @@ public class SynthesizerEngine implements Receiver
 		notifyListeners();
 	}
 
+	/**
+	 * Setzt das InputModule zurürck. Dadurch wird das Abspielen aller Noten unterbrochen.
+	 */
 	public void reset()
 	{
 		try 
@@ -167,13 +208,17 @@ public class SynthesizerEngine implements Receiver
 			if (inputModule != null)
 				inputModule.resetMidi();
 		} 
-		catch (Exception e) 
+		catch (InvalidMidiDataException e) 
 		{
+			//Wir erzeugen nur korrekte MIDI-Off-Events!!!
 			e.printStackTrace();
 		}
 
 	}
 
+	/**
+	 * Startet die Audiowiedergabe der Engine in einem neuen Thread.
+	 */
 	public void run()
 	{
 		Thread thread = new Thread(new Runnable() {
@@ -196,11 +241,21 @@ public class SynthesizerEngine implements Receiver
 		notifyListeners();
 	}
 
+	/**
+	 *  Gibt den Container zurück, der die Standardmodule enthält, die in jeder Engine sind. 
+	 *  
+	 * @return den in jeder Engine einmal enthaltenen Container
+	 */
 	public ModuleContainer getAllContainer() 
 	{
 		return allContainer;
 	}
 
+	/**
+	 * Gibt den Container zurück, mit dem die Töne erzeugt werden.
+	 * 
+	 * @return der Container, mit dem die Töne erzeugt werden
+	 */
 	public ModuleContainer getOsciContainer()
 	{
 		return osciContainer;
@@ -226,6 +281,7 @@ public class SynthesizerEngine implements Receiver
 
 	public void setSamplingRate(float samplingRate) throws LineUnavailableException 
 	{
+		//Bei jedem Parameter: Erst versuchen, Parameter zu aktualisieren, wenn das nicht klappt, Werte zurücksetzen.
 		float oldSamplingrate = this.samplingRate;
 		try
 		{
@@ -304,6 +360,11 @@ public class SynthesizerEngine implements Receiver
 		}
 	}
 
+	/**
+	 * Fügt einen EngineListener hinzu, der immer benachrichtigt wird, wenn sich ein Parameter der Audioausgabe verändert.
+	 * 
+	 * @param listener der EngineListener, der hinzugefügt werden soll
+	 */
 	public void addListener(EngineListener listener)
 	{
 		listeners.add(listener);
@@ -319,6 +380,11 @@ public class SynthesizerEngine implements Receiver
 		return connectedMidiDevice;
 	}
 
+	/**
+	 * Gibt an, ob die Engine gerade Audio wiedergibt.
+	 * 
+	 * @return ob die Engine zur Zeit Audio wiedergibt
+	 */
 	public boolean isRunning()
 	{
 		return isRunning;
@@ -338,6 +404,13 @@ public class SynthesizerEngine implements Receiver
 		return programManager;
 	}
 
+	/**
+	 * Aktualisiert die maximale Polyphonie. Diese gibt an, wie viele Töne gleichzeitig abgespielt werden können. 
+	 * Wenn mehr Container gleichzeitig spielen, wird jeder neue einfach ignoriert. 
+	 * Scheitert, wenn der Wert zu hoch ist.
+	 * 
+	 * @param newValue die maximale Anzahl an Tönen, die gleichzeitig wiedergegeben werden könen sollen
+	 */
 	public void setMaxPolyphony(int newValue)
 	{
 		if (newValue <= MAX_POLYPHONY && newValue > 0)

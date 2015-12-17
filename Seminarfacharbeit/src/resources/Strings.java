@@ -48,11 +48,11 @@ public class Strings
 		"Die Preset-Dateien konnten nicht vollst" + ae + "ndig geladen werden. Bitte " + ue + "berpr" + ue + "fen Sie die Dateien.",
 		"Die Engine konnte nicht mit dem gew" + ue + "nschten MIDI-Ger" + ae + "t verbunden werden.  Bitte "+ ue + "berpr" + ue + "fen Sie,"
 				+ "ob es von einer anderen Anwendung blockiert wird und trennen es gegebenenfalls.",
-		"Es konnten keine MIDI-Ger" + ae + "te erkannt werden. Bitte verbinden Sie eines mit dem Computer.",
-		"Das Programm konnte die angegebene Datei nicht finden. Bitte " + ue + "berpr" + ue + "fen sie den Pfad.",
-		"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
-		"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
-		"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei."
+				"Es konnten keine MIDI-Ger" + ae + "te erkannt werden. Bitte verbinden Sie eines mit dem Computer.",
+				"Das Programm konnte die angegebene Datei nicht finden. Bitte " + ue + "berpr" + ue + "fen sie den Pfad.",
+				"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
+				"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
+				"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei."
 			};
 
 	public static final String[] MODULE_NAMES = new String[]
@@ -73,16 +73,34 @@ public class Strings
 			{
 		{"Wellenform"},
 		{"Cutoff-Frequenz", "Resonanz"},
-		{"Attack-Zeit", "Decay-Zeit", "Sustain-Level", "Release-Zeit"}
+		{"Attack-Zeit", "Decay-Zeit", "Sustain-Level", "Release-Zeit", "Steilheit"},
+		{"Faktor"},
+		{},
+		{"Balance"},
+		{"Cutoff-Frequenz", "Resonanz"},
+		{},
+		{},
+		{}
 			};
 
 	public static final String[][] PARAM_DESCRIPTIONS = new String[][]
 			{
 		{"Das ist die Wellenform, die der Oszillator erzeugt."},
-		{"Das ist die Frequenz, ab der abgeschnitten wird.", "Gibt an, wie stark die Cutoff-Frequenz betont wird."},
-		{"Die Zeit, die der Ton ansteigt", "Die Zeit, die der Ton abf" + ae + "llt", "Das Level des Maximallevels, auf das der Ton abfällt", "Die Zeit, die der Ton verklingt."}
+		{"Das ist die Frequenz, ab der die Obert" + oe + "ne gefiltert werden. Hohe Werte bedeuten eine hohe Cutoff-Frequenz, niedrige Werte eine kleinere Cutoff-Frequenz.", 
+			"Gibt an, wie stark die Cutoff-Frequenz betont wird."},
+		{"Die Zeitspanne in ms, in der die Amplitude des Parameters bis zum Maximallevel steigt.", "Die Zeitspanne in ms, in der die Amplitude des Parameters vom Maximallevel auf das Sustainlevel abf" + ae + "llt.", 
+			"Das Level, auf das der Ton nach der Decayphase abfällt. Ist ein Vielfaches der anfänglichen Amplitude. ", "Die Zeitspanne in ms, in der die Amplitude des Parameters vom Sustainlevel auf das Endlevel abf" + ae + "llt.",
+			"Gibt an, wie stark exponentiell die Amplitude steigt oder abf" + ae + "llt. Hohe Werte sorgen für einen fast linearen Verlauf, niedrige für einen eher exponentiellen."},
+		{"Das ist der Faktor, mit der das Eingangssample multipliziert wird."},
+		{},
+		{"Die Balance gibt an, wie stark die einzelnen Eingangssample gewichtet werden. Je mehr man den Regler zu einem Modul zieht, desto lauter ist es zu hören."},
+		{"Das ist die Frequenz, ab der die Obert" + oe + "ne gefiltert werden. Hohe Werte bedeuten eine hohe Cutoff-Frequenz, niedrige Werte eine kleinere Cutoff-Frequenz.", 
+			"Gibt an, wie stark die Cutoff-Frequenz betont wird."},
+		{},
+		{},
+		{}
 			};
-	
+
 	public static final String[][] INPUT_NAMES = new String[][]
 			{
 		{"Sample-Input", "Wellenform"},
@@ -94,7 +112,7 @@ public class Strings
 		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
 		{}
 			};
-	
+
 	public static final String[][] OUTPUT_NAMES = new String[][]
 			{
 		{"Sample-Output"},
@@ -110,12 +128,18 @@ public class Strings
 	public static final String[] MODULE_DESCRIPTIONS = new String[]
 			{
 		"Der Oszillator ist das Grundmodul der Tonerzeugung, es erzeugt Grundschwingungen in verschiedenen Formen.",
-		"Der Tiefpassfilter l" + ae + "sst Frequenzen " + ue + "ber einer bestimmten Cutoff-Frequenz nicht passieren.",
-		"Die H" + ue + "llkurve beschreibt den Amplitudenverlauf eines bestimmten Parameters. Hier noch ein bisschen Text zum Nerven.",
-		"Das Oszilloskop zeigt die entstehenden Kl" + ae + "nge.",
-		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert den entstehenden Klang nicht."
+		"Der Tiefpassfilter l" + ae + "sst Obert" + oe + "ne " + ue + "ber einer bestimmten Cutoff-Frequenz nicht passieren.",
+		"Die H" + ue + "llkurve beschreibt den Amplitudenverlauf eines bestimmten Parameters in vier Phasen.",
+		"",
+		"",
+		"Der balancierte Mixer addiert zwei Eingangssignale und wichtet diese unterschiedlich stark.",
+		"Der Hochpassfilter l" + ae + "sst Obert" + oe + "ne unter einer bestimmten Cutoff-Frequenz nicht passieren.",
+		"",
+		"Das Oszilloskop zeigt die entstehenden Kl" + ae + "nge. Achtung: Es zeichnet diese nicht exakt, sondern plottet aus Performancegründen nur einen Teil der Daten!"
+				+ " Deshalb kann es zu Ungenauigkeiten bei der Darstellung kommen.",
+		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert die Amplitude des entstehenden Klanges nicht, nur die Lautstärke der Audioausgabe."
 			};
-	
+
 	public static final String[] STATUSBAR_TOOLTIPS = new String[]
 			{
 		"Samplingrate",
@@ -139,54 +163,61 @@ public class Strings
 	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
 
 	public static final String NO_MIDI_FILE_LOADED_LABEL = "Keine MIDI-Datei geladen!";
-	
+
 	public static final String MIDI_PLAYER_TITLE = "MIDI-Player";
 	public static final String MIDI_LOGGER_TITLE = "MIDI-Logger";
 	public static final String CLEAR_MIDI_LOGGER_MENU_ITEM = "Alles l" + oe + "schen";
-	
+
 	public static final String MIDI_PLAYER_INFO = "Info:\n";
 	public static final String MIDI_PLAYER_COPYRIGHT = "Copyright:\n";
 	public static final String MIDI_PLAYER_INSTRUMENTS = "Instrumente:\n";
-	
+
 	public static final String STATUSBAR_CONNECTING_DEVICE = "Verbinde mit MIDI-Ger" + ae + "t";
-	
+
 	//------------------------Dialogerläuterungen-------------
-	
+
 	public static final String ABOUT_DIALOG_TITLE = UE + "ber das Programm";
 	public static final String ABOUT_DIALOG_TEXT =  "Entstanden in Rahmen der Seminarfacharbeit 2014/15 von Leonhard Braun, Barbara Ueltzen und Jakob Mache"
 			+ " mit dem Thema \"Digitale Simulation analoger Synthesizer\"."
 			+ " Herzlichen Dank an unseren Fachbetreuer Herr S" + ue + "pke!";
 	public static final String ABOUT_DIALOG_HEADER = "(c) 2015 by Leonhard Braun, Barbara Ueltzen, Jakob Mache";	
-	
+
 	public static final String LIBRARIES_DIALOG_TITLE = "Verwendete Ressourcen";
 	public static final String LIBRARIES_DIALOG_HEADER = "Folgende Bibliotheken und Grafiken wurden verwendet:";
 	public static final String LIBRARIES_DIALOG_TEXT = "Fehler beim Laden der Bibliotheken";
-	
+
 	public static final String POLYPHONY_DIALOG_TITLE = "Maximale Polyphonie eingeben";
 	public static final String POLYPHONY_DIALOG_HEADER = "Maximale Polyphonie aktualisieren";
 	public static final String POLYPHONY_DIALOG_TEXT = "Neue maximale Polyphonie:";
-	
+
 	public static final String SAMPLERATE_DIALOG_TITLE = "Samplingrate eingeben";
 	public static final String SAMPLERATE_DIALOG_HEADER = "Samplingrate aktualisieren";
 	public static final String SAMPLINGRATE_DIALOG_TEXT = "Neue Samplingrate:";
-	
+
 	public static final String BUFFERTIME_DIALOG_TITLE = "Latenz eingeben";
 	public static final String BUFFERTIME_DIALOG_HEADER = "Latenz (Pufferdauer) aktualisieren";
 	public static final String BUFFERTIME_DIALOG_TEXT = "Neue Latenz (in ms):";
-	
+
 	public static final String MIDI_DEVICE_DIALOG_TITLE = "MIDI-Ger" + ae + "t ausw" + ae + "hlen";
 	public static final String MIDI_DEVICE_DIALOG_HEADER = "MIDI-Ger" + ae + "t verbinden";
 	public static final String MIDI_DEVICE_DIALOG_TEXT = "Verf" + ue + "gbare Ger" + ae + "te:";
-	
+
 	public static final String CURR_INSTRUMENT_DIALOG_TITLE = "Aktuelles Instrument ausw" + ae + "hlen";
 	public static final String CURR_INSTRUMENT_DIALOG_HEADER = "Aktuelles Instrument / Programm ausw" + ae + "hlen";
 	public static final String CURR_INSTRUMENT_DIALOG_TEXT = "Verf" + ue + "gbare Instrumente:";
-	
+
 	public static final String CHANNEL_INSTRUMENT_DIALOG_TITLE = "Instrumentenzuweisung";
 	public static final String CHANNEL_INSTRUMENT_DIALOG_HEADER = "Einem MIDI-Kanal ein Instrument(Programm) zuweisen";
 	
-	public static final String BUTTON_TYPE_RESET_ALL = "Alles zur" + ue + "cksetzen";
+	public static final String NOISE_HELP_DIALOG_TITLE = "Wichtiger Hinweis";
+	public static final String NOISE_HELP_DIALOG_HEADER = "Verhalten bei St" + oe + "rger" + ae  + "uschen";
+	public static final String NOISE_HELP_DIALOG_TEXT = "Achtung! Geraten Sie im Falle des Auftretens von St" + oe + "rger" + ae + "uschen nicht in Panik und bewahren Sie Ruhe! "
+			+ "Verringern Sie die Samplingrate und die Pufferzeit! Achten Sie zusätzlich bitte auf die korrekte Konfiguration aller Module, eine Releasezeit von 0 sorgt oftmals auch für Knacken!"
+			+ " Wenn Ihnen das Programm zu leise ist, verringern Sie die maximale Polyphonie!";
+
 	
+	public static final String BUTTON_TYPE_RESET_ALL = "Alles zur" + ue + "cksetzen";
+
 	//-------------------------Modulnamen---------------------
 
 	public static String getStandardModuleName(int id)

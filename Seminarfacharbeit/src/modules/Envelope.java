@@ -1,6 +1,6 @@
 package modules;
 
-import modules.listener.EnvelopeFinishedListener;
+import listener.EnvelopeFinishedListener;
 import resources.Strings;
 import engine.Module;
 import engine.SynthesizerEngine;
@@ -47,6 +47,14 @@ public class Envelope extends Module
 	public final static int RELEASE = 2;
 	private final static int SUSTAIN = 3;
 
+	/**
+	 * Eine ADSR-Hüllkurve verändert den Amplitudenverlauf eines Parameters.
+	 * 
+	 * @param parent Engine
+	 * @param id ID
+	 * @param listener Listener, der darauf wartet, dass die Hüllkurve fertig ist
+	 * @param name Name
+	 */
 	public Envelope(SynthesizerEngine parent, int id, EnvelopeFinishedListener listener, String name)  
 	{
 		super(parent, 8, 1, id, name);
@@ -103,6 +111,7 @@ public class Envelope extends Module
 
 	public void setPhase(int newPhase)
 	{
+		//Phase und Werte aktualisieren 
 		for (int i = 0; i < sampleCounter.length; i++)
 		{
 			sampleCounter[i] = 0;
@@ -117,6 +126,7 @@ public class Envelope extends Module
 
 	private void updateValues()
 	{
+		//Das wollen wir nur berechnen, wenn sich etwas geändert hat
 		attackTime = inputWires[ATTACK_INPUT].getNextSample();
 		decayTime = inputWires[DECAY_INPUT].getNextSample();
 		sustainLevel = inputWires[SUSTAIN_INPUT].getNextSample();
@@ -140,7 +150,7 @@ public class Envelope extends Module
 		numSamples[ATTACK] = Math.round((attackTime / 1000) * parent.getSamplingRate());
 		numSamples[DECAY] =  Math.round((decayTime / 1000) * parent.getSamplingRate());
 		numSamples[RELEASE] = Math.round((releaseTime / 1000) * parent.getSamplingRate());	
-
+		
 		if (phase != SUSTAIN)
 		{
 			float diffUp = (endAmplitudes[phase] - startAmplitudes[phase]);

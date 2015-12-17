@@ -1,6 +1,7 @@
 package containers;
 
 import resources.Strings;
+import listener.EnvelopeFinishedListener;
 import modules.BalancedMixer;
 import modules.Constant;
 import modules.Envelope;
@@ -9,12 +10,17 @@ import modules.Ids;
 import modules.LowpassFilter;
 import modules.Mixer;
 import modules.Oscillator;
-import modules.listener.EnvelopeFinishedListener;
 import engine.ModuleContainer;
 import engine.SynthesizerEngine;
 
 public class OscillatorContainer extends ModuleContainer implements EnvelopeFinishedListener
 {
+	/**
+	 * Der Standard-Container, mit dem Töne erzeugt werden.
+	 * 
+	 * @param parent die Engine, in der der Container ist
+	 * @param name Name des Containers
+	 */
 	public OscillatorContainer(SynthesizerEngine parent, String name) 
 	{
 		super(parent, 1, 1, Ids.ID_CONTAINER, name);

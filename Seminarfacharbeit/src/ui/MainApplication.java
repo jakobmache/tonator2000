@@ -13,7 +13,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -32,7 +31,6 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
-import ui.editor.SynthesizerEditor;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -59,6 +57,7 @@ public class MainApplication extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		//Hauptklasse --> UI laden
 		initStage(primaryStage);
 		initEngine();
 
@@ -82,18 +81,20 @@ public class MainApplication extends Application
 
 		engine.run();
 
-		rootLayout.setOnKeyPressed((event) ->
-		{
-			if (event.getCode() == KeyCode.E)
-			{
-				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
-				editor.show();
-			}
-		});
+//		//Mit E kann man den Editor aufrufen
+//		rootLayout.setOnKeyPressed((event) ->
+//		{
+//			if (event.getCode() == KeyCode.E)
+//			{
+//				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+//				editor.show();
+//			}
+//		});
 	}
 
 	private void initEngine()
 	{
+		//Engine laden
 		try 
 		{
 			this.engine = new SynthesizerEngine();
@@ -147,6 +148,8 @@ public class MainApplication extends Application
 
 	private void initStaticModules(BorderPane rootLayout)
 	{
+		//Die festen Module wie Plotter, usw... initialisieren
+		
 		VBox mainLayout = new VBox(5);
 		mainLayout.setMaxHeight(Double.MAX_VALUE);
 		mainLayout.setMaxWidth(Double.MAX_VALUE);
@@ -186,6 +189,8 @@ public class MainApplication extends Application
 
 	private void showStandardConfiguration()
 	{
+		// Lädt die Standardkonfiguration
+		
 		VBox osciBox = new VBox();
 		osciBox.setSpacing(5);
 		HBox balanceBox = new HBox();
@@ -202,7 +207,7 @@ public class MainApplication extends Application
 					Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_CONSTANT_STEEPNESS_2});
 			Node volume = UiUtils.generateModuleGui(engine, this, Module.VOLUME, new int[]{Ids.ID_VOLUME});
 			Node balance = UiUtils.generateModuleGui(engine, this, Module.BALANCED_MIXER, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
-			Node highpass = UiUtils.generateModuleGui(engine, this, Module.LOWPASS, new int[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
+			Node highpass = UiUtils.generateModuleGui(engine, this, Module.HIGHPASS, new int[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
 
 			osciBox.getChildren().add(oscillator1);
 			osciBox.getChildren().add(oscillator2);
@@ -240,6 +245,7 @@ public class MainApplication extends Application
 
 	public void showOverlay(int type)
 	{
+		//Zeigt ein Overlay an
 		if (type == OVERLAY_MIDI)
 		{
 			overlayPane.setText(Strings.OVERLAY_MIDI_STRING);
@@ -262,6 +268,7 @@ public class MainApplication extends Application
 
 	public void showProgram(int newProgram)
 	{
+		//Lädt das aktuelle Programm
 		currProgram = newProgram;
 		for (ModuleController controller:moduleControllers)
 		{
@@ -272,7 +279,7 @@ public class MainApplication extends Application
 			}
 			catch (Exception e)
 			{
-				Alert alert = UiUtils.generateExceptionDialog(e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS], 
+				Alert alert = UiUtils.generateExceptionDialog(getPrimaryStage(), e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS], 
 						Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOAD_ALL_PRESETS]);
 				alert.showAndWait();
 			}
@@ -328,7 +335,8 @@ public class MainApplication extends Application
 					}
 				}
 				popOver.setContentNode(content);
-
+				popOver.setAnchorX(event.getX());
+				popOver.setAnchorY(event.getY());
 				popOver.show(pane);
 			}
 		});

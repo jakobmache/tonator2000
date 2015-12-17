@@ -12,6 +12,13 @@ public class Mixer extends Module{
 
 	private int numModules = 0;
 
+	/**
+	 * Ein Mixer addiert verschiedene Audiosignale und hält sie dabei in ihrem Wertebereich.
+	 * 
+	 * @param parent Engine, von der die maximale Polyphonie abgerufen wird.
+	 * @param id ID
+	 * @param name Name
+	 */
 	public Mixer(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, SynthesizerEngine.MAX_POLYPHONY, 1, id, name);
