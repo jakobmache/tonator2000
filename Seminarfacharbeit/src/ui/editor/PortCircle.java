@@ -25,7 +25,7 @@ public class PortCircle extends Circle
 			if (event.getButton() == MouseButton.PRIMARY && connectedLine == null && owner.getBoundLine() == null)
 			{
 				BoundLine line = new BoundLine();
-				line.setStart(this);
+				line.setStartCircle(this);
 				line.setEnd(event.getSceneX(), event.getSceneY());
 				
 				owner.getPane().getChildren().add(line);
@@ -37,7 +37,7 @@ public class PortCircle extends Circle
 			//Linie beenden
 			else if (event.getButton() == MouseButton.PRIMARY && owner.getBoundLine() != null && connectedLine == null)
 			{
-				owner.getBoundLine().setEnd(this);
+				owner.getBoundLine().setEndCircle(this);
 				connectedLine = owner.getBoundLine();
 				
 				owner.setBoundLine(null);
@@ -66,5 +66,10 @@ public class PortCircle extends Circle
 	{
 		if (connectedLine != null)
 			connectedLine.update();
+	}
+	
+	public void deleteConnectedLine()
+	{
+		connectedLine = null;
 	}
 }

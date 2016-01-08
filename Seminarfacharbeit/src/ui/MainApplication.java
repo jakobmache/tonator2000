@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -31,6 +32,7 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
 import resources.Strings;
+import ui.editor.SynthesizerEditor;
 import engine.Module;
 import engine.SynthesizerEngine;
 
@@ -81,15 +83,15 @@ public class MainApplication extends Application
 
 		engine.run();
 
-//		//Mit E kann man den Editor aufrufen
-//		rootLayout.setOnKeyPressed((event) ->
-//		{
-//			if (event.getCode() == KeyCode.E)
-//			{
-//				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
-//				editor.show();
-//			}
-//		});
+		//Mit E kann man den Editor aufrufen
+		rootLayout.setOnKeyPressed((event) ->
+		{
+			if (event.getCode() == KeyCode.E)
+			{
+				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+				editor.show();
+			}
+		});
 	}
 
 	private void initEngine()

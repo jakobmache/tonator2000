@@ -2,9 +2,11 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import listener.ModuleContainerListener;
 import modules.Constant;
+import containers.ContainerConfiguration;
 import containers.ContainerPreset;
 
 public abstract class ModuleContainer extends Module
@@ -33,6 +35,8 @@ public abstract class ModuleContainer extends Module
 		super(parent, numInputWires, numOutputWires, id, name);
 		modules = new ArrayList<Module>();
 	}
+
+	
 	
 	/**
 	 * Fügt dem Container ein Modul hinzu.

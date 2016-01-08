@@ -40,6 +40,7 @@ import javax.xml.transform.TransformerException;
 
 import midi.MidiUtils;
 import resources.Strings;
+import ui.utils.NumberInputDialog;
 import containers.ContainerPreset;
 import engine.ProgramManager;
 import engine.SynthesizerEngine;

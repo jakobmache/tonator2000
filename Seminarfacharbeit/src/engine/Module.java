@@ -14,6 +14,7 @@ public abstract class Module
 	public static final int CONSTANT = 7;
 	public static final int PLOTTER = 8;
 	public static final int VOLUME = 9;
+	public static final int OUTPUT_MODULE = 10;
 	
 	//Alle Module, die im Editor vom Benutzer erstellt werden können
 	public static final int[] CREATABLE_MODULES = new int[]{
@@ -33,6 +34,8 @@ public abstract class Module
 	protected boolean enabled = true;
 	
 	protected String name = "Modul";
+	
+	public int type;
 	
 	/**
 	 * Instanziert ein neues Objekt der Klasse Module.

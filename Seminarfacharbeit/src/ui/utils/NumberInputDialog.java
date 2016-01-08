@@ -1,4 +1,4 @@
-package ui;
+package ui.utils;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;

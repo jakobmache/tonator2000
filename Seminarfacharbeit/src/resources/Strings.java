@@ -110,7 +110,10 @@ public class Strings
 		{"Sample-Input"},
 		{"Modul 1", "Modul 2", "Balance"},
 		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
-		{}
+		{},
+		{},
+		{},
+		{"Sample-Input"}
 			};
 
 	public static final String[][] OUTPUT_NAMES = new String[][]
@@ -122,7 +125,10 @@ public class Strings
 		{"Sample-Output"},
 		{"Sample-Output"},
 		{"Sample-Output"},
-		{"Wert-Output"}
+		{"Wert-Output"},
+		{},
+		{},
+		{}
 			};
 
 	public static final String[] MODULE_DESCRIPTIONS = new String[]
@@ -214,6 +220,9 @@ public class Strings
 	public static final String NOISE_HELP_DIALOG_TEXT = "Achtung! Geraten Sie im Falle des Auftretens von St" + oe + "rger" + ae + "uschen nicht in Panik und bewahren Sie Ruhe! "
 			+ "Verringern Sie die Samplingrate und die Pufferzeit! Achten Sie zusätzlich bitte auf die korrekte Konfiguration aller Module, eine Releasezeit von 0 sorgt oftmals auch für Knacken!"
 			+ " Wenn Ihnen das Programm zu leise ist, verringern Sie die maximale Polyphonie!";
+	
+	public static final String MODULE_NAME_INPUT_DIALOG_TITLE = "Modulnamen eingeben";
+	public static final String MODULE_NAME_INPUT_DIALOG_TEXT = "Bitte geben Sie einen Namen f" + ue + "r das Modul an: ";
 
 	
 	public static final String BUTTON_TYPE_RESET_ALL = "Alles zur" + ue + "cksetzen";

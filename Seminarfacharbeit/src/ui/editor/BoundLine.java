@@ -13,7 +13,7 @@ class BoundLine extends Line
 		setStrokeWidth(2);
 	}
 	
-	public void setStart(PortCircle circle)
+	public void setStartCircle(PortCircle circle)
 	{
 		input = circle;
 		
@@ -28,7 +28,7 @@ class BoundLine extends Line
 		setEndY(endY);
 	}
 	
-	public void setEnd(PortCircle circle)
+	public void setEndCircle(PortCircle circle)
 	{
 		output = circle;
 		
@@ -36,12 +36,7 @@ class BoundLine extends Line
 		setEndX(output.localToScene(point).getX());
 		setEndY(output.localToScene(point).getY());
 	}
-	
-	public void setEndCircle(PortCircle circle)
-	{
-		output = circle;
-	}
-	
+
 	public PortCircle getStartCircle()
 	{
 		return input;
