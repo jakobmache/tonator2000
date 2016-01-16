@@ -2,19 +2,18 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
+import containers.ContainerPreset;
 import listener.ModuleContainerListener;
 import modules.Constant;
-import containers.ContainerConfiguration;
-import containers.ContainerPreset;
 
-public abstract class ModuleContainer extends Module
+public class ModuleContainer extends Module
 {
 	public static final int SAMPLE_INPUT = 0;
 	public static final int SAMPLE_OUTPUT = 0;
 	
 	protected List<Module> modules;
+	protected List<Wire> wires;
 	
 	protected ContainerPreset preset;
 	
@@ -34,10 +33,9 @@ public abstract class ModuleContainer extends Module
 	{
 		super(parent, numInputWires, numOutputWires, id, name);
 		modules = new ArrayList<Module>();
+		wires = new ArrayList<Wire>();
 	}
 
-	
-	
 	/**
 	 * Fügt dem Container ein Modul hinzu.
 	 * 
@@ -58,7 +56,8 @@ public abstract class ModuleContainer extends Module
 	 */
 	public void addConnection(Module moduleDataIsGrabbedFrom, Module moduleDataIsSentTo, int indexDataIsGrabbedFrom, int indexDataIsSentTo)
 	{
-		new Wire(moduleDataIsSentTo, moduleDataIsGrabbedFrom, indexDataIsGrabbedFrom, indexDataIsSentTo);
+		Wire wire = new Wire(moduleDataIsSentTo, moduleDataIsGrabbedFrom, indexDataIsGrabbedFrom, indexDataIsSentTo);
+		wires.add(wire);
 	}
 	
 	/**
@@ -164,5 +163,28 @@ public abstract class ModuleContainer extends Module
 	public Wire getOutputWire()
 	{
 		return outputWires[SAMPLE_OUTPUT];
+	}
+
+	@Override
+	public float calcNextSample(int index) 
+	{
+		float sample = inputWires[SAMPLE_INPUT].getNextSample();
+		return sample;
+	}
+
+	@Override
+	public float calcNextDisabledSample(int index) {
+		float sample = inputWires[SAMPLE_INPUT].getNextSample();
+		return sample;
+	}
+	
+	public List<Module> getModules()
+	{
+		return modules;
+	}
+	
+	public List<Wire> getWires()
+	{
+		return wires;
 	}
 }

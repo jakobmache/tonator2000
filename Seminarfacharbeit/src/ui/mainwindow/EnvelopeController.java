@@ -1,4 +1,4 @@
-package ui;
+package ui.mainwindow;
 
 import java.util.HashMap;
 import java.util.Map;

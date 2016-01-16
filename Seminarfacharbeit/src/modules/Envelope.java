@@ -62,6 +62,14 @@ public class Envelope extends Module
 		
 		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
 	}
+	
+	public Envelope(SynthesizerEngine parent, int id, String name)  
+	{
+		super(parent, 8, 1, id, name);
+		
+		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
+	}
+
 
 	@Override
 	public float calcNextSample(int index)

@@ -35,9 +35,6 @@ public class Constant extends Module
 	@Override
 	public float calcNextSample(int index)
 	{
-		
-		if (!enabled)
-			return 0;
 		return value;
 	}
 

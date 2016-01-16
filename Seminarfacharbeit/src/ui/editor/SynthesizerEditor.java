@@ -1,13 +1,17 @@
 package ui.editor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javafx.scene.Cursor;
+import engine.Module;
+import engine.ModuleContainer;
+import engine.SynthesizerEngine;
+import engine.Wire;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
@@ -15,17 +19,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import modules.Ids;
+import modules.ModuleGenerator;
+import modules.ModuleType;
 import resources.Strings;
-import ui.MainApplication;
-import engine.Module;
-import engine.ModuleContainer;
-import engine.SynthesizerEngine;
+import ui.mainwindow.MainApplication;
+import ui.utils.MultipleInputDialog;
 
 public class SynthesizerEditor extends Stage
 {
-
-	private MainApplication owner;
 	private SynthesizerEngine engine;
+
+	private Map<Node, ModuleGuiBackend> moduleGuis = new HashMap<Node, ModuleGuiBackend>();
 
 	private ContextMenu menu;
 
@@ -33,28 +38,37 @@ public class SynthesizerEditor extends Stage
 
 	private Node selectedNode;
 
-	private BoundLine currentLine;
-
-	private List<Node> nodes = new ArrayList<Node>();
+	private BoundLine drawnLine;
+	private BoundLine highlightedLine;
+	
+	private ModuleGuiBackend outputBackend;
 
 	public SynthesizerEditor(MainApplication owner, SynthesizerEngine engine)
 	{
 		super();
-		this.owner = owner;
 		this.engine = engine;
+
+		initOwner(owner.getPrimaryStage());
 
 		initEditor();
 		initMenu();
 
 		Scene scene = new Scene(editorPane, 1000, 1000);
 		setScene(scene);
-		
-		show();
 
 		initModules();
 	}
 
-	private void addModuleByType(int type, double layoutX, double layoutY)
+	public void addModuleByGui(ModuleGuiBackend moduleGui, double layoutX, double layoutY)
+	{
+		Pane node = moduleGui.getGui();
+		node.setLayoutX(layoutX);
+		node.setLayoutY(layoutY);
+		editorPane.getChildren().add(node);
+		moduleGuis.put(node, moduleGui);
+	}
+
+	private void addModuleByType(ModuleType type, double layoutX, double layoutY)
 	{
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle(Strings.MODULE_NAME_INPUT_DIALOG_TITLE);
@@ -66,10 +80,10 @@ public class SynthesizerEditor extends Stage
 		addModuleByType(type, name, layoutX, layoutY);
 	}
 
-	private void addModuleByType(int type, String name, double layoutX, double layoutY)
+	private void addModuleByType(ModuleType type, String name, double layoutX, double layoutY)
 	{
-		ModuleGui moduleGui = null;
-		if (type == Module.CONSTANT)
+		ModuleGuiBackend moduleGui = null;
+		if (type == ModuleType.CONSTANT)
 		{	
 			MultipleInputDialog floatDialog = new MultipleInputDialog("Parameter" , null, new String[]{"Maximaler Wert: ", "Minimaler Wert: ", "Standardwert: "});
 			floatDialog.initOwner(this);
@@ -78,22 +92,13 @@ public class SynthesizerEditor extends Stage
 		}
 		else
 		{
-			moduleGui = new ModuleGui(this, type, name);
+			moduleGui = new ModuleGuiBackend(this, type, name);
 		}
 
 		addModuleByGui(moduleGui, layoutX, layoutY);
 	}
 
-	public void addModuleByGui(ModuleGui moduleGui, double layoutX, double layoutY)
-	{
-		Pane node = moduleGui.getGui();
-		node.setLayoutX(layoutX);
-		node.setLayoutY(layoutY);
-		editorPane.getChildren().add(node);
-		nodes.add(node);
-	}
-
-	private ConstantGui createConstant(SynthesizerEditor editor, int type, String name, float minValue, float maxValue, float defaultValue)
+	private ConstantGui createConstant(SynthesizerEditor editor, ModuleType type, String name, float minValue, float maxValue, float defaultValue)
 	{
 		ConstantGui moduleGui = new ConstantGui(editor, type, name, maxValue, minValue, defaultValue);	
 		return moduleGui;
@@ -104,84 +109,59 @@ public class SynthesizerEditor extends Stage
 		editorPane = new Pane();
 		editorPane.setOnMouseClicked((event) ->
 		{
-			//Rechtsklick bei gezogener Linie
-			if (event.getClickCount() == 1 && event.getButton() == MouseButton.SECONDARY && currentLine != null)
+			//Always request focus, otherwise you cant remove focus from constant text fields
+			editorPane.requestFocus();
+			//Rightclick with drawn line -> remove it
+			if (event.getClickCount() == 1 && event.getButton() == MouseButton.SECONDARY && drawnLine != null)
 			{
-				currentLine.getStartCircle().deleteConnectedLine();
-				editorPane.getChildren().remove(currentLine);
-				currentLine = null;
+				drawnLine.getStartCircle().deleteConnectedLine();
+				editorPane.getChildren().remove(drawnLine);
+				drawnLine = null;
 			}
 
-			//Rechtsklick sonst -> Menü
-			else if (event.getClickCount() == 1 && event.getButton() == MouseButton.SECONDARY && currentLine == null)
+			//Rightclick else -> context menu
+			else if (event.getClickCount() == 1 && event.getButton() == MouseButton.SECONDARY && drawnLine == null)
 			{
+				initMenu();
 				menu.show(this, event.getScreenX(), event.getScreenY());
-			}
-		});
-
-		editorPane.setOnKeyPressed((keyEvent) ->
-		{
-			if (keyEvent.getCode() == KeyCode.DELETE)
-			{
-				editorPane.getScene().setCursor(Cursor.DEFAULT);
-				System.out.println(selectedNode);
-				if (selectedNode != null)
-					removeModuleGui(selectedNode);
 			}
 		});
 
 		editorPane.setOnMouseMoved((event) ->
 		{
-			if (currentLine != null)
+			//If we draw a line -> connect
+			if (drawnLine != null)
 			{
-				currentLine.setEnd(event.getX(), event.getY());
+				drawnLine.setEnd(event.getX(), event.getY());
 			}
 		});
-	}
 
-	public void setBoundLine(BoundLine line)
-	{
-		if (line != null)
+		editorPane.setOnKeyPressed((event) ->
 		{
-			line.setMouseTransparent(true);
-		}
-		else if (line == null && currentLine != null)
-		{
-			currentLine.setMouseTransparent(false);
-		}
-		currentLine = line;
-	}
-
-	private void initModules()
-	{
-		addModuleByType(Module.OUTPUT_MODULE, "Audioausgabe", 100, 100);
-		addModuleByGui(new ConstantGui(this, Module.CONSTANT, "Frequenz", 100000000, 0, 440), 200, 200);
-	}
-
-	public BoundLine getBoundLine()
-	{
-		return currentLine;
-	}
-
-	public void setSelectedNode(Node selectedNode)
-	{
-		this.selectedNode = selectedNode;
-		for (Node node:nodes)
-		{
-			if (node == selectedNode)
+			//If we draw a line and press delete -> delete line
+			if (event.getCode() == KeyCode.DELETE)
 			{
-				//DropShadow borderGlow = new DropShadow();
-				//				borderGlow.setColor(Color.LIGHTBLUE);
-				//				borderGlow.setOffsetX(0f);
-				//				borderGlow.setOffsetY(0f);
-				//node.setEffect(borderGlow);
-				//node.setStyle("-fx-border-color:lightblue; -fx-border-radius:5; -fx-border-width:2");
+				if (highlightedLine != null)
+				{
+					removeBoundLine(highlightedLine);
+				}
 			}
-			else
+			//Just for debug
+			if (event.getCode() == KeyCode.ENTER)
 			{
-				node.setStyle(null);
+				ModuleContainer container = buildSynthesizer();
+				System.out.println("Modules: ");
+				for (Module module:container.getModules())
+				{
+					System.out.println("\t"  +  module);
+				}
+				System.out.println("Wires: ");
+				for (Wire wire:container.getWires())
+				{
+					System.out.println("\t" + wire);
+				}
 			}
-		}
+		});
 	}
 
 	private void initMenu()
@@ -190,26 +170,161 @@ public class SynthesizerEditor extends Stage
 		Menu addModuleMenu = new Menu("Modul hinzufügen");
 		menu.getItems().add(addModuleMenu);
 
-		for (int i = 0; i < Module.CREATABLE_MODULES.length; i++)
+		for (int i = 0; i < ModuleType.values().length; i++)
 		{
-			int type = Module.CREATABLE_MODULES[i];
-			MenuItem item = new MenuItem(Strings.MODULE_NAMES[type]);
+			ModuleType type = ModuleType.values()[i];
+			if (!type.isCreatable())
+			{
+				continue;
+			}
+			MenuItem item = new MenuItem(Strings.MODULE_NAMES[type.getIndex()]);
 			addModuleMenu.getItems().add(item);
 			item.setOnAction((event) ->
 			{
-				addModuleByType(type, menu.getAnchorX(), menu.getAnchorY());
+				addModuleByType(type, menu.getX(), menu.getY());
 			});
 		}
+
+		if (selectedNode != null )
+		{
+			if (moduleGuis.get(selectedNode).isDestroyable())
+			{
+				MenuItem deleteItem = new MenuItem("Modul löschen");
+				Node nodeSave = selectedNode;
+				deleteItem.setOnAction((ev) -> {
+					removeModuleGui(nodeSave);
+				});
+				menu.getItems().add(deleteItem);
+			}
+		}
+	}
+
+	private void initModules()
+	{
+		outputBackend = new ModuleGuiBackend(this, ModuleType.OUTPUT_MODULE, "Audio");
+		outputBackend.setDestroyable(false);
+		addModuleByGui(outputBackend, 100, 100);
+		ConstantGui freqGui = new ConstantGui(this, ModuleType.CONSTANT, "Frequenz", 100000000, 0, 0);
+		freqGui.setDestroyable(false);
+		addModuleByGui(freqGui,200,100);
+		ConstantGui ampliGui = new ConstantGui(this, ModuleType.CONSTANT, "Amplitude", 32768, -32767, 0);
+		ampliGui.setDestroyable(false);
+		addModuleByGui(ampliGui,300, 100);
 	}
 
 	private void removeModuleGui(Node gui)
 	{
 		editorPane.getChildren().remove(gui);
+		ModuleGuiBackend moduleGui = moduleGuis.get(gui);
+		for (PortCircle input:moduleGui.getInputs())
+		{
+			if (input.getBoundLine() != null)
+				removeBoundLine(input.getBoundLine());
+		}
+		for (PortCircle output:moduleGui.getOutputs())
+		{
+			if (output.getBoundLine() != null)
+				removeBoundLine(output.getBoundLine());
+		}
+	}
+
+	public BoundLine getBoundLine()
+	{
+		return drawnLine;
 	}
 
 	public Pane getPane()
 	{
 		return editorPane;
+	}
+
+	public void setBoundLine(BoundLine line)
+	{
+		if (line != null)
+		{
+			line.setMouseTransparent(true);
+		}
+		else if (line == null && drawnLine != null)
+		{
+			drawnLine.setMouseTransparent(false);
+		}
+		drawnLine = line;
+	}
+
+	public void setSelectedNode(Node selectedNode)
+	{
+		this.selectedNode = selectedNode;
+	}
+
+	//TODO:Fix connection between Two Inputs! What to do there?
+	public ModuleContainer buildSynthesizer()
+	{
+		ModuleContainer returnContainer = new ModuleContainer(engine, 1, 1, Ids.getNextId(), "ModuleContainer");
+		List<PortCircle> checkedPorts = new ArrayList<PortCircle>();
+
+		for (ModuleGuiBackend backend:moduleGuis.values())
+		{
+			if (backend.getModuleType() == ModuleType.OUTPUT_MODULE)
+				continue;
+			
+			Module module = ModuleGenerator.createModule(backend.getModuleType(), engine, backend.getName(), backend.getId());
+			returnContainer.addModule(module);
+		}
+		
+		for (ModuleGuiBackend endBackend:moduleGuis.values())
+		{
+			if (endBackend.getModuleType() == ModuleType.OUTPUT_MODULE)
+				continue;
+			
+			for (int indexDataIsSentTo = 0; indexDataIsSentTo < endBackend.getInputs().length; indexDataIsSentTo++)
+			{
+				PortCircle input = endBackend.getInputs()[indexDataIsSentTo];
+				if (!checkedPorts.contains(input))
+				{
+					BoundLine line = input.getBoundLine();
+					if (line != null)
+					{
+						PortCircle circle = line.getStartCircle();
+						if (circle.getOwner() == endBackend)
+						{
+							circle = line.getEndCircle();
+						}
+						ModuleGuiBackend startBackend = circle.getOwner();
+						
+						if (startBackend.getModuleType() == ModuleType.OUTPUT_MODULE)
+							continue;
+						
+						Module moduleDataIsGrabbedFrom = returnContainer.findModuleById(startBackend.getId());
+						Module moduleDataIsSentTo = returnContainer.findModuleById(input.getOwner().getId());
+						
+						returnContainer.addConnection(moduleDataIsGrabbedFrom, moduleDataIsSentTo, circle.getIndex(), indexDataIsSentTo);
+					}
+				}
+			}
+		}
+		
+		BoundLine outputWire = outputBackend.getInputs()[0].getBoundLine();
+		PortCircle circle = outputWire.getStartCircle();
+		if (circle.getOwner() == outputBackend)
+		{
+			circle = outputWire.getEndCircle();
+		}
+		Module lastModule = returnContainer.findModuleById(circle.getOwner().getId());
+		returnContainer.addConnection(lastModule, returnContainer, circle.getIndex(), ModuleContainer.SAMPLE_INPUT);
+		
+		return returnContainer;
+	}
+
+	public void removeBoundLine(BoundLine line)
+	{
+		editorPane.getChildren().remove(line);
+		line.getStartCircle().deleteConnectedLine();
+		line.getEndCircle().deleteConnectedLine();
+	}
+
+	public void setHighlightedLine(BoundLine line)
+	{
+		highlightedLine = line;
 	}
 
 }

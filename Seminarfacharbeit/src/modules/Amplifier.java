@@ -29,10 +29,7 @@ public class Amplifier extends Module
 
 	@Override
 	public float calcNextSample(int index) 
-	{
-		if (!enabled)
-			return inputWires[SAMPLE_INPUT].getNextSample();
-		
+	{		
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample();
 		float newValue = inputWires[FACTOR_INPUT].getNextSample() * inputSample;
 		return newValue;

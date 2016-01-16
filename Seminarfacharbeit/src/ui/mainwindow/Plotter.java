@@ -1,10 +1,14 @@
-package ui;
+package ui.mainwindow;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import com.goebl.simplify.Point;
+
+import containers.StandardModuleContainer;
+import engine.SynthesizerEngine;
 import javafx.animation.AnimationTimer;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -13,8 +17,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import modules.Ids;
 import modules.SampleFilter;
-import containers.StandardModuleContainer;
-import engine.SynthesizerEngine;
 
 public class Plotter extends VBox
 {
@@ -36,7 +38,7 @@ public class Plotter extends VBox
 	public Plotter(SynthesizerEngine engine)
 	{
 		sampleFilter = ((SampleFilter) ((StandardModuleContainer) engine.getAllContainer()).findModuleById(Ids.ID_SAMPLE_FILTER_1));
-		
+
 		xAxis = new NumberAxis(0, maxDataPoints, 1000);
 		xAxis.setForceZeroInRange(false);
 		xAxis.setAutoRanging(false);
@@ -56,7 +58,7 @@ public class Plotter extends VBox
 		lineChart.setAnimated(false);
 		lineChart.setHorizontalGridLinesVisible(true);
 		lineChart.setLegendVisible(false);
-		
+
 		setVgrow(lineChart, Priority.ALWAYS);
 		lineChart.setMaxHeight(Double.MAX_VALUE);
 
@@ -81,7 +83,7 @@ public class Plotter extends VBox
 
 		lineChart.setMaxWidth(Double.MAX_VALUE);
 		lineChart.setMaxHeight(Double.MAX_VALUE);
-		
+
 		setOnScroll((event) -> {
 			double upperBound = yAxis.getUpperBound() - 5 * event.getDeltaY();
 			double lowerBound = yAxis.getLowerBound() + 5 * event.getDeltaY();
@@ -91,7 +93,7 @@ public class Plotter extends VBox
 				yAxis.setUpperBound(yAxis.getUpperBound());
 			else
 				yAxis.setUpperBound(upperBound);
-			
+
 			if (lowerBound < Short.MIN_VALUE)
 				yAxis.setLowerBound(Short.MIN_VALUE);
 			else if (lowerBound >= 0)
@@ -99,53 +101,98 @@ public class Plotter extends VBox
 			else
 				yAxis.setLowerBound(lowerBound);
 		});
-		
+
 		yAxis.setUpperBound(Y_START_BOUND);
 		yAxis.setLowerBound(-1 * Y_START_BOUND);
 
 	}
 
-	  private class AddToQueue implements Runnable {
-	        public void run() {
-	            try {
-	            	for (float sample:sampleFilter.getBufferList())
-	            		dataQ.add(sample);
+	//TODO:Improve plotting
+	private class AddToQueue implements Runnable {
+		public void run() {
+			try {
+					            	for (float sample:sampleFilter.getBufferList())
+					            		dataQ.add(sample);
 
-	                Thread.sleep(50);
-	                executor.execute(this);
-	            } catch (InterruptedException ex) {
-	                ex.printStackTrace();
-	            }
-	        }
-	    }
+//				List<Float> bufferList = sampleFilter.getBufferList();
+//				Point2D[] samplePoints = new Point2D[bufferList.size()];
+//
+//				for (int i = 0; i < bufferList.size(); i++)
+//					samplePoints[i] = new Point2D(i, bufferList.get(i));
+//
+//				Simplify<Point2D> simplify = new Simplify<Point2D>(new Point2D[0]);
+//
+//				double tolerance = 0.5;
+//				boolean highQuality = true;
+//
+//				if (samplePoints.length > 0)
+//				{
+//					Point2D[] lessPoints = simplify.simplify(samplePoints, tolerance, highQuality);
+//
+//					for (Point point:lessPoints)
+//						dataQ.add((float) point.getY());
+//				}
 
-	    //-- Timeline gets called in the JavaFX Main thread
-	    private void prepareTimeline() {
-	        // Every frame to take any data from queue and add to chart
-	        new AnimationTimer() {
-	            @Override public void handle(long now) {
-	                	addDataToSeries();
-	            }
-	        }.start();
-	    }
+				Thread.sleep(50);
+				executor.execute(this);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
-	    private void addDataToSeries() 
-	    {
-	        for (int i = 0; i < 200; i++)
-	        {
-	        	if (dataQ.isEmpty())
-	        		break;
-	        	series.getData().add(new XYChart.Data<Number, Number>(xSeriesData++, dataQ.remove()));
-	        }
-	        // remove points to keep us at no more than MAX_DATA_POINTS
-	        if (series.getData().size() > maxDataPoints) {
-	            series.getData().remove(0, series.getData().size() - maxDataPoints);
-	        }
-	        // update 
-	        xAxis.setLowerBound(xSeriesData-maxDataPoints);
-	        xAxis.setUpperBound(xSeriesData-1);
-	    }
+	//-- Timeline gets called in the JavaFX Main thread
+	private void prepareTimeline() {
+		// Every frame to take any data from queue and add to chart
+		new AnimationTimer() {
+			@Override public void handle(long now) {
+				addDataToSeries();
+			}
+		}.start();
+	}
+
+	private void addDataToSeries() 
+	{
+		for (int i = 0; i < 200; i++)
+		{
+			if (dataQ.isEmpty())
+				break;
+			series.getData().add(new XYChart.Data<Number, Number>(xSeriesData++, dataQ.remove()));
+		}
+		// remove points to keep us at no more than MAX_DATA_POINTS
+		if (series.getData().size() > maxDataPoints) {
+			series.getData().remove(0, series.getData().size() - maxDataPoints);
+		}
+		// update 
+		xAxis.setLowerBound(xSeriesData-maxDataPoints);
+		xAxis.setUpperBound(xSeriesData-1);
+	}
 
 
 
+}
+
+class Point2D implements Point
+{
+
+	private double x;
+	private double y;
+
+	public Point2D(double x, double y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public double getX() 
+	{
+		return x;
+	}
+
+	@Override
+	public double getY() 
+	{
+		return y;
+	}
 }

@@ -1,4 +1,4 @@
-package ui.editor;
+package ui.utils;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
@@ -6,7 +6,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-import ui.utils.NumberInputField;
 
 public class MultipleInputDialog extends Dialog<Float[]>
 {
@@ -57,7 +56,7 @@ public class MultipleInputDialog extends Dialog<Float[]>
 		
 		for (int i = 0; i < labels.length; i++)
 		{
-			NumberInputField field = new NumberInputField(Float.MAX_VALUE, Float.MIN_VALUE);
+			NumberInputField field = new NumberInputField(Float.MAX_VALUE, Float.MIN_VALUE, false);
 			numberFields[i] = field;
 			grid.add(labels[i], 0, i);
 			grid.add(field, 1, i);

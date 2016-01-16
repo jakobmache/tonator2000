@@ -1,16 +1,26 @@
 package ui.editor;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 class BoundLine extends Line 
 {
+	
+	private SynthesizerEditor owner;
+	
 	private PortCircle input;
 	private PortCircle output;
 	
-	public BoundLine()
+	private Color defaultColor = Color.BLACK;
+	private Color highlightColor = Color.RED;
+	
+	public BoundLine(SynthesizerEditor owner)
 	{
-		setStrokeWidth(2);
+		this.owner = owner;
+		setStroke(defaultColor);
+		setStrokeWidth(4);
+		initBindings();
 	}
 	
 	public void setStartCircle(PortCircle circle)
@@ -57,5 +67,20 @@ class BoundLine extends Line
 		setEndX(output.localToScene(point).getX());
 		setEndY(output.localToScene(point).getY());
 	}
-
+	
+	private void initBindings()
+	{
+		setOnMouseEntered((event) -> 
+		{
+			if (owner.getBoundLine() == null)
+			{
+				setStroke(highlightColor);
+				owner.setHighlightedLine(this);
+			}
+		});
+		setOnMouseExited((event) ->
+		{
+			setStroke(defaultColor);
+		});
+	}
 }

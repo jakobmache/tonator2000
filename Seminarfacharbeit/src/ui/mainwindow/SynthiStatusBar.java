@@ -1,4 +1,4 @@
-package ui;
+package ui.mainwindow;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;

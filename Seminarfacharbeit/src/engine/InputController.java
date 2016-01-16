@@ -132,10 +132,8 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		
 		//Sie wird nicht abgespielt --> Wir erzeugen einen neuen Container, der sie spielt
 		ProgramManager manager = parent.getProgramManager();
-	
-		OscillatorContainer container;
 		
-		container = new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
+		OscillatorContainer container = new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
 		container.addListener(this);
 		

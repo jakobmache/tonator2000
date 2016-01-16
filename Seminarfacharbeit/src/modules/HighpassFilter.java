@@ -37,9 +37,6 @@ public class HighpassFilter extends Module
 	@Override
 	public float calcNextSample(int index) 
 	{
-		if (!enabled)
-			return inputWires[SAMPLE_INPUT].getNextSample();
-
 		if (cutoffFrequency != inputWires[CUTOFF_INPUT].getNextSample())
 		{
 			setCutoffFrequency(inputWires[CUTOFF_INPUT].getNextSample());
@@ -50,9 +47,8 @@ public class HighpassFilter extends Module
 		}
 
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample() / Short.MAX_VALUE;
-
 		
-		inputSample -= q * b4;                          //feedback
+		inputSample -= q * (b4 - inputSample);                          //feedback
 
 		t1 = b1;  
 		b1 = (inputSample + b0) * p - b1 * f;
@@ -64,6 +60,7 @@ public class HighpassFilter extends Module
 		b4 = b4 - b4 * b4 * b4 * 0.166667f;    //clipping
 		b0 = inputSample;
 
+		//System.out.println(inputSample + "|" + b4);
 		return (float)(b0 - b4) * Short.MAX_VALUE;
 	}
 

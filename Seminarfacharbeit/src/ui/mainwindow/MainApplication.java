@@ -1,10 +1,20 @@
-package ui;
+package ui.mainwindow;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.LineUnavailableException;
+
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.tools.Borders;
+
+import engine.Module;
+import engine.SynthesizerEngine;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,23 +30,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import javax.sound.sampled.LineUnavailableException;
-
 import modules.Ids;
-
-import org.controlsfx.control.NotificationPane;
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.tools.Borders;
-
 import resources.Strings;
 import ui.editor.SynthesizerEditor;
-import engine.Module;
-import engine.SynthesizerEngine;
 
 //TODO: Fix disablen
+//TODO: ChannelVolumeInput
 public class MainApplication extends Application 
 {
 
@@ -76,7 +75,7 @@ public class MainApplication extends Application
 
 		showProgram(0);
 		updateModules();
-
+		
 		primaryStage.show();
 
 		showOverlay(OVERLAY_MIDI);
@@ -89,6 +88,8 @@ public class MainApplication extends Application
 			if (event.getCode() == KeyCode.E)
 			{
 				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
+				editor.setTitle("Synthesizer-Editor");
+				editor.getIcons().add(new Image(iconUrl.toString()));
 				editor.show();
 			}
 		});
@@ -341,6 +342,7 @@ public class MainApplication extends Application
 				popOver.setAnchorY(event.getY());
 				popOver.show(pane);
 			}
+
 		});
 	}
 

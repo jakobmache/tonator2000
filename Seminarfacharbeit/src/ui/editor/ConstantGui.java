@@ -2,9 +2,10 @@ package ui.editor;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
+import modules.ModuleType;
 import ui.utils.NumberInputField;
 
-public class ConstantGui extends ModuleGui 
+public class ConstantGui extends ModuleGuiBackend 
 {
 	private float maxValue;
 	private float minValue;
@@ -12,7 +13,7 @@ public class ConstantGui extends ModuleGui
 	
 	private static int sliderHeight = 100;
 	
-	public ConstantGui(SynthesizerEditor owner, int type, String name, float maxValue, float minValue, float defaultValue) 
+	public ConstantGui(SynthesizerEditor owner, ModuleType type, String name, float maxValue, float minValue, float defaultValue) 
 	{
 		super(owner, type, name, sliderHeight);
 		
@@ -30,7 +31,7 @@ public class ConstantGui extends ModuleGui
 //		slider.setMax(maxValue);
 //		vBox.getChildren().add(slider);
 		
-		NumberInputField input = new NumberInputField(this.maxValue, this.minValue);
+		NumberInputField input = new NumberInputField(this.maxValue, this.minValue, true);
 		input.setText(Float.toString(this.defaultValue));
 		vBox.getChildren().add(input);
 		

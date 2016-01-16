@@ -46,11 +46,11 @@ public class AnimatedLineChart extends Application {
         };
 
         lineChart.setAnimated(false);
-        lineChart.setTitle("Animated Line Chart");
+        lineChart.setTitle(Messages.getString("AnimatedLineChart.lineChartTitle")); //$NON-NLS-1$
         lineChart.setHorizontalGridLinesVisible(true);
 
         // Set Name for Series
-        series1.setName("Series 1");
+        series1.setName(Messages.getString("AnimatedLineChart.lineChartSeries1")); //$NON-NLS-1$
 
         // Add Chart Series
         lineChart.getData().add(series1);
@@ -61,7 +61,7 @@ public class AnimatedLineChart extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Animated Line Chart Sample");
+        stage.setTitle(Messages.getString("AnimatedLineChart.stageTitle")); //$NON-NLS-1$
         init(stage);
         stage.show();
 

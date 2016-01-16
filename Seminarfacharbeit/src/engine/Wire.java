@@ -6,6 +6,7 @@ public class Wire
 	private Module moduleDataIsGrabbedFrom;
 	
 	private int indexDataIsGrabbedFrom;
+	private int indexDataIsSentTo;
 	
 	/**
 	 * Erzeugt ein neues Kabel / Wire. Dieses verbindet zwei Module miteinander.
@@ -24,6 +25,7 @@ public class Wire
 		moduleDataIsGrabbedFrom.connectOutputWire(indexDataIsGrabbedFrom, this);
 		
 		this.indexDataIsGrabbedFrom = indexDataIsGrabbedFrom;
+		this.indexDataIsSentTo = indexDataIsSentTo;
 	}
 	
 	/**
@@ -39,7 +41,7 @@ public class Wire
 	@Override
 	public String toString()
 	{
-		return "Kabel von " + moduleDataIsGrabbedFrom + " zu " + moduleDataIsSentTo + ", id: " + this.hashCode();
+		return "Kabel von " + moduleDataIsGrabbedFrom + "(" + indexDataIsGrabbedFrom + ") zu " + moduleDataIsSentTo + "(" + indexDataIsSentTo + "), id: " + this.hashCode();
 	}
 
 }

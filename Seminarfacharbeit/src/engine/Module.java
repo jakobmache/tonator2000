@@ -16,11 +16,7 @@ public abstract class Module
 	public static final int VOLUME = 9;
 	public static final int OUTPUT_MODULE = 10;
 	
-	//Alle Module, die im Editor vom Benutzer erstellt werden können
-	public static final int[] CREATABLE_MODULES = new int[]{
-		OSCILLATOR, LOWPASS, ENVELOPE, AMPLIFIER, MIXER, BALANCED_MIXER, CONSTANT
-	};
-	
+
 	protected SynthesizerEngine parent;
 
 	protected Wire[] inputWires;
@@ -50,7 +46,7 @@ public abstract class Module
 	public Module(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String moduleName)
 	{
 		this.parent = parent;
-		this.inputWires = new Wire[numInputWires];
+		this.inputWires = new Wire[numInputWires + 1];
 		this.outputWires = new Wire[numOutputWires];
 		this.inputNames = new String[numInputWires];
 		this.outputNames = new String[numOutputWires];
@@ -70,7 +66,7 @@ public abstract class Module
 		{
 			float value =  calcNextSample(index);
 			if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
-				System.out.println("Value too high at " + moduleId);
+				System.out.println("Value too high at " + moduleId + " with " + value);
 			return value;
 		}
 		else 
@@ -174,5 +170,10 @@ public abstract class Module
 	public String[] getOutputNames()
 	{
 		return outputNames;
+	}
+	
+	public String toString()
+	{
+		return "Modul " + name + ", id: " + moduleId;
 	}
 }

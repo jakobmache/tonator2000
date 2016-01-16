@@ -1,5 +1,7 @@
 package modules;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Ids 
 {
 	//Enthält die Ids für den Standardaufbau
@@ -49,11 +51,11 @@ public class Ids
 	
 	public static final int ID_CONTAINER = 200;
 	
-	private static int counter = 0;
+	private static AtomicInteger counter = new AtomicInteger(0);
 	
-	public static int getNextId()
+	public static synchronized int getNextId()
 	{
-		return counter++;
+		return counter.getAndIncrement();
 	}
 	
 }

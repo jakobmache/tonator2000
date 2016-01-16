@@ -33,16 +33,13 @@ public class SampleFilter extends Module
 	@Override
 	public float calcNextSample(int index) 
 	{
-		if (!enabled)
-			return inputWires[SAMPLE_INPUT].getNextSample();
-		
 		count++;
 		currSample = inputWires[0].getNextSample();
 		if (stop == count)
 		{
 			count = 0;
 			bufferList.add(currSample);
-		}
+		} 
 		return currSample;
 	}
 	

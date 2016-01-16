@@ -103,7 +103,7 @@ public class Strings
 
 	public static final String[][] INPUT_NAMES = new String[][]
 			{
-		{"Sample-Input", "Wellenform"},
+		{"Frequenz", "Amplitude", "Wellenform"},
 		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
 		{"Sample-Input", "Attack-Zeit", "Decay-Zeit", "Sustain-Level", "Release-Zeit", "Steilheit", "Startlevel", "Peaklevel"},
 		{"Sample-Input", "Verstärkungsfaktor"},

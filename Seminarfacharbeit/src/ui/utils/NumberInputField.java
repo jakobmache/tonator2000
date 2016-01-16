@@ -1,5 +1,6 @@
 package ui.utils;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
@@ -9,7 +10,7 @@ public class NumberInputField extends TextField
 	private float minValue;
 	private float maxValue;
 
-	public NumberInputField(float maxValue, float minValue)
+	public NumberInputField(float maxValue, float minValue, boolean ignoreFirstFocus)
 	{
 		this.maxValue = maxValue;
 		this.minValue = minValue;
@@ -40,6 +41,19 @@ public class NumberInputField extends TextField
 				setEffect(borderGlow);
 			}
 		});
+
+		if (ignoreFirstFocus)
+		{
+			SimpleBooleanProperty firstTime = new SimpleBooleanProperty(true);
+
+			focusedProperty().addListener((observable,  oldValue,  newValue) -> {
+				if(newValue && firstTime.get())
+				{
+					getParent().requestFocus();
+					firstTime.set(false);
+				}
+			});
+		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package ui;
+package ui.mainwindow;
 
 import resources.Strings;
 import javafx.application.Platform;

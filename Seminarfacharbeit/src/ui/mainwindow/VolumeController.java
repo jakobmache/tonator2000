@@ -1,4 +1,4 @@
-package ui;
+package ui.mainwindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;

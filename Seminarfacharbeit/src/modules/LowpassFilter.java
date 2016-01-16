@@ -38,9 +38,6 @@ public class LowpassFilter extends Module
 	@Override
 	public float calcNextSample(int index) 
 	{
-		if (!enabled)
-			return inputWires[SAMPLE_INPUT].getNextSample();
-
 		if (cutoffFrequency != inputWires[CUTOFF_INPUT].getNextSample())
 		{
 			setCutoffFrequency(inputWires[CUTOFF_INPUT].getNextSample());
