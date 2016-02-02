@@ -27,6 +27,7 @@ public class LowpassFilter extends Module
 	public LowpassFilter(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);
+		type = ModuleType.LOWPASS;
 	}
 
 	@Override

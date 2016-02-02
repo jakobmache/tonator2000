@@ -145,6 +145,11 @@ public class Strings
 				+ " Deshalb kann es zu Ungenauigkeiten bei der Darstellung kommen.",
 		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert die Amplitude des entstehenden Klanges nicht, nur die Lautstärke der Audioausgabe."
 			};
+	
+	public static final String[] WAVEFORMS = new String[]
+			{
+					"Sinus", "S" + ae + "gezahn", "Rechteck", "Dreieck", "Wei" + SS + "es Rauschen"
+			};
 
 	public static final String[] STATUSBAR_TOOLTIPS = new String[]
 			{

@@ -21,7 +21,7 @@ public class Oscillator extends Module
 	public static final int TYPE_TRI = 3;
 	public static final int TYPE_WHITE_NOISE = 4;
 
-	private int type = Oscillator.TYPE_SINE;
+	private int waveform = Oscillator.TYPE_SINE;
 
 	private float frequency;
 	private float amplitude;
@@ -41,13 +41,14 @@ public class Oscillator extends Module
 	public Oscillator(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);
+		type = ModuleType.OSCILLATOR;
 		random = new Random(System.currentTimeMillis());
 	}
 
-	public void setType(int newType)
+	public void setWaveform(int newType)
 	{
-		type = newType;
-		if (type == TYPE_SAW)
+		waveform = newType;
+		if (waveform == TYPE_SAW)
 			cyclePosition = -1;
 	}
 
@@ -74,8 +75,8 @@ public class Oscillator extends Module
 		if (frequency != inputWires[FREQUENCY_INPUT].getNextSample())
 			setFrequency(inputWires[FREQUENCY_INPUT].getNextSample());
 		
-		if (type != inputWires[TYPE_INPUT].getNextSample())
-			setType((int) inputWires[TYPE_INPUT].getNextSample());
+		if (waveform != inputWires[TYPE_INPUT].getNextSample())
+			setWaveform((int) inputWires[TYPE_INPUT].getNextSample());
 		
 		setAmplitude(inputWires[AMPLITUDE_INPUT].getNextSample());
 		
@@ -84,7 +85,7 @@ public class Oscillator extends Module
 			return 0;
 
 		float value;
-		if (type == TYPE_SINE)
+		if (waveform == TYPE_SINE)
 		{
 			value = (float) (amplitude * Math.sin(Constants.TWOPI * cyclePosition));
 			cyclePosition += cycleIncrease;
@@ -93,7 +94,7 @@ public class Oscillator extends Module
 			return value;
 		}
 
-		else if (type == TYPE_SQUARE)
+		else if (waveform == TYPE_SQUARE)
 		{
 			float sineValue = (float) (amplitude * Math.sin(2 * Math.PI * cyclePosition));
 			cyclePosition += cycleIncrease;
@@ -106,7 +107,7 @@ public class Oscillator extends Module
 			return value;
 		}
 
-		else if (type == TYPE_SAW)
+		else if (waveform == TYPE_SAW)
 		{
 			cycleIncrease = 2 / (parent.getSamplingRate() / frequency);
 			cyclePosition += cycleIncrease;
@@ -115,7 +116,7 @@ public class Oscillator extends Module
 			return (float) (amplitude * cyclePosition);
 		}
 		
-		else if (type == TYPE_TRI)
+		else if (waveform == TYPE_TRI)
 		{
 			cycleIncrease = 2 / (parent.getSamplingRate() / frequency);
 			value = (float) (2 / Math.PI * Math.asin(Math.sin(Math.PI * cyclePosition)));
@@ -125,7 +126,7 @@ public class Oscillator extends Module
 			return (float) (amplitude * value);
 		}
 		
-		else if (type == TYPE_WHITE_NOISE)
+		else if (waveform == TYPE_WHITE_NOISE)
 		{
 			value = (2 * random.nextFloat() - 1) * amplitude;
 			return value;

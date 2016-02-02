@@ -8,13 +8,13 @@ import java.util.Map;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
+import containers.OscillatorContainer;
+import containers.SynthesizerModuleContainer;
 import listener.ModuleContainerListener;
 import listener.ProgramListener;
 import midi.MidiUtils;
 import modules.Ids;
 import modules.Mixer;
-import resources.Strings;
-import containers.OscillatorContainer;
 
 public class InputController implements ModuleContainerListener, ProgramListener{
 
@@ -57,19 +57,6 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 		
 		parent.getProgramManager().addListener(this);
-	}
-	
-	/**
-	 * Gibt den Containertyp an, mit dem alle Töne erzeugt werden.
-	 * Diese Container werden also neu erzeugt, wenn ein neuer Ton abgespielt werden soll, und 
-	 * enthalten die Module zum Modifizieren des Tones. Ist damit äquivalent zum frei konfigurierbaren
-	 * Teil des Synthesizers. (Noch nicht implementiert, erst für den Editor wichtig)
-	 * 
-	 * @return den Referenzcontainer, mit dem jeder Ton erzeugt wird
-	 */
-	public ModuleContainer getReferenceContainer()
-	{
-		return new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
 	}
 
 	/**
@@ -131,14 +118,23 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 		
 		//Sie wird nicht abgespielt --> Wir erzeugen einen neuen Container, der sie spielt
-		ProgramManager manager = parent.getProgramManager();
+//		ProgramManager manager = parent.getProgramManager();
 		
-		OscillatorContainer container = new OscillatorContainer(parent, Strings.getStandardModuleName(Ids.ID_CONTAINER));
-		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
-		container.addListener(this);
+		PlayableModuleContainer container;
+		if (parent.getSynthesizerContainer().getClass() == OscillatorContainer.class)
+		{
+			System.out.println("Default!");
+			container = new OscillatorContainer(parent, "OscillatorContainer");
+		}
+		else {
+			container = new SynthesizerModuleContainer(parent, 1, 1, Ids.getNextId(), "SynthesizerContainer", parent.getSynthesizerContainer());
+		}
+
+//		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
+//		container.addListener(this);
 		
 		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, Mixer.NEXT_FREE_INPUT);
-
+		
 		//Wir müssen uns den Container merken
 		allContainers.add(container);
 		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
@@ -212,7 +208,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	{
 		for (ModuleContainer container:allContainers)
 		{
-			((OscillatorContainer) container).stopPlaying();
+			((PlayableModuleContainer) container).stopPlaying();
 		}
 	}
 
@@ -278,6 +274,11 @@ public class InputController implements ModuleContainerListener, ProgramListener
 	public int getChannelProgram(int channel)
 	{
 		return channelPrograms.get(channel);
+	}
+	
+	public PlayableModuleContainer getSynthesizerContainer()
+	{
+		return parent.getSynthesizerContainer();
 	}
 
 }

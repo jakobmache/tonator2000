@@ -22,6 +22,7 @@ public class BalancedMixer extends Mixer
 	public BalancedMixer(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, id, name);
+		type = ModuleType.BALANCED_MIXER;
 	}
 	
 	@Override

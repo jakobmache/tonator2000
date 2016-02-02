@@ -19,6 +19,7 @@ public class Constant extends Module
 	public Constant(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 0, 1, id, name);
+		type = ModuleType.CONSTANT;
 	}
 	
 	public void setValue(float sample)

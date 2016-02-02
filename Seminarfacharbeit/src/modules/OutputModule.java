@@ -36,6 +36,8 @@ public class OutputModule extends Module
 	public OutputModule(SynthesizerEngine parent, int id, String name) throws LineUnavailableException 
 	{
 		super(parent, 1, 0, id, name);
+		type = ModuleType.OUTPUT_MODULE;
+		
 		//Größe eines Paketes: Anzahl der Samples in der BufferZeit * Samplegröße in Bytes
 		packetSize = (int) (parent.getBufferTime() * parent.getSamplingRate() * parent.getSampleSizeInBytes());
 

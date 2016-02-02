@@ -9,10 +9,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import modules.Ids;
+import modules.ModuleGenerator;
 import modules.ModuleType;
 
 import org.controlsfx.tools.Borders;
 
+import engine.Module;
 import resources.Strings;
 
 public class ModuleGuiBackend
@@ -44,6 +46,8 @@ public class ModuleGuiBackend
 	private ContextMenu menu;
 	
 	private boolean destroyable = true;
+	
+	protected Module module;
 
 	/**
 	 * Creates a new ModuleGuiBackend which contains data related to this module.
@@ -68,6 +72,8 @@ public class ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
+		
+		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
 	}
 	
 	/**
@@ -102,7 +108,7 @@ public class ModuleGuiBackend
 	/**
 	 * Calculates the width and height of a module.
 	 */
-	private void initSize()
+	protected void initSize()
 	{
 		int max = Math.max(Strings.INPUT_NAMES[type.getIndex()].length, Strings.OUTPUT_NAMES[type.getIndex()].length);
 		if (width == 0)
@@ -184,7 +190,7 @@ public class ModuleGuiBackend
 		});	
 	}
 
-	private void drawInputs()
+	protected void drawInputs()
 	{
 		inputs = new PortCircle[Strings.INPUT_NAMES[type.getIndex()].length];
 		for (int i = 0; i < Strings.INPUT_NAMES[type.getIndex()].length; i++)
@@ -219,7 +225,7 @@ public class ModuleGuiBackend
 		gui.getChildren().add(line);
 	}
 
-	private void drawOutputs()
+	protected void drawOutputs()
 	{
 		outputs = new PortCircle[Strings.OUTPUT_NAMES[type.getIndex()].length];
 		for (int i = 0; i < Strings.OUTPUT_NAMES[type.getIndex()].length; i++)
@@ -283,5 +289,10 @@ public class ModuleGuiBackend
 	public int getId()
 	{
 		return id;
+	}
+	
+	public Module getModule()
+	{
+		return module;
 	}
 }

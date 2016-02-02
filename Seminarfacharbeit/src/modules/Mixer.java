@@ -22,6 +22,7 @@ public class Mixer extends Module{
 	public Mixer(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, SynthesizerEngine.MAX_POLYPHONY, 1, id, name);
+		type = ModuleType.LOWPASS;
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class Mixer extends Module{
 				continue;		
 		}
 
-		sum = sum /parent.getMaxPolyphony();
+		sum = sum / parent.getMaxPolyphony();
 
 		return sum;
 	}
@@ -60,6 +61,7 @@ public class Mixer extends Module{
 	@Override
 	public void connectInputWire(int index, Wire wire)
 	{
+		//Muhahahaha fake
 		int targetIndex = inputWires.length - 1;
 		//Wir wollen am nächsten freien Index "andocken"
 		for (int i = 0; i < inputWires.length; i++)	
@@ -70,6 +72,8 @@ public class Mixer extends Module{
 				break;
 			}
 		}
+		
+		System.out.println("Add at index " + targetIndex);
 
 		inputWires[targetIndex] = wire;
 	}

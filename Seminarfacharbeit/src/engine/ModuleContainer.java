@@ -6,18 +6,20 @@ import java.util.List;
 import containers.ContainerPreset;
 import listener.ModuleContainerListener;
 import modules.Constant;
+import modules.ModuleType;
 
 public class ModuleContainer extends Module
 {
 	public static final int SAMPLE_INPUT = 0;
 	public static final int SAMPLE_OUTPUT = 0;
 	
-	protected List<Module> modules;
-	protected List<Wire> wires;
+	protected List<Module> modules = new ArrayList<Module>();
+	protected List<Wire> wires = new ArrayList<Wire>();
 	
 	protected ContainerPreset preset;
 	
 	private List<ModuleContainerListener> listeners = new ArrayList<ModuleContainerListener>();
+
 	
 	/**
 	 * Instanziert einen neuen ModuleContainer, der verschiedene Module enthalten kann. Das letzte Modul muss mit dem 
@@ -32,8 +34,12 @@ public class ModuleContainer extends Module
 	public ModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name)
 	{
 		super(parent, numInputWires, numOutputWires, id, name);
-		modules = new ArrayList<Module>();
-		wires = new ArrayList<Wire>();
+		preset = new ContainerPreset();
+		for (Module module:modules)
+		{
+			if (module.getType() == ModuleType.CONSTANT)
+				preset.setParam(module.getId(), module.requestNextSample(Constant.VALUE_OUTPUT));
+		}
 	}
 
 	/**
@@ -164,19 +170,6 @@ public class ModuleContainer extends Module
 	{
 		return outputWires[SAMPLE_OUTPUT];
 	}
-
-	@Override
-	public float calcNextSample(int index) 
-	{
-		float sample = inputWires[SAMPLE_INPUT].getNextSample();
-		return sample;
-	}
-
-	@Override
-	public float calcNextDisabledSample(int index) {
-		float sample = inputWires[SAMPLE_INPUT].getNextSample();
-		return sample;
-	}
 	
 	public List<Module> getModules()
 	{
@@ -186,5 +179,17 @@ public class ModuleContainer extends Module
 	public List<Wire> getWires()
 	{
 		return wires;
+	}
+
+	@Override
+	public float calcNextSample(int index) 
+	{
+		return inputWires[SAMPLE_INPUT].getNextSample();
+	}
+
+	@Override
+	public float calcNextDisabledSample(int index) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

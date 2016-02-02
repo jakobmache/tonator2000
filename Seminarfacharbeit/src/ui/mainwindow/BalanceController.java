@@ -52,8 +52,8 @@ public class BalanceController extends ModuleController
 	@Override
 	public void loadData() 
 	{
-		module1Label.setText(parent.getInputController().getReferenceContainer().findModuleById(module1Id).getName());
-		module2Label.setText(parent.getInputController().getReferenceContainer().findModuleById(module2Id).getName());
+		module1Label.setText(parent.getInputController().getSynthesizerContainer().findModuleById(module1Id).getName());
+		module2Label.setText(parent.getInputController().getSynthesizerContainer().findModuleById(module2Id).getName());
 		float balance = parent.getProgramManager().getInstrumentPreset(currProgram).getParam(balanceConstantId);
 		balanceSlider.setValue(balance);
 		update();

@@ -60,6 +60,8 @@ public class Envelope extends Module
 		super(parent, 8, 1, id, name);
 		this.listener = listener;
 		
+		type = ModuleType.ENVELOPE;
+		
 		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
 	}
 	

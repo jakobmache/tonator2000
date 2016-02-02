@@ -1,12 +1,13 @@
 package ui.editor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import engine.Module;
 import engine.ModuleContainer;
+import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 import engine.Wire;
 import javafx.scene.Node;
@@ -20,7 +21,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import modules.Ids;
-import modules.ModuleGenerator;
 import modules.ModuleType;
 import resources.Strings;
 import ui.mainwindow.MainApplication;
@@ -160,6 +160,7 @@ public class SynthesizerEditor extends Stage
 				{
 					System.out.println("\t" + wire);
 				}
+				engine.setSynthesizerContainer((PlayableModuleContainer) container);
 			}
 		});
 	}
@@ -260,17 +261,19 @@ public class SynthesizerEditor extends Stage
 	public ModuleContainer buildSynthesizer()
 	{
 		ModuleContainer returnContainer = new ModuleContainer(engine, 1, 1, Ids.getNextId(), "ModuleContainer");
-		List<PortCircle> checkedPorts = new ArrayList<PortCircle>();
+		Set<PortCircle> checkedPorts = new HashSet<PortCircle>();
 
+		//Create each module
 		for (ModuleGuiBackend backend:moduleGuis.values())
 		{
 			if (backend.getModuleType() == ModuleType.OUTPUT_MODULE)
 				continue;
 			
-			Module module = ModuleGenerator.createModule(backend.getModuleType(), engine, backend.getName(), backend.getId());
+			Module module = backend.getModule();
 			returnContainer.addModule(module);
 		}
 		
+		//Create wires
 		for (ModuleGuiBackend endBackend:moduleGuis.values())
 		{
 			if (endBackend.getModuleType() == ModuleType.OUTPUT_MODULE)
@@ -309,6 +312,7 @@ public class SynthesizerEditor extends Stage
 		{
 			circle = outputWire.getEndCircle();
 		}
+		
 		Module lastModule = returnContainer.findModuleById(circle.getOwner().getId());
 		returnContainer.addConnection(lastModule, returnContainer, circle.getIndex(), ModuleContainer.SAMPLE_INPUT);
 		
@@ -325,6 +329,11 @@ public class SynthesizerEditor extends Stage
 	public void setHighlightedLine(BoundLine line)
 	{
 		highlightedLine = line;
+	}
+	
+	public SynthesizerEngine getEngine()
+	{
+		return engine;
 	}
 
 }

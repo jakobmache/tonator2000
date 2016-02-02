@@ -1,4 +1,4 @@
-package containers;
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					package containers;
 
 import resources.Strings;
 import listener.EnvelopeFinishedListener;
@@ -11,9 +11,10 @@ import modules.LowpassFilter;
 import modules.Mixer;
 import modules.Oscillator;
 import engine.ModuleContainer;
+import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 
-public class OscillatorContainer extends ModuleContainer implements EnvelopeFinishedListener
+public class OscillatorContainer extends PlayableModuleContainer implements EnvelopeFinishedListener 
 {
 	/**
 	 * Der Standard-Container, mit dem Töne erzeugt werden.
@@ -25,6 +26,8 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 	{
 		super(parent, 1, 1, Ids.ID_CONTAINER, name);
 		initModules();
+		setFrequencyId(Ids.ID_CONSTANT_FREQUENCY_1);
+		setAmplitudeId(Ids.ID_CONSTANT_AMPLITUDE_1);
 	}
 	
 	private void initModules()
@@ -109,8 +112,22 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		addConnection(findModuleById(Ids.ID_HIGHPASS_1), findModuleById(Ids.ID_LOWPASS_1), HighpassFilter.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_LOWPASS_1), findModuleById(Ids.ID_ENVELOPE_1), LowpassFilter.SAMPLE_OUTPUT, Envelope.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_ENVELOPE_1), this, Envelope.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
+		System.out.println("Init module!");
+		((Constant) findModuleById(Ids.ID_CONSTANT_OSCITYPE_1)).setValue(Oscillator.TYPE_SINE);
+		((Constant) findModuleById(Ids.ID_CONSTANT_OSCITYPE_2)).setValue(Oscillator.TYPE_SINE);
+		
+		((Constant) findModuleById(Ids.ID_CONSTANT_CUTOFF_1)).setValue(1.0F);
+		((Constant) findModuleById(Ids.ID_CONSTANT_CUTOFF_2)).setValue(0.01F);
+		
+		((Constant)findModuleById(Ids.ID_CONSTANT_STARTLEVEL_2)).setValue(1.0F);
+		((Constant)findModuleById(Ids.ID_CONSTANT_PEAKLEVEL_2)).setValue(1.0F / findModuleById(Ids.ID_CONSTANT_CUTOFF_1).requestNextSample(Constant.VALUE_OUTPUT));
+		
+		((Constant)findModuleById(Ids.ID_CONSTANT_STARTLEVEL_1)).setValue(0.0F);
+		((Constant)findModuleById(Ids.ID_CONSTANT_PEAKLEVEL_1)).setValue(1.0F);
+		((Constant)findModuleById(Ids.ID_CONSTANT_SUSTAIN_1)).setValue(1.0F);
 	}
 	
+	@Override
 	public void startPlaying(float frequency, float amplitude)
 	{
 		((Constant)findModuleById(Ids.ID_CONSTANT_FREQUENCY_1)).setValue(frequency);
@@ -125,8 +142,11 @@ public class OscillatorContainer extends ModuleContainer implements EnvelopeFini
 		((Constant)findModuleById(Ids.ID_CONSTANT_STARTLEVEL_2)).setValue(1.0F);
 		((Constant)findModuleById(Ids.ID_CONSTANT_PEAKLEVEL_2)).setValue(1.0F / findModuleById(Ids.ID_CONSTANT_CUTOFF_1).requestNextSample(Constant.VALUE_OUTPUT));
 		((Envelope)findModuleById(Ids.ID_ENVELOPE_2)).start();
+		
+		//System.out.println(((Constant) findModuleById(Ids.ID_CONSTANT_AMPLITUDE_1)).requestNextSample(0));
 	}
 	
+	@Override
 	public void stopPlaying()
 	{
 		((Envelope)findModuleById(Ids.ID_ENVELOPE_1)).release();

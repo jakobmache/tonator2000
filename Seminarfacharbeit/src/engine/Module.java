@@ -1,5 +1,7 @@
 package engine;
 
+import modules.ModuleType;
+
 public abstract class Module 
 {
 	//Die Typen aller Module. Damit kann man, wenn man Daten Modulen zuordnet, zum Beispiel in Arrays
@@ -31,7 +33,7 @@ public abstract class Module
 	
 	protected String name = "Modul";
 	
-	public int type;
+	public ModuleType type;
 	
 	/**
 	 * Instanziert ein neues Objekt der Klasse Module.
@@ -175,5 +177,15 @@ public abstract class Module
 	public String toString()
 	{
 		return "Modul " + name + ", id: " + moduleId;
+	}
+	
+	public ModuleType getType()
+	{
+		return type;
+	}
+	
+	public SynthesizerEngine getParent()
+	{
+		return parent;
 	}
 }

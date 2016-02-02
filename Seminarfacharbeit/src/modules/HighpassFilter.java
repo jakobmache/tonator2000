@@ -27,6 +27,7 @@ public class HighpassFilter extends Module
 	public HighpassFilter(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 3, 1, id, name);
+		type = ModuleType.HIGHPASS;
 	}
 
 	public float calcNextDisabledSample(int index) 
@@ -48,7 +49,7 @@ public class HighpassFilter extends Module
 
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample() / Short.MAX_VALUE;
 		
-		inputSample -= q * (b4 - inputSample);                          //feedback
+		//inputSample -= q * (b4 - inputSample);                          //feedback
 
 		t1 = b1;  
 		b1 = (inputSample + b0) * p - b1 * f;
@@ -61,7 +62,8 @@ public class HighpassFilter extends Module
 		b0 = inputSample;
 
 		//System.out.println(inputSample + "|" + b4);
-		return (float)(b0 - b4) * Short.MAX_VALUE;
+		//return (float)(b0 - b4) * Short.MAX_VALUE;
+		return inputSample * Short.MAX_VALUE;
 	}
 
 	public void setCutoffFrequency(float newValue)

@@ -35,9 +35,31 @@ public class Wire
 	 */
 	public float getNextSample()
 	{
-		return moduleDataIsGrabbedFrom.requestNextSample(indexDataIsGrabbedFrom);
+		float value = moduleDataIsGrabbedFrom.requestNextSample(indexDataIsGrabbedFrom);
+//		System.out.println(this + ":" + value);
+		return value;
 	}
 	
+	public Module getModuleDataIsGrabbedFrom()
+	{
+		return moduleDataIsGrabbedFrom;
+	}
+	
+	public Module getModuleDataIsSentTo()
+	{
+		return moduleDataIsSentTo;
+	}
+	
+	public int getIndexDataIsGrabbedFrom() 
+	{
+		return indexDataIsGrabbedFrom;
+	}
+
+	public int getIndexDataIsSentTo() 
+	{
+		return indexDataIsSentTo;
+	}
+
 	@Override
 	public String toString()
 	{

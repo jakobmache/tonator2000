@@ -19,6 +19,7 @@ public class Amplifier extends Module
 	public Amplifier(SynthesizerEngine parent, int id, String name) 
 	{
 		super(parent, 2, 1, id, name);
+		type = ModuleType.AMPLIFIER;
 	}
 	
 	@Override

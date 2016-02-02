@@ -21,6 +21,7 @@ import midi.MidiPlayer;
 import modules.Ids;
 import modules.Mixer;
 import modules.OutputModule;
+import containers.OscillatorContainer;
 import containers.StandardModuleContainer;
 
 public class SynthesizerEngine implements Receiver
@@ -51,9 +52,11 @@ public class SynthesizerEngine implements Receiver
 	private InputController inputModule;
 	private Mixer outputMixer;
 	private ModuleContainer allContainer;
-	private ModuleContainer osciContainer;
+	private PlayableModuleContainer synthesizerContainer;
 	private ProgramManager programManager;
 	private MidiLogger logger;
+	
+	private long startTimestamp;
 
 	private MidiDevice connectedMidiDevice;
 
@@ -71,6 +74,8 @@ public class SynthesizerEngine implements Receiver
 		initModules();
 		midiPlayer = new MidiPlayer(this);
 		logger = new MidiLogger();
+		
+		setSynthesizerContainer(new OscillatorContainer(this, "DefaultOscillatorContainer"));
 	}
 
 	/**
@@ -221,6 +226,7 @@ public class SynthesizerEngine implements Receiver
 	 */
 	public void run()
 	{
+		updateStartTimestamp();
 		Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -256,9 +262,14 @@ public class SynthesizerEngine implements Receiver
 	 * 
 	 * @return der Container, mit dem die Töne erzeugt werden
 	 */
-	public ModuleContainer getOsciContainer()
+	public PlayableModuleContainer getSynthesizerContainer()
 	{
-		return osciContainer;
+		return synthesizerContainer;
+	}
+	
+	public void setSynthesizerContainer(PlayableModuleContainer container)
+	{
+		this.synthesizerContainer = container;
 	}
 
 	public Mixer getOutputMixer()
@@ -425,5 +436,14 @@ public class SynthesizerEngine implements Receiver
 		return logger;
 	}
 	
+	public long getTimestamp()
+	{
+		return System.nanoTime() - startTimestamp;
+	}
+	
+	public void updateStartTimestamp()
+	{
+		startTimestamp = System.nanoTime();
+	}
 	
 }
