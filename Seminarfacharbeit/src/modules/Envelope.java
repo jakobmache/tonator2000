@@ -1,9 +1,9 @@
 package modules;
 
-import listener.EnvelopeFinishedListener;
-import resources.Strings;
 import engine.Module;
 import engine.SynthesizerEngine;
+import listener.EnvelopeFinishedListener;
+import resources.Strings;
 
 public class Envelope extends Module
 {
@@ -69,6 +69,8 @@ public class Envelope extends Module
 	{
 		super(parent, 8, 1, id, name);
 		
+		type = ModuleType.ENVELOPE;
+		
 		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
 	}
 
@@ -110,11 +112,12 @@ public class Envelope extends Module
 			else if (phase == RELEASE && sampleCounter[RELEASE] >= numSamples[RELEASE])
 			{
 				currFactor = endAmplitudes[RELEASE];
-				listener.onEnvelopeFinished(this);
+				//listener.onEnvelopeFinished(this);
 			}
 		}
 		
 		currValue *= currFactor;
+		
 		return currValue;
 
 	}

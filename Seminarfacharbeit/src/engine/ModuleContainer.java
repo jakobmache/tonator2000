@@ -19,7 +19,6 @@ public class ModuleContainer extends Module
 	protected ContainerPreset preset;
 	
 	private List<ModuleContainerListener> listeners = new ArrayList<ModuleContainerListener>();
-
 	
 	/**
 	 * Instanziert einen neuen ModuleContainer, der verschiedene Module enthalten kann. Das letzte Modul muss mit dem 
@@ -33,14 +32,10 @@ public class ModuleContainer extends Module
 	 */
 	public ModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name)
 	{
-		super(parent, numInputWires, numOutputWires, id, name);
+		super(parent, numInputWires, numOutputWires, id, name);	
 		preset = new ContainerPreset();
-		for (Module module:modules)
-		{
-			if (module.getType() == ModuleType.CONSTANT)
-				preset.setParam(module.getId(), module.requestNextSample(Constant.VALUE_OUTPUT));
-		}
 	}
+
 
 	/**
 	 * Fügt dem Container ein Modul hinzu.
@@ -123,6 +118,12 @@ public class ModuleContainer extends Module
 	 */
 	public ContainerPreset getPreset()
 	{
+		preset = new ContainerPreset();
+		for (Module module:modules)
+		{
+			if (module.getType() == ModuleType.CONSTANT)
+				preset.setParam(module.getId(), module.requestNextSample(Constant.VALUE_OUTPUT));
+		}
 		return preset;
 	}
 	
@@ -184,6 +185,7 @@ public class ModuleContainer extends Module
 	@Override
 	public float calcNextSample(int index) 
 	{
+		
 		return inputWires[SAMPLE_INPUT].getNextSample();
 	}
 

@@ -14,15 +14,15 @@ import javax.sound.midi.Transmitter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
-import resources.Strings;
+import containers.OscillatorContainer;
+import containers.StandardModuleContainer;
 import listener.EngineListener;
 import midi.MidiLogger;
 import midi.MidiPlayer;
 import modules.Ids;
 import modules.Mixer;
 import modules.OutputModule;
-import containers.OscillatorContainer;
-import containers.StandardModuleContainer;
+import resources.Strings;
 
 public class SynthesizerEngine implements Receiver
 {
@@ -71,11 +71,18 @@ public class SynthesizerEngine implements Receiver
 	public SynthesizerEngine() throws LineUnavailableException, IOException
 	{
 		updateAudioFormat();
+		
 		initModules();
+		
 		midiPlayer = new MidiPlayer(this);
 		logger = new MidiLogger();
 		
-		setSynthesizerContainer(new OscillatorContainer(this, "DefaultOscillatorContainer"));
+		try {
+			setSynthesizerContainer(new OscillatorContainer(this, "OscillatorContainer"));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -269,7 +276,10 @@ public class SynthesizerEngine implements Receiver
 	
 	public void setSynthesizerContainer(PlayableModuleContainer container)
 	{
+		stopAudio();
 		this.synthesizerContainer = container;
+		//Use the Preset created by default
+		programManager.setForAll(synthesizerContainer.getPreset());
 	}
 
 	public Mixer getOutputMixer()

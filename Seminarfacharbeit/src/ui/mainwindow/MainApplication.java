@@ -97,7 +97,7 @@ public class MainApplication extends Application
 
 	private void initEngine()
 	{
-		//Engine laden
+		//Load engine
 		try 
 		{
 			this.engine = new SynthesizerEngine();

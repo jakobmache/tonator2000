@@ -6,9 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import listener.ProgramListener;
-import presets.OscillatorContainerPreset;
 import containers.ContainerPreset;
+import listener.ProgramListener;
 
 public class ProgramManager 
 {
@@ -43,9 +42,10 @@ public class ProgramManager
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("resources/generalmidi.txt")));
 		
+		//Set null for each program
 		for (int i = 0; i < programPresets.length; i++)
 		{
-			programPresets[i] = new OscillatorContainerPreset();
+			programPresets[i] = null;
 			instrumentNames[i] = reader.readLine();
 		}
 		
@@ -108,5 +108,21 @@ public class ProgramManager
 	{
 		for (ProgramListener listener:listeners)
 			listener.programValueChanged(program, id, value);
+	}
+	
+	public void reset()
+	{
+		for (int program = 0; program < NUM_PROGRAMS; program++)
+		{
+			programPresets[program] = null;
+		}
+	}
+	
+	public void setForAll(ContainerPreset preset)
+	{
+		for (int program = 0; program < NUM_PROGRAMS; program++)
+		{
+			programPresets[program] = preset;
+		}
 	}
 }

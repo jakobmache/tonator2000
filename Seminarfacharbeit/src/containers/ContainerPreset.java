@@ -72,14 +72,13 @@ public class ContainerPreset
 		{
 			Node node = paramNodes.item(i);
 			int id = Integer.parseInt(node.getAttributes().getNamedItem(ATTRIBUTE_TAG).getNodeValue());
-			System.out.println(node);
 			float value = Float.parseFloat(node.getTextContent());
 			params.put(id, value);
 		}
 	}
 	
 	/**
-	 * Aktualisiert einen Parameter.
+	 * Aktualisiert einen Parameter oder fügt ihn hinzu, wenn es ihn nicht gibt.
 	 * 
 	 * @param id ID des Parameters
 	 * @param value neuer Wert des Parameters

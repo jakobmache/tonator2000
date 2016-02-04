@@ -1,5 +1,11 @@
 package containers;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import engine.Module;
 import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
@@ -9,9 +15,23 @@ import modules.ModuleType;
 
 public class SynthesizerModuleContainer extends PlayableModuleContainer
 {
+	private int zeroCounter = 0;
+	private int zeroMax = 100;
+	private float epsilon = 0.00000001F;
+	
 	public SynthesizerModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id,
 			String name, PlayableModuleContainer container) {
 		super(parent, numInputWires, numOutputWires, id, name, container);
+	}
+	
+	public SynthesizerModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name) 
+	{
+		super(parent, numInputWires, numOutputWires, id, name);
+	}
+	
+	public SynthesizerModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, String name, String xmlPath) throws ParserConfigurationException, SAXException, IOException 
+	{
+		super(parent, numInputWires, numOutputWires, name, xmlPath);
 	}
 
 	@Override
@@ -20,9 +40,8 @@ public class SynthesizerModuleContainer extends PlayableModuleContainer
 		((Constant) findModuleById(getFrequencyId())).setValue(frequency);
 		((Constant) findModuleById(getAmplitudeId())).setValue(amplitude);
 		
-		System.out.println("Start playing!");
 		for (Module module:modules)
-		{
+		{ 
 			if (module.getType() == ModuleType.ENVELOPE)
 				((Envelope) module).start();
 		}
@@ -36,11 +55,33 @@ public class SynthesizerModuleContainer extends PlayableModuleContainer
 			if (module.getType() == ModuleType.ENVELOPE)
 				((Envelope) module).release();
 		}
+		
+		if (isFreqToZeroOnStop())
+		{
+			((Constant)findModuleById(getFrequencyId())).setValue(0.0F);
+			((Constant)findModuleById(getAmplitudeId())).setValue(0.0F);
+		}
 	}
 	
 	public float calcNextSample(int index)
 	{
-		return inputWires[SAMPLE_INPUT].getNextSample();
+		float value = inputWires[SAMPLE_INPUT].getNextSample();
+		
+		if (Math.abs(value) < epsilon)
+		{
+			zeroCounter++;
+		}
+		else
+		{
+			zeroCounter = 0;
+		}
+		
+		if (zeroCounter > zeroMax)
+		{
+			onFinished();
+		}
+		
+		return value;
 	}
 
 

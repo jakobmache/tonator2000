@@ -22,9 +22,9 @@ public class Constant extends Module
 		type = ModuleType.CONSTANT;
 	}
 	
-	public void setValue(float sample)
-	{
-		value = sample;
+	public void setValue(float newValue)
+	{	
+		value = newValue;
 	}
 	
 	@Override

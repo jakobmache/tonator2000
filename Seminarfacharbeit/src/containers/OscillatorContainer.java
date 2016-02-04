@@ -10,12 +10,22 @@ import modules.Ids;
 import modules.LowpassFilter;
 import modules.Mixer;
 import modules.Oscillator;
+
+import java.io.FileNotFoundException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import engine.ModuleContainer;
 import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 
 public class OscillatorContainer extends PlayableModuleContainer implements EnvelopeFinishedListener 
 {
+	private int zeroCounter = 0;
+	private int zeroMax = 3000;
+	private float epsilon = 0.000001F;
+	
 	/**
 	 * Der Standard-Container, mit dem Töne erzeugt werden.
 	 * 
@@ -28,6 +38,13 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		initModules();
 		setFrequencyId(Ids.ID_CONSTANT_FREQUENCY_1);
 		setAmplitudeId(Ids.ID_CONSTANT_AMPLITUDE_1);
+		try {
+			getPreset().writeToFile("osciFile.xml");
+		}
+		catch (FileNotFoundException | ParserConfigurationException | TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void initModules()
@@ -112,7 +129,6 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		addConnection(findModuleById(Ids.ID_HIGHPASS_1), findModuleById(Ids.ID_LOWPASS_1), HighpassFilter.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_LOWPASS_1), findModuleById(Ids.ID_ENVELOPE_1), LowpassFilter.SAMPLE_OUTPUT, Envelope.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_ENVELOPE_1), this, Envelope.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
-		System.out.println("Init module!");
 		((Constant) findModuleById(Ids.ID_CONSTANT_OSCITYPE_1)).setValue(Oscillator.TYPE_SINE);
 		((Constant) findModuleById(Ids.ID_CONSTANT_OSCITYPE_2)).setValue(Oscillator.TYPE_SINE);
 		
@@ -125,6 +141,17 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		((Constant)findModuleById(Ids.ID_CONSTANT_STARTLEVEL_1)).setValue(0.0F);
 		((Constant)findModuleById(Ids.ID_CONSTANT_PEAKLEVEL_1)).setValue(1.0F);
 		((Constant)findModuleById(Ids.ID_CONSTANT_SUSTAIN_1)).setValue(1.0F);
+		
+		((Constant)findModuleById(Ids.ID_CONSTANT_STEEPNESS_1)).setValue(-3.0F);
+		((Constant)findModuleById(Ids.ID_CONSTANT_STEEPNESS_2)).setValue(-3.0F);
+		
+		((Constant)findModuleById(Ids.ID_CONSTANT_RESONANCE_1)).setValue(0.0F);
+		((Constant)findModuleById(Ids.ID_CONSTANT_RESONANCE_2)).setValue(0.0F);
+		
+//		findModuleById(Ids.ID_LOWPASS_1).setEnabled(false);
+//		findModuleById(Ids.ID_ENVELOPE_1).setEnabled(false);
+//		findModuleById(Ids.ID_HIGHPASS_1).setEnabled(false);
+//		findModuleById(Ids.ID_ENVELOPE_2).setEnabled(false);
 	}
 	
 	@Override
@@ -142,8 +169,6 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		((Constant)findModuleById(Ids.ID_CONSTANT_STARTLEVEL_2)).setValue(1.0F);
 		((Constant)findModuleById(Ids.ID_CONSTANT_PEAKLEVEL_2)).setValue(1.0F / findModuleById(Ids.ID_CONSTANT_CUTOFF_1).requestNextSample(Constant.VALUE_OUTPUT));
 		((Envelope)findModuleById(Ids.ID_ENVELOPE_2)).start();
-		
-		//System.out.println(((Constant) findModuleById(Ids.ID_CONSTANT_AMPLITUDE_1)).requestNextSample(0));
 	}
 	
 	@Override
@@ -151,6 +176,12 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 	{
 		((Envelope)findModuleById(Ids.ID_ENVELOPE_1)).release();
 		((Envelope)findModuleById(Ids.ID_ENVELOPE_2)).release();
+		
+//		((Constant)findModuleById(Ids.ID_CONSTANT_FREQUENCY_1)).setValue(0);
+//		((Constant)findModuleById(Ids.ID_CONSTANT_AMPLITUDE_1)).setValue(0);
+//		
+//		((Constant)findModuleById(Ids.ID_CONSTANT_FREQUENCY_2)).setValue(0);
+//		((Constant)findModuleById(Ids.ID_CONSTANT_AMPLITUDE_2)).setValue(0);
 	}
 
 	@Override
@@ -163,8 +194,17 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 	@Override
 	public float calcNextSample(int index) 
 	{
-		float sample = inputWires[SAMPLE_INPUT].getNextSample();
-		return sample;
+		float value = inputWires[SAMPLE_INPUT].getNextSample();
+		
+		if (Math.abs(value) < epsilon)
+			zeroCounter++;
+		else
+			zeroCounter = 0;
+		
+		if (zeroCounter > zeroMax)
+			onFinished();
+		
+		return value;
 	}
 
 	@Override

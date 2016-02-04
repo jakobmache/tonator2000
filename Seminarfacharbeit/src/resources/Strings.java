@@ -13,6 +13,7 @@ public class Strings
 	public static final int ERROR_WRITING_FILE = 6;
 	public static final int ERROR_READING_FILE = 7;
 	public static final int ERROR_TOO_LESS_DATA = 8;
+	public static final int ERROR_BUILDING_SYNTHESIZER = 9;
 
 	public static final String ae = "\u00e4";
 	public static final String AE = "\u00c4";
@@ -38,7 +39,8 @@ public class Strings
 		"Die angegebene Datei konnte nicht gefunden werden!",
 		"Fehler beim Schreiben der Datei",
 		"Fehler beim Lesen der Datei",
-		"Preset nicht vollst" + ae + "ndig"
+		"Preset nicht vollst" + ae + "ndig",
+		"Synthesizer konnte nicht erstellt werden"
 			};
 
 	public static final String[] ERROR_EXPLANATIONS = new String[]
@@ -52,7 +54,8 @@ public class Strings
 				"Das Programm konnte die angegebene Datei nicht finden. Bitte " + ue + "berpr" + ue + "fen sie den Pfad.",
 				"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
 				"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
-				"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei."
+				"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei.",
+		"Der Synthesizer konnte nicht erstellt werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob mit jedem Ein-und Ausgang ein Kabel verbunden ist."
 			};
 
 	public static final String[] MODULE_NAMES = new String[]
@@ -160,6 +163,8 @@ public class Strings
 		"MIDI-Ger"+ ae + "t",
 		"Aktuell ausgew"+ ae + "hltes Instrument"
 			};
+	
+	public static final String WAVEFORM_SELECTOR_NAME = "Wellenform";
 
 	public static final String OVERLAY_MIDI_STRING = "Bitte schließen Sie ein MIDI-Ger" + ae + "t an oder laden Sie eine MIDI-Datei!";
 
@@ -257,6 +262,15 @@ public class Strings
 		else 
 			return "Modul";	
 	}
+	
+	//----------------------------Menü----------------------------
+	
+	public static final String MENU_FILE = "Datei";
+	public static final String MENU_SAVE = "Speichern";
+	public static final String MENU_LOAD = "Laden";
+	public static final String MENU_BUILD = "In Synthesizer laden";
+	
+	public static final String TITLE_SAVE_SYNTHESIZER = "Synthesizer speichern";
 
 
 }

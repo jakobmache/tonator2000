@@ -63,6 +63,7 @@ public class Mixer extends Module{
 	{
 		//Muhahahaha fake
 		int targetIndex = inputWires.length - 1;
+
 		//Wir wollen am nächsten freien Index "andocken"
 		for (int i = 0; i < inputWires.length; i++)	
 		{
@@ -72,8 +73,6 @@ public class Mixer extends Module{
 				break;
 			}
 		}
-		
-		System.out.println("Add at index " + targetIndex);
 
 		inputWires[targetIndex] = wire;
 	}

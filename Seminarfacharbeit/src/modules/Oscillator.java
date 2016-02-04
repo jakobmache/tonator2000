@@ -81,8 +81,15 @@ public class Oscillator extends Module
 		setAmplitude(inputWires[AMPLITUDE_INPUT].getNextSample());
 		
 		//ZeroDivision verhindern!
-		if (frequency == 0)
+		if (Math.abs(frequency) < 0.0001F)
+		{
 			return 0;
+		}
+
+		if (Math.abs(amplitude) < 0.0001F)
+		{
+			return 0;
+		}
 
 		float value;
 		if (waveform == TYPE_SINE)

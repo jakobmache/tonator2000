@@ -109,7 +109,6 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		int channel = message.getChannel();
 		float frequency = MidiUtils.midiNoteNumberToFrequency(key);
 
-		
 		//Wird die Note auf diesem Kanal schon abgespielt?
 		if (channelNotes.get(channel).containsKey(key))
 		{
@@ -118,23 +117,21 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		}
 		
 		//Sie wird nicht abgespielt --> Wir erzeugen einen neuen Container, der sie spielt
-//		ProgramManager manager = parent.getProgramManager();
+		ProgramManager manager = parent.getProgramManager();
 		
 		PlayableModuleContainer container;
 		if (parent.getSynthesizerContainer().getClass() == OscillatorContainer.class)
 		{
-			System.out.println("Default!");
 			container = new OscillatorContainer(parent, "OscillatorContainer");
 		}
 		else {
-			container = new SynthesizerModuleContainer(parent, 1, 1, Ids.getNextId(), "SynthesizerContainer", parent.getSynthesizerContainer());
+			container = new SynthesizerModuleContainer(parent, 1, 1, Ids.getNextId(), parent.getSynthesizerContainer().getName(), parent.getSynthesizerContainer());
 		}
 
-//		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
-//		container.addListener(this);
-		
+		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
+		container.addListener(this);
+
 		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, Mixer.NEXT_FREE_INPUT);
-		
 		//Wir müssen uns den Container merken
 		allContainers.add(container);
 		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
@@ -157,7 +154,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 			
 			//Sie wird abgespielt --> Wir stoppen das Abspielen (bzw bei ASDR Release)
 			Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);
-			OscillatorContainer container = (OscillatorContainer) noteMap.get(key);
+			PlayableModuleContainer container = (PlayableModuleContainer) noteMap.get(key);
 			container.stopPlaying();
 			
 			//Die entsprechende Note wird nicht mehr abgespielt

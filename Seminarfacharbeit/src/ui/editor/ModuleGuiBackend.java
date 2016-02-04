@@ -1,5 +1,8 @@
 package ui.editor;
 
+import org.controlsfx.tools.Borders;
+
+import engine.Module;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -11,10 +14,6 @@ import javafx.scene.shape.Line;
 import modules.Ids;
 import modules.ModuleGenerator;
 import modules.ModuleType;
-
-import org.controlsfx.tools.Borders;
-
-import engine.Module;
 import resources.Strings;
 
 public class ModuleGuiBackend
@@ -38,8 +37,8 @@ public class ModuleGuiBackend
 	
 	private String name;
 
-	private PortCircle[] inputs;
-	private PortCircle[] outputs;
+	protected PortCircle[] inputs;
+	protected PortCircle[] outputs;
 
 	private SynthesizerEditor owner;
 	
@@ -59,10 +58,15 @@ public class ModuleGuiBackend
 	public ModuleGuiBackend(SynthesizerEditor owner, ModuleType type, String name)
 	{
 		super();
+		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
+		
 		this.owner = owner;
 		this.type = type;
 		this.name = name;
 		gui = new Pane();
+		
+		inputs = new PortCircle[0];
+		outputs = new PortCircle[0];
 		
 		id = Ids.getNextId();
 
@@ -72,8 +76,6 @@ public class ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
-		
-		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
 	}
 	
 	/**
@@ -90,6 +92,9 @@ public class ModuleGuiBackend
 		
 		this.height = height;
 		
+		inputs = new PortCircle[0];
+		outputs = new PortCircle[0];
+		
 		id = Ids.getNextId();
 
 		this.owner = owner;
@@ -103,6 +108,8 @@ public class ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
+		
+		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
 	}
 
 	/**
