@@ -16,8 +16,8 @@ public class Oscillator extends Module
 	public static final int SAMPLE_OUTPUT = 0;
 
 	public static final int TYPE_SINE = 0;
-	public static final int TYPE_SQUARE = 1;
-	public static final int TYPE_SAW = 2;
+	public static final int TYPE_SQUARE = 2;
+	public static final int TYPE_SAW = 1;
 	public static final int TYPE_TRI = 3;
 	public static final int TYPE_WHITE_NOISE = 4;
 

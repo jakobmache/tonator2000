@@ -15,12 +15,13 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 
 import containers.OscillatorContainer;
+import containers.PlayableModuleContainer;
 import containers.StandardModuleContainer;
 import listener.EngineListener;
 import midi.MidiLogger;
 import midi.MidiPlayer;
 import modules.Ids;
-import modules.Mixer;
+import modules.OutputMixer;
 import modules.OutputModule;
 import resources.Strings;
 
@@ -50,7 +51,7 @@ public class SynthesizerEngine implements Receiver
 	private OutputModule outputModule;
 
 	private InputController inputModule;
-	private Mixer outputMixer;
+	private OutputMixer outputMixer;
 	private ModuleContainer allContainer;
 	private PlayableModuleContainer synthesizerContainer;
 	private ProgramManager programManager;
@@ -120,13 +121,13 @@ public class SynthesizerEngine implements Receiver
 	private void initModules() throws LineUnavailableException, IOException
 	{
 		programManager = new ProgramManager();
-		outputMixer = new Mixer(this, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
+		outputMixer = new OutputMixer(this, Ids.ID_MIXER_1, Strings.getStandardModuleName(Ids.ID_MIXER_1));
 		inputModule = new InputController(this);
 
 		outputModule = new OutputModule(this, Ids.ID_OUTPUT_1, Strings.getStandardModuleName(Ids.ID_OUTPUT_1));
 	
 		allContainer = new StandardModuleContainer(this, 1, 1, Ids.ID_CONTAINER, Strings.getStandardModuleName(Ids.ID_CONTAINER));
-		new Wire(allContainer, outputMixer, Mixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
+		new Wire(allContainer, outputMixer, OutputMixer.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
 		new Wire(outputModule, allContainer, ModuleContainer.SAMPLE_OUTPUT, OutputModule.SAMPLE_INPUT);
 	}
 
@@ -280,9 +281,13 @@ public class SynthesizerEngine implements Receiver
 		this.synthesizerContainer = container;
 		//Use the Preset created by default
 		programManager.setForAll(synthesizerContainer.getPreset());
+		
+		System.out.println("New container: " + synthesizerContainer);
+		for (Module module:synthesizerContainer.getModules())
+			System.out.println(module);
 	}
 
-	public Mixer getOutputMixer()
+	public OutputMixer getOutputMixer()
 	{
 		return outputMixer;
 	}

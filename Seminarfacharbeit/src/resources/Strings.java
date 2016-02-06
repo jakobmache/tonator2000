@@ -14,6 +14,7 @@ public class Strings
 	public static final int ERROR_READING_FILE = 7;
 	public static final int ERROR_TOO_LESS_DATA = 8;
 	public static final int ERROR_BUILDING_SYNTHESIZER = 9;
+	public static final int ERROR_LOADING_SYNTHESIZER = 10;
 
 	public static final String ae = "\u00e4";
 	public static final String AE = "\u00c4";
@@ -40,7 +41,8 @@ public class Strings
 		"Fehler beim Schreiben der Datei",
 		"Fehler beim Lesen der Datei",
 		"Preset nicht vollst" + ae + "ndig",
-		"Synthesizer konnte nicht erstellt werden"
+		"Synthesizer konnte nicht erstellt werden",
+		"Synthesizer konnte nicht geladen werden"
 			};
 
 	public static final String[] ERROR_EXPLANATIONS = new String[]
@@ -55,7 +57,8 @@ public class Strings
 				"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
 				"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
 				"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei.",
-		"Der Synthesizer konnte nicht erstellt werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob mit jedem Ein-und Ausgang ein Kabel verbunden ist."
+		"Der Synthesizer konnte nicht erstellt werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob mit jedem Ein-und Ausgang ein Kabel verbunden ist.",
+		"Der Synthesizer konnte nicht geladen werden. Bitte " + ue + "berpr " + ue + "fen Sie, ob die Datei fehlerfrei erstellt wurde."
 			};
 
 	public static final String[] MODULE_NAMES = new String[]
@@ -233,7 +236,6 @@ public class Strings
 	
 	public static final String MODULE_NAME_INPUT_DIALOG_TITLE = "Modulnamen eingeben";
 	public static final String MODULE_NAME_INPUT_DIALOG_TEXT = "Bitte geben Sie einen Namen f" + ue + "r das Modul an: ";
-
 	
 	public static final String BUTTON_TYPE_RESET_ALL = "Alles zur" + ue + "cksetzen";
 
@@ -271,6 +273,13 @@ public class Strings
 	public static final String MENU_BUILD = "In Synthesizer laden";
 	
 	public static final String TITLE_SAVE_SYNTHESIZER = "Synthesizer speichern";
+	public static final String TITLE_LOAD_SYNTHESIZER = "Synthesizer laden";
+	
+	public static final String TITLE_MIXER_DIALOG = "Anzahl an Eing" + ae + "ngen";
+	public static final String HEADER_MIXER_DIALOG = "Bitte geben Sie die Anzahl an Eing" + ae + "ngen des Mixers an!";
+	public static final String[] MIXER_DIALOG_INPUTS = new String[] {"Anzahl an Eing" + ae + "ngen:"};
+	
+	public static final String SAVE_SYNTH_DEFAULT_FILENAME = "synthesizer.xml";
 
 
 }

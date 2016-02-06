@@ -32,7 +32,7 @@ public class ContainerPreset
 	public static final String ATTRIBUTE_TAG = "id";
 	
 	//Alle Parameter mit ihren Werten
-	public Map<Integer, Float> params = new HashMap<Integer, Float>();
+	protected Map<Integer, Float> params = new HashMap<Integer, Float>();
 	
 	public ContainerPreset()
 	{
@@ -50,6 +50,14 @@ public class ContainerPreset
 	public ContainerPreset(String xmlPath) throws ParserConfigurationException, SAXException, IOException
 	{
 		loadFromXml(xmlPath);
+	}
+	
+	public ContainerPreset(ContainerPreset preset)
+	{
+		for (int id:preset.getIds())
+		{
+			params.put(id, preset.getParam(id));
+		}
 	}
 	
 	/**

@@ -9,12 +9,13 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
 import containers.OscillatorContainer;
+import containers.PlayableModuleContainer;
 import containers.SynthesizerModuleContainer;
 import listener.ModuleContainerListener;
 import listener.ProgramListener;
 import midi.MidiUtils;
 import modules.Ids;
-import modules.Mixer;
+import modules.OutputMixer;
 
 public class InputController implements ModuleContainerListener, ProgramListener{
 
@@ -131,7 +132,7 @@ public class InputController implements ModuleContainerListener, ProgramListener
 		container.applyContainerPreset(manager.getInstrumentPreset(channelPrograms.get(channel)));
 		container.addListener(this);
 
-		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, Mixer.NEXT_FREE_INPUT);
+		new Wire(parent.getOutputMixer(), container, ModuleContainer.SAMPLE_OUTPUT, OutputMixer.NEXT_FREE_INPUT);
 		//Wir müssen uns den Container merken
 		allContainers.add(container);
 		Map<Integer, ModuleContainer> noteMap = channelNotes.get(channel);

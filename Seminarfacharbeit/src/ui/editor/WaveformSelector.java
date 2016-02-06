@@ -2,21 +2,20 @@ package ui.editor;
 
 import engine.Module;
 import javafx.scene.control.ComboBox;
-import javafx.scene.shape.Box;
 import modules.Constant;
 import modules.ModuleType;
 import resources.Strings;
 
-public class WaveformSelector extends ModuleGuiBackend
-{
-	
+public class WaveformSelector extends ConstantGui
+{	
 	public static final int NUM_WAVEFORMS = 5;
 	
 	private ComboBox<String> box;
 
-	public WaveformSelector(SynthesizerEditor owner, String name) 
+	public WaveformSelector(SynthesizerEditor owner, String name, int defaultValue) 
 	{
-		super(owner, ModuleType.CONSTANT, name);
+		super(owner, ModuleType.CONSTANT, name, 4, 0, defaultValue);
+		box.setValue(Strings.WAVEFORMS[(int) getDefaultValue()]);
 	}
 	
 	@Override
@@ -39,6 +38,11 @@ public class WaveformSelector extends ModuleGuiBackend
 		
 		box.setValue(Strings.WAVEFORMS[0]);
 		
+		box.valueProperty().addListener((ov, oldValue, newValue) -> 
+		{
+			setDefaultValue(Float.valueOf(indexOf(Strings.WAVEFORMS, newValue)));
+		});
+		
 		gui.getChildren().add(box);
 	}
 	
@@ -56,7 +60,18 @@ public class WaveformSelector extends ModuleGuiBackend
 	public Module getModule()
 	{
 		((Constant) module).setValue(indexOf(Strings.WAVEFORMS, box.getValue()));
-		System.out.println("Module value: " + module.requestNextSample(Constant.VALUE_OUTPUT));
 		return module;
+	}
+	
+	@Override
+	public boolean isEditable()
+	{
+		return box.isEditable();
+	}
+	
+	@Override
+	public void setEditable(boolean editable)
+	{
+		box.setEditable(editable);
 	}
 }

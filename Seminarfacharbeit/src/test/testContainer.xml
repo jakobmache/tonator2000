@@ -1,0 +1,30 @@
+
+	 <ModuleContainer>
+	 		<Modules>
+	 			<Module>
+					<Type>OSCILLATOR</Type>
+	 				<XPos>0</XPos>
+	 				<YPos>0</YPos>
+	 				<Id>1</Id>
+					<Name>Oszillator 1</Name>
+	 			</Module>
+				<Module>
+					<Type>ENVELOPE</Type>
+	 				<XPos>100</XPos>
+	 				<YPos>100</YPos>
+	 				<Id>2</Id>
+					<Name>Huellkurve 1</Name>
+	 			</Module>
+			</Modules>
+			<Wires>
+	  			<Wire>
+	 				<FromId>1</FromId>
+	 				<ToId>2</ToId>
+					<FromIndex>0</FromIndex>
+					<ToIndex>0</ToIndex>
+	 			</Wire>
+	 		</Wires>
+	 		<Properties>
+	 			<FreqToZeroOnStop>true</FreqToZeroOnStop>
+	  		</Properties>
+	 </ModuleContainer>

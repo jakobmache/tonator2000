@@ -1,4 +1,4 @@
-package engine;
+package containers;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,8 +22,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import containers.SynthesizerModuleContainer;
-import containers.TestContainer;
+import engine.Module;
+import engine.ModuleContainer;
+import engine.SynthesizerEngine;
+import engine.Wire;
 import modules.Constant;
 import modules.Ids;
 import modules.ModuleGenerator;
@@ -37,26 +39,32 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	
 	private boolean freqToZeroOnStop = false;
 	
-	private static final String XML_ROOT = "ModuleContainer";
+	public static final String XML_ROOT = "ModuleContainer";
 	
-	private static final String XML_MODULE = "Module";
-	private static final String XML_MODULE_TYPE = "Type";
-	private static final String XML_MODULE_ID = "Id";
-	private static final String XML_MODULE_NAME = "Name";
-	private static final String XML_MODULE_XPOS = "XPos";
-	private static final String XML_MODULE_YPOS = "YPos";
-	private static final String XML_MODULE_DEFAULT_VALUE = "DefaultValue";
+	public static final String XML_MODULE = "Module";
+	public static final String XML_MODULE_TYPE = "Type";
+	public static final String XML_MODULE_ID = "Id";
+	public static final String XML_MODULE_NAME = "Name";
+	public static final String XML_MODULE_XPOS = "XPos";
+	public static final String XML_MODULE_YPOS = "YPos";
+	public static final String XML_MODULE_DEFAULT_VALUE = "DefaultValue";
+	public static final String XML_MODULE_MAX_VALUE = "MaxValue";
+	public static final String XML_MODULE_MIN_VALUE = "MinValue";
+	public static final String XML_MODULE_IS_EDITABLE = "IsEditable";
+	public static final String XML_MODULE_SUBTYPE = "Subtype";
 	
-	private static final String XML_WIRE = "Wire";
-	private static final String XML_WIRE_FROM_ID = "FromId";
-	private static final String XML_WIRE_TO_ID = "ToId";
-	private static final String XML_WIRE_FROM_INDEX = "FromIndex";
-	private static final String XML_WIRE_TO_INDEX = "ToIndex";
+	public static final String XML_WIRE = "Wire";
+	public static final String XML_WIRE_FROM_ID = "FromId";
+	public static final String XML_WIRE_TO_ID = "ToId";
+	public static final String XML_WIRE_FROM_INDEX = "FromIndex";
+	public static final String XML_WIRE_TO_INDEX = "ToIndex";
 	
-	private static final String XML_PROPERTY_FREQTOZERO = "FreqToZeroOnStop";
-	private static final String XML_PROPERTY_AMPLITUDEID = "AmplitudeId";
-	private static final String XML_PROPERTY_FREQUENCYID = "FrequencyId";
-	private static final String XML_PROPERTY_CONTAINERID = "ContainerId";
+	public static final String XML_PROPERTY_FREQTOZERO = "FreqToZeroOnStop";
+	public static final String XML_PROPERTY_AMPLITUDEID = "AmplitudeId";
+	public static final String XML_PROPERTY_FREQUENCYID = "FrequencyId";
+	public static final String XML_PROPERTY_CONTAINERID = "ContainerId";
+	public static final String XML_PROPERTY_OUTPUTX = "OutputX";
+	public static final String XML_PROPERTY_OUTPUTY = "OutputY";
 	
 	public PlayableModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name, PlayableModuleContainer container)
 	{
@@ -68,13 +76,12 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 
 			if (module.getType() == ModuleType.CONSTANT)
 				((Constant) copy).setValue(((Constant)module).requestNextSample(Constant.VALUE_OUTPUT));
+			
 			modules.add(copy);
 		}
 	
 		for (Wire wire:container.getWires())
 		{
-
-			
 			Module moduleDataIsGrabbedFrom = wire.getModuleDataIsGrabbedFrom();
 			Module moduleDataIsSentTo = wire.getModuleDataIsSentTo();
 			

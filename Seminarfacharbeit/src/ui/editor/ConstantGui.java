@@ -22,11 +22,7 @@ public class ConstantGui extends ModuleGuiBackend
 		super(owner, type, name, sliderHeight);
 		this.maxValue = maxValue;
 		this.minValue = minValue;
-		this.defaultValue = defaultValue;
-
-		VBox vBox = new VBox();
-		vBox.setAlignment(Pos.CENTER);
-		
+		this.defaultValue = defaultValue;	
 //		Slider slider = new Slider(minValue, maxValue, defaultValue);
 //		slider.setMaxHeight(sliderHeight);
 //		slider.setOrientation(Orientation.VERTICAL);
@@ -34,6 +30,16 @@ public class ConstantGui extends ModuleGuiBackend
 //		slider.setMax(maxValue);
 //		vBox.getChildren().add(slider);
 		
+		owner.requestFocus();
+		if (input != null)
+			input.setEditable(true);
+	}
+	
+	@Override
+	protected void drawInputs()
+	{
+		VBox vBox = new VBox();
+		vBox.setAlignment(Pos.CENTER);
 		input = new NumberInputField(this.maxValue, this.minValue, true);
 		input.setText(Float.toString(this.defaultValue));
 		vBox.getChildren().add(input);
@@ -45,7 +51,6 @@ public class ConstantGui extends ModuleGuiBackend
 		input.setLayoutY(0);
 		input.setMaxHeight(2 * radius);
 		input.setMaxWidth(width);
-		owner.requestFocus();
 	}
 	
 	@Override
@@ -53,5 +58,39 @@ public class ConstantGui extends ModuleGuiBackend
 	{
 		((Constant) module).setValue(Float.valueOf(input.getText()));
 		return module;
+	}
+	
+	public void setEditable(boolean editable)
+	{
+		input.setEditable(editable);
+	}
+	
+	public boolean isEditable()
+	{
+		return input.isEditable();
+	}
+
+	public float getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(float maxValue) {
+		this.maxValue = maxValue;
+	}
+
+	public float getMinValue() {
+		return minValue;
+	}
+
+	public void setMinValue(float minValue) {
+		this.minValue = minValue;
+	}
+
+	public float getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(float defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 }

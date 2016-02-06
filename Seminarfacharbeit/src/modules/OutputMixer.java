@@ -4,13 +4,13 @@ import engine.Module;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
-public class Mixer extends Module{
+public class OutputMixer extends Module{
 
 	public static final int SAMPLE_OUTPUT = 0;
 
-	public static final int NEXT_FREE_INPUT = Integer.MAX_VALUE;
+	public static final int NEXT_FREE_INPUT = 0;
 
-	private int numInputs = 0;
+	private int numModules = 0;
 
 	/**
 	 * Ein Mixer addiert verschiedene Audiosignale und hält sie dabei in ihrem Wertebereich.
@@ -19,11 +19,10 @@ public class Mixer extends Module{
 	 * @param id ID
 	 * @param name Name
 	 */
-	public Mixer(SynthesizerEngine parent, int numInputs, int id, String name) 
+	public OutputMixer(SynthesizerEngine parent, int id, String name) 
 	{
-		super(parent, numInputs, 1, id, name);
+		super(parent, SynthesizerEngine.MAX_POLYPHONY, 1, id, name);
 		type = ModuleType.MIXER;
-		this.numInputs = numInputs;
 	}
 
 	@Override
@@ -42,11 +41,12 @@ public class Mixer extends Module{
 	private float calculateSum()
 	{
 		float sum = 0;
-		for (int i = 0; i < numInputs; i++)
+		for (int i = 0; i < parent.getMaxPolyphony(); i++)
 		{
 			Wire inputWire = inputWires[i];
 			if (inputWire != null)
 			{
+				System.out.println(inputWire.getModuleDataIsGrabbedFrom());
 				float value = inputWire.getNextSample();
 				sum += value;
 			}
@@ -54,7 +54,7 @@ public class Mixer extends Module{
 				continue;		
 		}
 
-		sum = sum / numInputs;
+		sum = sum / parent.getMaxPolyphony();
 
 		return sum;
 	}
@@ -62,26 +62,20 @@ public class Mixer extends Module{
 	@Override
 	public void connectInputWire(int index, Wire wire)
 	{
-		if (index == NEXT_FREE_INPUT)
+		//Muhahahaha fake
+		int targetIndex = inputWires.length - 1;
+
+		//Wir wollen am nächsten freien Index "andocken"
+		for (int i = 0; i < inputWires.length; i++)	
 		{
-			//Muhahahaha fake
-			int targetIndex = inputWires.length - 1;
-
-			//Wir wollen am nächsten freien Index "andocken"
-			for (int i = 0; i < inputWires.length; i++)	
+			if (inputWires[i] == null)
 			{
-				if (inputWires[i] == null)
-				{
-					targetIndex = i;
-					break;
-				}
+				targetIndex = i;
+				break;
 			}
+		}
 
-			inputWires[targetIndex] = wire;
-		}
-		else {
-			inputWires[index] = wire;
-		}
+		inputWires[targetIndex] = wire;
 	}
 
 	public void disconnectInputWire(Wire wire)
@@ -95,7 +89,7 @@ public class Mixer extends Module{
 
 	public int getNumModules()
 	{
-		return numInputs;
+		return numModules;
 	}
 
 

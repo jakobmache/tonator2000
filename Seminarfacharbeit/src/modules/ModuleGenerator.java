@@ -19,7 +19,7 @@ public class ModuleGenerator
 		case ENVELOPE:
 			return new Envelope(engine, id, name);
 		case MIXER:
-			return new Mixer(engine, id, name);
+			return new OutputMixer(engine, id, name);
 		case BALANCED_MIXER:
 			return new BalancedMixer(engine,id, name);
 		case AMPLIFIER:
@@ -29,6 +29,11 @@ public class ModuleGenerator
 		default:
 			return null;
 		}
+	}
+	
+	public static Mixer createMixer(SynthesizerEngine engine, String name, int id, int numInputs)
+	{
+		return new Mixer(engine, numInputs, id, name);
 	}
 
 }

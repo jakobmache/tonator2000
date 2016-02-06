@@ -7,7 +7,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import engine.Module;
-import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 import modules.Constant;
 import modules.Envelope;

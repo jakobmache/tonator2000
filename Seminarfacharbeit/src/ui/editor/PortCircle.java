@@ -31,20 +31,19 @@ public class PortCircle extends Circle
 			if (event.getButton() == MouseButton.PRIMARY && connectedLine == null && editor.getBoundLine() == null)
 			{
 				BoundLine line = new BoundLine(editor);
-				line.setStartCircle(this);
+
+				connectStartOfLine(line);
+				
 				line.setEnd(event.getSceneX(), event.getSceneY());
 				
 				editor.getPane().getChildren().add(line);
 				editor.setBoundLine(line);
-				
-				connectedLine = line;
 			}
 			
 			//Linie beenden
 			else if (event.getButton() == MouseButton.PRIMARY && editor.getBoundLine() != null && connectedLine == null)
 			{
-				editor.getBoundLine().setEndCircle(this);
-				connectedLine = editor.getBoundLine();
+				connectEndOfLine(editor.getBoundLine());
 				
 				editor.setBoundLine(null);
 			}
@@ -61,6 +60,18 @@ public class PortCircle extends Circle
 			getScene().setCursor(Cursor.DEFAULT);
 		});
 	};
+	
+	public void connectStartOfLine(BoundLine line)
+	{
+		line.setStartCircle(this);
+		connectedLine = line;
+	}
+	
+	public void connectEndOfLine(BoundLine line)
+	{
+		line.setEndCircle(this);
+		connectedLine = line;
+	}
 	
 	public void onLayoutXChanged(double newX)
 	{
@@ -97,5 +108,10 @@ public class PortCircle extends Circle
 	public PortCircleType getType()
 	{
 		return type;
+	}
+	
+	public void setConnectedLine(BoundLine line)
+	{
+		connectedLine = line;
 	}
 }

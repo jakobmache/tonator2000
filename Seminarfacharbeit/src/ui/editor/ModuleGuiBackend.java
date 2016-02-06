@@ -4,8 +4,6 @@ import org.controlsfx.tools.Borders;
 
 import engine.Module;
 import javafx.scene.Cursor;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
@@ -40,9 +38,7 @@ public class ModuleGuiBackend
 	protected PortCircle[] inputs;
 	protected PortCircle[] outputs;
 
-	private SynthesizerEditor owner;
-	
-	private ContextMenu menu;
+	protected SynthesizerEditor owner;
 	
 	private boolean destroyable = true;
 	
@@ -58,8 +54,9 @@ public class ModuleGuiBackend
 	public ModuleGuiBackend(SynthesizerEditor owner, ModuleType type, String name)
 	{
 		super();
+		id = Ids.getNextId();
 		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
-		
+
 		this.owner = owner;
 		this.type = type;
 		this.name = name;
@@ -68,10 +65,7 @@ public class ModuleGuiBackend
 		inputs = new PortCircle[0];
 		outputs = new PortCircle[0];
 		
-		id = Ids.getNextId();
-
 		initSize();
-		initMenu();
 
 		drawInputs();
 		drawLine();
@@ -90,12 +84,13 @@ public class ModuleGuiBackend
 	{
 		super();
 		
+		id = Ids.getNextId();
+		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
+		
 		this.height = height;
 		
 		inputs = new PortCircle[0];
 		outputs = new PortCircle[0];
-		
-		id = Ids.getNextId();
 
 		this.owner = owner;
 		this.type = type;
@@ -103,13 +98,10 @@ public class ModuleGuiBackend
 		gui = new Pane();
 
 		initSize();
-		initMenu();
 		
 		drawInputs();
 		drawLine();
 		drawOutputs();
-		
-		module = ModuleGenerator.createModule(type, owner.getEngine(), name, id);
 	}
 
 	/**
@@ -124,13 +116,6 @@ public class ModuleGuiBackend
 			height = 4 * radius + 4 * yOffset;
 		gui.setMinWidth(width);
 		gui.setMinHeight(height);
-	}
-	
-	private void initMenu()
-	{
-		menu = new ContextMenu();
-		MenuItem deleteMenuItem = new MenuItem("Modul hinzufügen");
-		menu.getItems().add(deleteMenuItem);
 	}
 
 	private void initBindings()
@@ -301,5 +286,12 @@ public class ModuleGuiBackend
 	public Module getModule()
 	{
 		return module;
+	}
+	
+	public void setId(int newId)
+	{
+		id = newId;
+		if (module != null)
+			module.setId(newId);
 	}
 }

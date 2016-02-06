@@ -188,4 +188,9 @@ public abstract class Module
 	{
 		return parent;
 	}
+	
+	public void setId(int id)
+	{
+		moduleId = id;
+	}
 }

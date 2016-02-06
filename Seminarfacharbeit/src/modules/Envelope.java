@@ -2,13 +2,10 @@ package modules;
 
 import engine.Module;
 import engine.SynthesizerEngine;
-import listener.EnvelopeFinishedListener;
 import resources.Strings;
 
 public class Envelope extends Module
 {
-	private EnvelopeFinishedListener listener;
-	
 	public static final int SAMPLE_INPUT = 0;
 	public static final int ATTACK_INPUT = 1;
 	public static final int DECAY_INPUT = 2;
@@ -52,19 +49,8 @@ public class Envelope extends Module
 	 * 
 	 * @param parent Engine
 	 * @param id ID
-	 * @param listener Listener, der darauf wartet, dass die Hüllkurve fertig ist
 	 * @param name Name
 	 */
-	public Envelope(SynthesizerEngine parent, int id, EnvelopeFinishedListener listener, String name)  
-	{
-		super(parent, 8, 1, id, name);
-		this.listener = listener;
-		
-		type = ModuleType.ENVELOPE;
-		
-		inputNames[SAMPLE_INPUT] = Strings.PARAM_NAMES_MAIN[ENVELOPE][0];
-	}
-	
 	public Envelope(SynthesizerEngine parent, int id, String name)  
 	{
 		super(parent, 8, 1, id, name);

@@ -30,6 +30,8 @@ class BoundLine extends Line
 		Point2D point = new Point2D((float) input.getCenterX(), (float) input.getCenterY());
 		setStartX(input.localToScene(point).getX());
 		setStartY(input.localToScene(point).getY());
+		
+		input.setConnectedLine(this);
 	}
 	
 	public void setEnd(double endX, double endY)
@@ -45,6 +47,8 @@ class BoundLine extends Line
 		Point2D point = new Point2D((float) output.getCenterX(), (float) output.getCenterY());
 		setEndX(output.localToScene(point).getX());
 		setEndY(output.localToScene(point).getY());
+		
+		output.setConnectedLine(this);
 	}
 
 	public PortCircle getStartCircle()

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ModuleContainer>
+    <Module>
+        <Name>Amplitude</Name>
+        <Id>2</Id>
+        <Type>CONSTANT</Type>
+        <DefaultValue>100.0</DefaultValue>
+    </Module>
+    <Module>
+        <Name>Frequenz</Name>
+        <Id>3</Id>
+        <Type>CONSTANT</Type>
+        <DefaultValue>100.0</DefaultValue>
+    </Module>
+    <Module>
+        <Name>Wellenform</Name>
+        <Id>4</Id>
+        <Type>CONSTANT</Type>
+        <DefaultValue>1.0</DefaultValue>
+    </Module>
+    <Module>
+        <Name>Oszillator 1</Name>
+        <Id>5</Id>
+        <Type>OSCILLATOR</Type>
+    </Module>
+    <Wire>
+        <FromId>2</FromId>
+        <ToId>5</ToId>
+        <FromIndex>0</FromIndex>
+        <ToIndex>1</ToIndex>
+    </Wire>
+    <Wire>
+        <FromId>3</FromId>
+        <ToId>5</ToId>
+        <FromIndex>0</FromIndex>
+        <ToIndex>0</ToIndex>
+    </Wire>
+    <Wire>
+        <FromId>4</FromId>
+        <ToId>5</ToId>
+        <FromIndex>0</FromIndex>
+        <ToIndex>2</ToIndex>
+    </Wire>
+    <Wire>
+        <FromId>5</FromId>
+        <ToId>0</ToId>
+        <FromIndex>0</FromIndex>
+        <ToIndex>0</ToIndex>
+    </Wire>
+    <FrequencyId>3</FrequencyId>
+    <AmplitudeId>2</AmplitudeId>
+    <FreqToZeroOnStop>true</FreqToZeroOnStop>
+    <ContainerId>0</ContainerId>
+</ModuleContainer>

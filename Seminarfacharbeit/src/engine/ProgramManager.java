@@ -122,7 +122,7 @@ public class ProgramManager
 	{
 		for (int program = 0; program < NUM_PROGRAMS; program++)
 		{
-			programPresets[program] = preset;
+			programPresets[program] = new ContainerPreset(preset);
 		}
 	}
 }

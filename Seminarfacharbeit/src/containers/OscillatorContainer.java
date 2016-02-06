@@ -8,7 +8,7 @@ import modules.Envelope;
 import modules.HighpassFilter;
 import modules.Ids;
 import modules.LowpassFilter;
-import modules.Mixer;
+import modules.OutputMixer;
 import modules.Oscillator;
 
 import java.io.FileNotFoundException;
@@ -17,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import engine.ModuleContainer;
-import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 
 public class OscillatorContainer extends PlayableModuleContainer implements EnvelopeFinishedListener 
@@ -84,8 +83,8 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		
 		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_1, Strings.getStandardModuleName(Ids.ID_OSCILLATOR_1)));
 		addModule(new Oscillator(parent, Ids.ID_OSCILLATOR_2,  Strings.getStandardModuleName(Ids.ID_OSCILLATOR_2)));
-		addModule(new Envelope(parent, Ids.ID_ENVELOPE_1, this,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_1)));
-		addModule(new Envelope(parent, Ids.ID_ENVELOPE_2, this,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_2)));
+		addModule(new Envelope(parent, Ids.ID_ENVELOPE_1,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_1)));
+		addModule(new Envelope(parent, Ids.ID_ENVELOPE_2,  Strings.getStandardModuleName(Ids.ID_ENVELOPE_2)));
 		addModule(new LowpassFilter(parent, Ids.ID_LOWPASS_1,  Strings.getStandardModuleName(Ids.ID_LOWPASS_1)));
 		addModule(new BalancedMixer(parent, Ids.ID_MIXER_2, Strings.getStandardModuleName(Ids.ID_MIXER_2)));
 		addModule(new HighpassFilter(parent, Ids.ID_HIGHPASS_1, Strings.getStandardModuleName(Ids.ID_HIGHPASS_1)));
@@ -125,7 +124,7 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		
 		addConnection(findModuleById(Ids.ID_OSCILLATOR_1), findModuleById(Ids.ID_MIXER_2), Oscillator.SAMPLE_OUTPUT, BalancedMixer.SAMPLE_INPUT_1);
 		addConnection(findModuleById(Ids.ID_OSCILLATOR_2), findModuleById(Ids.ID_MIXER_2), Oscillator.SAMPLE_OUTPUT, BalancedMixer.SAMPLE_INPUT_2);
-		addConnection(findModuleById(Ids.ID_MIXER_2), findModuleById(Ids.ID_HIGHPASS_1), Mixer.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
+		addConnection(findModuleById(Ids.ID_MIXER_2), findModuleById(Ids.ID_HIGHPASS_1), OutputMixer.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_HIGHPASS_1), findModuleById(Ids.ID_LOWPASS_1), HighpassFilter.SAMPLE_OUTPUT, LowpassFilter.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_LOWPASS_1), findModuleById(Ids.ID_ENVELOPE_1), LowpassFilter.SAMPLE_OUTPUT, Envelope.SAMPLE_INPUT);
 		addConnection(findModuleById(Ids.ID_ENVELOPE_1), this, Envelope.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);

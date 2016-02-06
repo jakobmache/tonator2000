@@ -1,7 +1,6 @@
 package containers;
 
 import engine.ModuleContainer;
-import engine.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 import modules.Constant;
 import modules.Ids;

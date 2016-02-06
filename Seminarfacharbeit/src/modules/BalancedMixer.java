@@ -3,7 +3,7 @@ package modules;
 import engine.SynthesizerEngine;
 import engine.Wire;
 
-public class BalancedMixer extends Mixer
+public class BalancedMixer extends OutputMixer
 {
 	public static final int SAMPLE_INPUT_1 = 0;
 	public static final int SAMPLE_INPUT_2 = 1;
