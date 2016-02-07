@@ -3,6 +3,7 @@ package ui.editor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +37,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
@@ -50,6 +52,7 @@ import resources.Strings;
 import ui.mainwindow.MainApplication;
 import ui.mainwindow.UiUtils;
 import ui.utils.MultipleInputDialog;
+import ui.utils.NumberInputDialog;
 
 //TODO: Gui for synthesizer
 //TODO: Menu, ....
@@ -61,11 +64,15 @@ import ui.utils.MultipleInputDialog;
 
 public class SynthesizerEditor extends Stage
 {
+	
+	public static final int WIDTH = 3000;
+	public static final int HEIGHT = 3000;
 	private SynthesizerEngine engine;
 
 	private Map<Node, ModuleGuiBackend> moduleGuis = new HashMap<Node, ModuleGuiBackend>();
 
 	private ContextMenu menu;
+	private MenuBar menuBar;
 
 	private Pane editorPane;
 
@@ -87,12 +94,18 @@ public class SynthesizerEditor extends Stage
 
 		initEditor();
 
-		Scene scene = new Scene(editorPane, 1000, 1000);
+		ScrollPane root = new ScrollPane(editorPane);
+		root.setPrefSize(WIDTH, HEIGHT);
+		Scene scene = new Scene(root, 1000, 1000);
 		setScene(scene);
 
 		initMenu();
 
 		initModules();
+
+		editorPane.requestFocus();
+		
+		menuBar.prefWidthProperty().bind(scene.widthProperty());
 	}
 
 	public void addModuleByGui(ModuleGuiBackend moduleGui, double layoutX, double layoutY)
@@ -187,14 +200,13 @@ public class SynthesizerEditor extends Stage
 
 	private void initMenu()
 	{
-		MenuBar menuBar = new MenuBar();
+		menuBar = new MenuBar();
 		menuBar.prefWidthProperty().bind(editorPane.widthProperty());
 		Menu fileMenu = new Menu(Strings.MENU_FILE);
 		MenuItem saveItem = new MenuItem(Strings.MENU_SAVE);
 		MenuItem loadItem = new MenuItem(Strings.MENU_LOAD);
 		SeparatorMenuItem separator = new SeparatorMenuItem();
 		MenuItem buildItem = new MenuItem(Strings.MENU_BUILD);
-
 
 		fileMenu.getItems().add(saveItem);
 		fileMenu.getItems().add(loadItem);
@@ -246,7 +258,7 @@ public class SynthesizerEditor extends Stage
 			fileChooser.getExtensionFilters().add(new ExtensionFilter("XML-Dateien", "*.xml"));
 
 			File file = fileChooser.showOpenDialog(this);
-			
+
 			try 
 			{
 				clear();
@@ -298,6 +310,7 @@ public class SynthesizerEditor extends Stage
 			addModuleMenu.getItems().add(item);
 			item.setOnAction((event) ->
 			{
+				//Mixer was selected
 				if (type == ModuleType.MIXER)
 				{
 					TextInputDialog dialog = new TextInputDialog();
@@ -306,14 +319,15 @@ public class SynthesizerEditor extends Stage
 					dialog.setHeaderText(null);
 					dialog.initOwner(this);
 					String name = dialog.showAndWait().get();
-					
-					MultipleInputDialog mixerDialog = new MultipleInputDialog(Strings.TITLE_MIXER_DIALOG, Strings.HEADER_MIXER_DIALOG, 
-							Strings.MIXER_DIALOG_INPUTS);
-					Integer numInputs = Math.round(mixerDialog.showAndWait().get()[0]);
+
+					NumberInputDialog mixerDialog = new NumberInputDialog(this, Strings.TITLE_MIXER_DIALOG, Strings.HEADER_MIXER_DIALOG, 
+							Strings.TEXT_MIXER_DIALOG, 1, 1000);
+					Integer numInputs = Integer.valueOf(mixerDialog.showAndWait().get());
 					MixerBackend backend = new MixerBackend(this, ModuleType.MIXER, name, Ids.getNextId(), numInputs);
 					addModuleByGui(backend, menu.getAnchorX(), menu.getAnchorY());
 				}
-				else {
+				else 
+				{
 					addModuleByType(type, menu.getX(), menu.getY());
 				}
 			});
@@ -399,7 +413,7 @@ public class SynthesizerEditor extends Stage
 				float maxValue = Float.valueOf(maxValueNode.getTextContent());
 				float defaultValue = Float.valueOf(defValueNode.getTextContent());
 				boolean isEditable = Boolean.valueOf(editableNode.getTextContent());
-				
+
 				//Look whether it is a waveform selector
 				if (node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_SUBTYPE).getLength() > 0)
 				{
@@ -409,7 +423,7 @@ public class SynthesizerEditor extends Stage
 				{
 					backend = new ConstantGui(this, type, name, maxValue, minValue, defaultValue);
 				}
-				
+
 				((ConstantGui) backend).setEditable(isEditable);
 
 				//Set amplitude and freq backend
@@ -420,52 +434,74 @@ public class SynthesizerEditor extends Stage
 				}
 				else if (id == frequencyId)
 				{
-					System.out.println("Frequency backend created: " + backend + "|" + backend.getModule());
 					backend.setDestroyable(false);
 					freqBackend = (ConstantGui) backend;
 				}
 			}
 			else 
 			{
-				backend = new ModuleGuiBackend(this, type, name);
+				if (type == ModuleType.MIXER)
+				{
+					org.w3c.dom.Node numInputsNode = node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_NUM_INPUTS).item(0);
+					Integer numInputs = Integer.valueOf(numInputsNode.getTextContent());
+					backend = new MixerBackend(this, type, name, id, numInputs);
+				}
+				else
+				{
+					backend = new ModuleGuiBackend(this, type, name);
+				}
 			}
 
 			backend.setId(id);
 
+
+			System.out.printf("Loaded backend %s with name %s, ID %d, type %s : %s\n", backend, backend.getName(), backend.getId(), backend.getModuleType(), backend.getModule());
+
 			addModuleByGui(backend, xPos, yPos);
 		}
-		
+
 		//Add audio output
 		outputBackend = new ModuleGuiBackend(this, ModuleType.OUTPUT_MODULE, "Audio");
 		outputBackend.setDestroyable(false);
 		outputBackend.setId(containerId);
 		addModuleByGui(outputBackend, audioX, audioY);
-		
+
 		//Create each wire
 		NodeList wireNodes = document.getElementsByTagName(PlayableModuleContainer.XML_WIRE);
-		
+
 		for (int i = 0; i < wireNodes.getLength(); i++)
 		{
 			Element wireElement = (Element) wireNodes.item(i);
-			
+
 			org.w3c.dom.Node fromIndexNode = wireElement.getElementsByTagName(PlayableModuleContainer.XML_WIRE_FROM_INDEX).item(0);
 			org.w3c.dom.Node toIndexNode = wireElement.getElementsByTagName(PlayableModuleContainer.XML_WIRE_TO_INDEX).item(0);
 			org.w3c.dom.Node fromIdNode = wireElement.getElementsByTagName(PlayableModuleContainer.XML_WIRE_FROM_ID).item(0);
 			org.w3c.dom.Node toIdNode = wireElement.getElementsByTagName(PlayableModuleContainer.XML_WIRE_TO_ID).item(0);
-			
+
 			int fromIndex = Integer.valueOf(fromIndexNode.getTextContent());
 			int toIndex = Integer.valueOf(toIndexNode.getTextContent());
 			int fromId = Integer.valueOf(fromIdNode.getTextContent());
 			int toId = Integer.valueOf(toIdNode.getTextContent());
-			
+
 			BoundLine line = new BoundLine(this);
-			
+
 			editorPane.getChildren().add(line);
-			
+
+			System.out.printf("Try to create wire from backend %s to %s, output %d to input %d\n", getBackendById(fromId).getName(),
+					getBackendById(toId).getName(), fromIndex, toIndex);
+			System.out.printf("Output wires: %s, Input wires:%s\n", Arrays.toString(getBackendById(fromId).getOutputs()), 
+					Arrays.toString(getBackendById(toId).getInputs()));
+
 			line.setStartCircle(getBackendById(fromId).getOutputs()[fromIndex]);
 			line.setEndCircle(getBackendById(toId).getInputs()[toIndex]);
-			
+
 			line.update();
+		}
+		
+		for (Node moduleGui:moduleGuis.keySet())
+		{
+			moduleGui.setLayoutX(moduleGui.getLayoutX() + 100);
+			moduleGui.setLayoutY(moduleGui.getLayoutY() + 100);
 		}
 	}
 
@@ -524,6 +560,15 @@ public class SynthesizerEditor extends Stage
 
 					moduleNode.appendChild(subtypeNode);
 				}
+			}
+
+			//If it is a mixer we have to add number inputs
+			if (getBackendById(id).getModuleType() == ModuleType.MIXER)
+			{
+				Element numInputsNode = document.createElement(PlayableModuleContainer.XML_MODULE_NUM_INPUTS);
+				numInputsNode.setTextContent(Integer.toString(((MixerBackend) getBackendById(id)).getInputs().length));
+
+				moduleNode.appendChild(numInputsNode);
 			}
 
 			//Write the gui position to the file
@@ -660,6 +705,7 @@ public class SynthesizerEditor extends Stage
 		SynthesizerModuleContainer returnContainer = new SynthesizerModuleContainer(engine, 1, 1, Ids.getNextId(), "ModuleContainer");
 		Set<PortCircle> checkedPorts = new HashSet<PortCircle>();
 
+		System.out.println("================Creating modules=====================");
 		//Create each module
 		for (ModuleGuiBackend backend:moduleGuis.values())
 		{
@@ -671,12 +717,14 @@ public class SynthesizerEditor extends Stage
 			returnContainer.addModule(module);
 		}
 
+		System.out.println("================Creating wires=====================");
 		//Create wires
 		for (ModuleGuiBackend endBackend:moduleGuis.values())
 		{
 			if (endBackend.getModuleType() == ModuleType.OUTPUT_MODULE)
 				continue;
 
+			//Go from each input 
 			for (int indexDataIsSentTo = 0; indexDataIsSentTo < endBackend.getInputs().length; indexDataIsSentTo++)
 			{
 				PortCircle input = endBackend.getInputs()[indexDataIsSentTo];
@@ -685,20 +733,26 @@ public class SynthesizerEditor extends Stage
 					BoundLine line = input.getBoundLine();
 					if (line != null)
 					{
-						PortCircle circle = line.getStartCircle();
-						if (circle.getOwner() == endBackend)
-							circle = line.getEndCircle();
+						//First look for the start circle
+						PortCircle startCircle = line.getStartCircle();
 						
-						ModuleGuiBackend startBackend = circle.getOwner();
+						//Line was drawn the other way
+						if (startCircle.getOwner() == endBackend)
+							startCircle = line.getEndCircle();
+
+						ModuleGuiBackend startBackend = startCircle.getOwner();
 
 						if (startBackend.getModuleType() == ModuleType.OUTPUT_MODULE)
 							continue;
 
+						int fromIndex = indexOf(startBackend.getOutputs(), startCircle);
+						
+						System.out.printf("Start circle index: %d, End circle index: %d\n", startCircle.getIndex(), input.getIndex());
+
 						Module moduleDataIsGrabbedFrom = returnContainer.findModuleById(startBackend.getId());
 						Module moduleDataIsSentTo = returnContainer.findModuleById(input.getOwner().getId());
-						System.out.println("Input owner: " + input.getOwner() + " mit ID " + input.getOwner().getId());
-						System.out.printf("Wire from %s (%s) to %s (%s)\n", moduleDataIsGrabbedFrom, startBackend.getName(), moduleDataIsSentTo, endBackend.getName());
-						returnContainer.addConnection(moduleDataIsGrabbedFrom, moduleDataIsSentTo, circle.getIndex(), indexDataIsSentTo);
+						System.out.printf("Wire from %s.%d (%s) to %s.%d (%s)\n", moduleDataIsGrabbedFrom, fromIndex, startBackend.getName(), moduleDataIsSentTo, indexDataIsSentTo, endBackend.getName());
+						returnContainer.addConnection(moduleDataIsGrabbedFrom, moduleDataIsSentTo, fromIndex, indexDataIsSentTo);
 					}
 				}
 			}
@@ -713,6 +767,8 @@ public class SynthesizerEditor extends Stage
 
 		Module lastModule = returnContainer.findModuleById(circle.getOwner().getId());
 		returnContainer.addConnection(lastModule, returnContainer, circle.getIndex(), ModuleContainer.SAMPLE_INPUT);
+		
+		System.out.printf("Wire from %s (%s) to %s (%s)\n", lastModule, lastModule.getName(), returnContainer, returnContainer.getName());
 
 		returnContainer.setAmplitudeId(amplBackend.getId());
 		returnContainer.setFrequencyId(freqBackend.getId());
@@ -737,6 +793,16 @@ public class SynthesizerEditor extends Stage
 	public SynthesizerEngine getEngine()
 	{
 		return engine;
+	}
+	
+	public static int indexOf(Object[] array, Object object)
+	{
+		for (int i = 0; i < array.length; i++)
+		{
+			if (object == array[i])
+				return i;
+		}
+		return array.length;
 	}
 
 }

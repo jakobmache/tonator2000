@@ -46,7 +46,6 @@ public class OutputMixer extends Module{
 			Wire inputWire = inputWires[i];
 			if (inputWire != null)
 			{
-				System.out.println(inputWire.getModuleDataIsGrabbedFrom());
 				float value = inputWire.getNextSample();
 				sum += value;
 			}

@@ -98,5 +98,10 @@ public class Mixer extends Module{
 		return numInputs;
 	}
 
+	public int getNumInputs() 
+	{
+		return numInputs;
+	}
+
 
 }

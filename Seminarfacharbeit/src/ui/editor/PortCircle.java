@@ -114,4 +114,9 @@ public class PortCircle extends Circle
 	{
 		connectedLine = line;
 	}
+	
+	public String toString()
+	{
+		return owner.getName() + "at index " + index;
+	}
 }

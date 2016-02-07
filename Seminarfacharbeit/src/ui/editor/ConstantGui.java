@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import modules.Constant;
 import modules.ModuleType;
+import resources.Strings;
 import ui.utils.NumberInputField;
 
 public class ConstantGui extends ModuleGuiBackend 
@@ -23,6 +24,7 @@ public class ConstantGui extends ModuleGuiBackend
 		this.maxValue = maxValue;
 		this.minValue = minValue;
 		this.defaultValue = defaultValue;	
+
 //		Slider slider = new Slider(minValue, maxValue, defaultValue);
 //		slider.setMaxHeight(sliderHeight);
 //		slider.setOrientation(Orientation.VERTICAL);
@@ -40,17 +42,31 @@ public class ConstantGui extends ModuleGuiBackend
 	{
 		VBox vBox = new VBox();
 		vBox.setAlignment(Pos.CENTER);
-		input = new NumberInputField(this.maxValue, this.minValue, true);
+		input = new NumberInputField(this.maxValue, this.minValue, false);
 		input.setText(Float.toString(this.defaultValue));
 		vBox.getChildren().add(input);
 		
 		gui.getChildren().add(vBox);
-		
-		input.setText(Float.toString(defaultValue));
 		input.setLayoutX(0);
 		input.setLayoutY(0);
 		input.setMaxHeight(2 * radius);
 		input.setMaxWidth(width);
+	}
+	
+	@Override
+	protected void initSize()
+	{
+		int oldRadius = radius;
+		radius = 16;
+		int max = Math.max(Strings.INPUT_NAMES[type.getIndex()].length, Strings.OUTPUT_NAMES[type.getIndex()].length);
+		if (width == 0)
+			width = 2 * radius * max + (max + 1) * xOffset;
+		if (height == 0)
+			height = 4 * radius + 4 * yOffset;
+		
+		radius = oldRadius;
+		gui.setMinWidth(width);
+		gui.setMinHeight(height);
 	}
 	
 	@Override

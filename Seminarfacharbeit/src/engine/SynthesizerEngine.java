@@ -281,10 +281,6 @@ public class SynthesizerEngine implements Receiver
 		this.synthesizerContainer = container;
 		//Use the Preset created by default
 		programManager.setForAll(synthesizerContainer.getPreset());
-		
-		System.out.println("New container: " + synthesizerContainer);
-		for (Module module:synthesizerContainer.getModules())
-			System.out.println(module);
 	}
 
 	public OutputMixer getOutputMixer()

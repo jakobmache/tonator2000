@@ -176,7 +176,7 @@ public abstract class Module
 	
 	public String toString()
 	{
-		return "Modul " + name + ", id: " + moduleId + ", " + hashCode();
+		return "Modul " + name + ", id: " + moduleId + ", " + getClass();
 	}
 	
 	public ModuleType getType()

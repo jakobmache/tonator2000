@@ -16,7 +16,7 @@ import resources.Strings;
 
 public class ModuleGuiBackend
 {
-	private ModuleType type;
+	protected ModuleType type;
 
 	protected int xOffset = 10;
 	protected int yOffset = 10;
@@ -70,6 +70,8 @@ public class ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
+		
+		System.out.println("Backend module: " + module + "(" + name + ")");
 	}
 	
 	/**
@@ -102,6 +104,8 @@ public class ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
+		
+		System.out.println("Backend module: " + module);
 	}
 
 	/**

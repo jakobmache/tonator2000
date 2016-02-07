@@ -28,6 +28,7 @@ import engine.SynthesizerEngine;
 import engine.Wire;
 import modules.Constant;
 import modules.Ids;
+import modules.Mixer;
 import modules.ModuleGenerator;
 import modules.ModuleType;
 
@@ -52,6 +53,7 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	public static final String XML_MODULE_MIN_VALUE = "MinValue";
 	public static final String XML_MODULE_IS_EDITABLE = "IsEditable";
 	public static final String XML_MODULE_SUBTYPE = "Subtype";
+	public static final String XML_MODULE_NUM_INPUTS = "NumInputs";
 	
 	public static final String XML_WIRE = "Wire";
 	public static final String XML_WIRE_FROM_ID = "FromId";
@@ -72,7 +74,11 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 		
 		for (Module module:container.getModules())
 		{
-			Module copy = ModuleGenerator.createModule(module.getType(), parent, module.getName(), module.getId());
+			Module copy;
+			if (module.getType() == ModuleType.MIXER)
+				copy = ModuleGenerator.createMixer(parent, module.getName(), module.getId(), ((Mixer) module).getNumInputs());
+			else
+				copy = ModuleGenerator.createModule(module.getType(), parent, module.getName(), module.getId());
 
 			if (module.getType() == ModuleType.CONSTANT)
 				((Constant) copy).setValue(((Constant)module).requestNextSample(Constant.VALUE_OUTPUT));
@@ -200,7 +206,6 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	
 	public void writeToXmlFile(String path) throws ParserConfigurationException, TransformerFactoryConfigurationError, FileNotFoundException, TransformerException
 	{
-		System.out.println("Write to file!");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
@@ -246,6 +251,9 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 			fromIndex.setTextContent(Integer.toString(wire.getIndexDataIsGrabbedFrom()));
 			toIndex.setTextContent(Integer.toString(wire.getIndexDataIsSentTo()));
 			
+			System.out.println(wire.getModuleDataIsGrabbedFrom());
+			System.out.println(wire.getIndexDataIsGrabbedFrom());
+			
 			element.appendChild(fromId);
 			element.appendChild(toId);
 			element.appendChild(fromIndex);
@@ -281,7 +289,6 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 
         tr.transform(new DOMSource(document), 
                              new StreamResult(new FileOutputStream(path)));
-        System.out.println("Ready: " + path);
 	}
 	
 	public abstract void startPlaying(float frequency, float amplitude);

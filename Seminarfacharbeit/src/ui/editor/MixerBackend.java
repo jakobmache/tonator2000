@@ -2,7 +2,7 @@ package ui.editor;
 
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
-import modules.ModuleGenerator;
+import modules.Mixer;
 import modules.ModuleType;
 import resources.Strings;
 
@@ -17,7 +17,7 @@ public class MixerBackend extends ModuleGuiBackend
 		
 		this.numInputs = numInputs;
 		
-		module = ModuleGenerator.createMixer(owner.getEngine(), name, id, numInputs);
+		module = new Mixer(owner.getEngine(), numInputs, id, name);
 		gui.getChildren().clear();
 		setId(id);
 		
@@ -26,6 +26,8 @@ public class MixerBackend extends ModuleGuiBackend
 		drawInputs();
 		drawLine();
 		drawOutputs();
+		
+		System.out.println("Mixer module: " + module);
 	}
 	
 	@Override
@@ -60,5 +62,10 @@ public class MixerBackend extends ModuleGuiBackend
 
 			gui.getChildren().add(circle);
 		}
+	}
+	
+	public int getNumInputs()
+	{
+		return numInputs;
 	}
 }

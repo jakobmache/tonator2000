@@ -24,8 +24,10 @@ public class Strings
 	public static final String OE = "\u00d6";
 	public static final String SS = "\u00df";
 
-	//public static final String APPLICATION_NAME = "Ton Total 2000";
-	public static final String APPLICATION_NAME = "Seminarfacharbeit";
+	public static final String APPLICATION_NAME = "Ton Total 2000";
+	//public static final String APPLICATION_NAME = "Seminarfacharbeit";
+	
+	public static final String VERSION_NUMBER = "v2.0 beta [unstable]";
 
 	public static final String ERROR_TITLE = "Fehler";
 	public static final String WARNING_TITLE = "Warnung";
@@ -72,7 +74,9 @@ public class Strings
 		"Hochpassfilter",
 		"Konstante",
 		"Oszilloskop",
-		"Lautstärke"
+		"Lautstärke",
+		"Audioausgabe",
+		"Duplicator"
 			};
 
 	public static final String[][] PARAM_NAMES_MAIN = new String[][]
@@ -84,6 +88,7 @@ public class Strings
 		{},
 		{"Balance"},
 		{"Cutoff-Frequenz", "Resonanz"},
+		{},
 		{},
 		{},
 		{}
@@ -119,6 +124,7 @@ public class Strings
 		{},
 		{},
 		{},
+		{"Sample-Input"},
 		{"Sample-Input"}
 			};
 
@@ -134,7 +140,8 @@ public class Strings
 		{"Wert-Output"},
 		{},
 		{},
-		{}
+		{},
+		{"Sample-Output 1", "Sample-Output 2"}
 			};
 
 	public static final String[] MODULE_DESCRIPTIONS = new String[]
@@ -174,10 +181,6 @@ public class Strings
 	public static final String STATUSBAR_NO_DEVICE_STRING = "Kein MIDI-Gerät angeschlossen";
 	public static final String STATUSBAR_NOT_RUNNING_STRING = "Engine gestoppt";
 	public static final String STATUSBAR_RUNNING_STRING = "Engine l" + ae + "uft!";
-
-
-	//public static final String VERSION_NUMBER = "v0.4.4 beta";
-	public static final String VERSION_NUMBER = "v1.0";
 
 	public static final String SAVE_PRESET_FILE_NAME = "preset.xml";
 
@@ -277,7 +280,7 @@ public class Strings
 	
 	public static final String TITLE_MIXER_DIALOG = "Anzahl an Eing" + ae + "ngen";
 	public static final String HEADER_MIXER_DIALOG = "Bitte geben Sie die Anzahl an Eing" + ae + "ngen des Mixers an!";
-	public static final String[] MIXER_DIALOG_INPUTS = new String[] {"Anzahl an Eing" + ae + "ngen:"};
+	public static final String TEXT_MIXER_DIALOG = "Anzahl an Eing" + ae + "ngen:";
 	
 	public static final String SAVE_SYNTH_DEFAULT_FILENAME = "synthesizer.xml";
 

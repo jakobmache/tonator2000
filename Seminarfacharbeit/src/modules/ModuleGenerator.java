@@ -26,6 +26,8 @@ public class ModuleGenerator
 			return new Amplifier(engine, id, name);
 		case CONSTANT:
 			return new Constant(engine, id, name);
+		case DUPLICATOR:
+			return new Duplicator(engine, id, name);
 		default:
 			return null;
 		}

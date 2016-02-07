@@ -13,7 +13,8 @@ public enum ModuleType
 	CONSTANT(7, true),
 	PLOTTER(8, false),
 	VOLUME(9, false),
-	OUTPUT_MODULE(10, false);
+	OUTPUT_MODULE(10, false),
+	DUPLICATOR(11, true);
 	
 	private int index;
 	private boolean creatable;
