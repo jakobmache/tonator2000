@@ -98,7 +98,11 @@ public class UiUtils
 		//	-Konstante:		0: Konstanten-ID, 1: Minimum, 2: Maximum, 3: Standard
 
 
-		String title = Strings.MODULE_NAMES[type.getIndex()];
+		String title;
+		if (ids != null && ids.length > 0)
+			title = Strings.getStandardModuleName(Math.round(ids[0]));
+		else
+			title = Strings.MODULE_NAMES[type.getIndex()];
 		return generateModuleGui(engine, title, application, type, ids);
 	}
 	

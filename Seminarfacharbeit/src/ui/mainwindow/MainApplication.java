@@ -353,16 +353,7 @@ public class MainApplication extends Application
 	{
 		for (ModuleController controller:moduleControllers)
 		{
-			try
-			{
 				controller.loadData();
-			}
-			catch (Exception e)
-			{
-				Alert alert = UiUtils.generateExceptionDialog(e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOAD_ALL_PRESETS], 
-						Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOAD_ALL_PRESETS]);
-				alert.showAndWait();
-			}
 		}
 	}
 

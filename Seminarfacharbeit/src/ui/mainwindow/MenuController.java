@@ -38,6 +38,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+
 import midi.MidiUtils;
 import resources.Strings;
 import ui.editor.SynthesizerEditor;
@@ -386,6 +388,7 @@ public class MenuController
 		{
 			try 
 			{
+				System.out.println("Try to load preset!");
 				engine.getProgramManager().setInstrumentPreset(parent.getCurrProgram(), new ContainerPreset(file.getPath()));
 				parent.updateModules();
 			} 
@@ -394,13 +397,18 @@ public class MenuController
 				Alert alert = UiUtils.generateAlert(parent.getPrimaryStage(), AlertType.WARNING, Strings.WARNING_TITLE, 
 						Strings.ERROR_HEADERS[Strings.ERROR_TOO_LESS_DATA], Strings.ERROR_EXPLANATIONS[Strings.ERROR_TOO_LESS_DATA]);
 				alert.showAndWait();
+				System.out.println("NPE!");
 			}
-			catch (Exception e) 
+			catch (ParserConfigurationException | SAXException | IOException e) 
 			{
 				Alert alert = UiUtils.generateExceptionDialog(parent.getPrimaryStage(), e, Strings.ERROR_TITLE, 
 						Strings.ERROR_HEADERS[Strings.ERROR_READING_FILE], Strings.ERROR_EXPLANATIONS[Strings.ERROR_READING_FILE]);
 				alert.showAndWait();
 			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 

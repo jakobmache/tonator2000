@@ -1,1222 +1,822 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="engine.SynthesizerEngine" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/SynthesizerEngine.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="999" width="216" x="1616" y="2946"/>    
+<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="containers.PlayableModuleContainer" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/containers/PlayableModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="440" x="1503" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="engine.Module" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/Module.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="567" width="231" x="1347" y="4322"/>    
+  <class id="2" language="java" name="containers.SynthesizerModuleContainer" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/containers/SynthesizerModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="458" x="1503" y="2797"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="engine.Wire" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/Wire.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="165" x="1347" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="4" language="java" name="engine.InputController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/InputController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2331" y="3182"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="engine.ProgramManager" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/ProgramManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="243" width="247" x="2305" y="3985"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="6" language="java" name="engine.ModuleContainer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/engine/ModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="297" width="277" x="1836" y="3985"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="7" language="java" name="midi.MidiLogger" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/midi/MidiLogger.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="242" x="2592" y="3985"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="8" language="java" name="midi.MidiPlayer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/midi/MidiPlayer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="261" width="221" x="1374" y="3985"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="9" language="java" name="midi.MidiUtils" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/midi/MidiUtils.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="297" width="213" x="365" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="10" language="java" name="containers.ContainerPreset" project="Seminarfacharbeit" 
+  <class id="3" language="java" name="containers.ContainerPreset" project="Seminarfacharbeit" 
     file="/Seminarfacharbeit/src/containers/ContainerPreset.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="261" width="158" x="2561" y="4322"/>    
+    <position height="207" width="188" x="1275" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <interface id="11" language="java" name="listener.ModuleContainerListener" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/listener/ModuleContainerListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="235" x="2265" y="4322"/>    
+  <class id="4" language="java" name="containers.StandardModuleContainer" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/containers/StandardModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="321" x="2258" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="engine.Module" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/Module.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="231" x="2556" y="819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="engine.InputController" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/InputController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="276" x="1820" y="819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="engine.ModuleContainer" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/ModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="277" x="2258" y="2141"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="engine.SynthesizerEngine" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/SynthesizerEngine.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="765" width="296" x="1498" y="1336"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="engine.Wire" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/Wire.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="216" x="2619" y="2514"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="engine.ProgramManager" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/engine/ProgramManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="247" x="1275" y="2141"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="11" language="java" name="listener.EngineListener" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/listener/EngineListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="139" x="814" y="2141"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="12" language="java" name="containers.OscillatorContainer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/containers/OscillatorContainer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="246" x="1979" y="4322"/>    
+  <interface id="12" language="java" name="listener.MidiLoggerListener" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/listener/MidiLoggerListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="157" x="805" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="13" language="java" name="containers.StandardModuleContainer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/containers/StandardModuleContainer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="321" x="1618" y="4322"/>    
+  </interface>  
+  <interface id="13" language="java" name="listener.ProgramListener" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/listener/ProgramListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="216" x="1019" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
-  </class>  
-  <interface id="14" language="java" name="listener.EngineListener" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/listener/EngineListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="139" x="894" y="3985"/>    
+  </interface>  
+  <interface id="14" language="java" name="listener.ModuleContainerListener" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/listener/ModuleContainerListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="235" x="1983" y="2514"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
   <interface id="15" language="java" name="listener.EnvelopeFinishedListener" project="Seminarfacharbeit" 
     file="/Seminarfacharbeit/src/listener/EnvelopeFinishedListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="197" x="2557" y="5770"/>    
+    <position height="-1" width="-1" x="1117" y="235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="16" language="java" name="listener.MidiLoggerListener" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/listener/MidiLoggerListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="157" x="3015" y="4322"/>    
+  <class id="16" language="java" name="midi.MidiLogger" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/midi/MidiLogger.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="242" x="993" y="2141"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <interface id="17" language="java" name="listener.ProgramListener" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/listener/ProgramListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="216" x="2759" y="4322"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="18" language="java" name="modules.Amplifier" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/Amplifier.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="171" width="211" x="1819" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="19" language="java" name="modules.BalancedMixer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/BalancedMixer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="240" x="179" y="5770"/>    
+  <class id="17" language="java" name="midi.MidiUtils" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/midi/MidiUtils.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="209" x="1327" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="20" language="java" name="modules.Constant" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/Constant.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="171" width="212" x="2324" y="4929"/>    
+  <class id="18" language="java" name="midi.MidiPlayer" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/midi/MidiPlayer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="221" x="1559" y="819"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="21" language="java" name="modules.Envelope" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/Envelope.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="801" width="338" x="414" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="22" language="java" name="modules.HighpassFilter" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/HighpassFilter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="495" width="237" x="1070" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="23" language="java" name="modules.Ids" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/Ids.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="801" width="204" x="1016" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="24" language="java" name="modules.LowpassFilter" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/LowpassFilter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="495" width="238" x="792" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="25" language="java" name="modules.Mixer" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/Mixer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="243" width="195" x="179" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="26" language="java" name="modules.Oscillator" project="Seminarfacharbeit" 
+  <class id="19" language="java" name="modules.Oscillator" project="Seminarfacharbeit" 
     file="/Seminarfacharbeit/src/modules/Oscillator.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="477" width="214" x="2070" y="4929"/>    
+    <position height="207" width="214" x="2027" y="1336"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="27" language="java" name="modules.OutputModule" project="Seminarfacharbeit" 
+  <class id="20" language="java" name="modules.OutputModule" project="Seminarfacharbeit" 
     file="/Seminarfacharbeit/src/modules/OutputModule.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="351" width="235" x="2597" y="4929"/>    
+    <position height="225" width="235" x="1983" y="2141"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="28" language="java" name="modules.SampleFilter" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/modules/SampleFilter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="261" width="227" x="1552" y="4929"/>    
+  <class id="21" language="java" name="modules.Ids" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/modules/Ids.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="93" x="1812" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="29" language="java" name="presets.OscillatorContainerPreset" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/presets/OscillatorContainerPreset.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="172" x="2872" y="4929"/>    
+  <class id="22" language="java" name="modules.Constant" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/modules/Constant.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="212" x="2281" y="1336"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="30" language="java" name="ui.editor.BoundLine" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/editor/BoundLine.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="207" width="163" x="1797" y="1377"/>    
+  <class id="23" language="java" name="modules.ModuleGenerator" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/modules/ModuleGenerator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="331" x="956" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="31" language="java" name="ui.editor.ModuleGui" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/editor/ModuleGui.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="351" width="182" x="2155" y="37"/>    
+  <enumeration id="24" language="java" name="modules.ModuleType" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/modules/ModuleType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="129" x="2706" y="1336"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
-  </class>  
-  <class id="32" language="java" name="ui.editor.PortCircle" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/editor/PortCircle.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="199" x="1914" y="1930"/>    
+  </enumeration>  
+  <class id="25" language="java" name="resources.Strings" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/resources/Strings.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="196" x="1576" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="33" language="java" name="ui.editor.SynthesizerEditor" project="Seminarfacharbeit" 
+  <class id="26" language="java" name="ui.editor.SynthesizerEditor" project="Seminarfacharbeit" 
     file="/Seminarfacharbeit/src/ui/editor/SynthesizerEditor.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="297" width="287" x="1847" y="878"/>    
+    <position height="351" width="300" x="1945" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="34" language="java" name="ui.BalanceController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/BalanceController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="315" width="265" x="2526" y="2321"/>    
+  <class id="27" language="java" name="ui.editor.ModuleGuiBackend" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/editor/ModuleGuiBackend.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="315" x="2176" y="428"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="35" language="java" name="ui.ChannelInstrumentAlert" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/ChannelInstrumentAlert.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="225" width="285" x="1247" y="2321"/>    
+  <class id="28" language="java" name="ui.editor.BoundLine" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/editor/BoundLine.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="170" x="1945" y="428"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="36" language="java" name="ui.EnvelopeController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/EnvelopeController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="585" width="298" x="3435" y="2321"/>    
+  <class id="29" language="java" name="ui.editor.PortCircle" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/editor/PortCircle.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="380" x="2136" y="819"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="37" language="java" name="ui.LowpassFilterController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/LowpassFilterController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="315" width="281" x="3114" y="2321"/>    
+  <class id="30" language="java" name="ui.mainwindow.MidiLoggerUI" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/MidiLoggerUI.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="157" x="617" y="2141"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="38" language="java" name="ui.MainApplication" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/MainApplication.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="513" width="247" x="1273" y="1377"/>    
+  <class id="31" language="java" name="ui.mainwindow.MenuController" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/MenuController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="477" width="274" x="1203" y="819"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="39" language="java" name="ui.MenuController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/MenuController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="567" width="274" x="1212" y="37"/>    
+  <class id="32" language="java" name="ui.mainwindow.Plotter" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/Plotter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="785" y="300"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="40" language="java" name="ui.MidiLoggerUI" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/MidiLoggerUI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="157" x="3015" y="3985"/>    
+  <class id="33" language="java" name="ui.mainwindow.MainApplication" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/MainApplication.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1141" y="584"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="41" language="java" name="ui.MidiPlayerController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/MidiPlayerController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="459" width="358" x="1273" y="878"/>    
+  <class id="34" language="java" name="ui.mainwindow.Plotter.AddToQueue" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/Plotter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="801" y="463"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="42" language="java" name="ui.LoadFileTask" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/MidiPlayerController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="282" x="1652" y="37"/>    
+  <class id="35" language="java" name="ui.mainwindow.ModuleController" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/ModuleController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="218" x="945" y="819"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="43" language="java" name="ui.ModuleController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/ModuleController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="261" width="218" x="1656" y="1930"/>    
+  <class id="36" language="java" name="ui.mainwindow.SynthiStatusBar" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/SynthiStatusBar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="280" x="625" y="819"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="44" language="java" name="ui.utils.NumberInputDialog" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/utils/NumberInputDialog.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="283" x="42" y="37"/>    
+  <class id="37" language="java" name="ui.mainwindow.UiUtils" project="Seminarfacharbeit" 
+    file="/Seminarfacharbeit/src/ui/mainwindow/UiUtils.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="444" x="472" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+      <attributes public="true" package="true" protected="false" private="false" static="false"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="45" language="java" name="ui.OscillatorController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/OscillatorController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="387" width="243" x="2831" y="2321"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="46" language="java" name="ui.Plotter" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/Plotter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="243" width="213" x="1094" y="4322"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="47" language="java" name="ui.Plotter.AddToQueue" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/Plotter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="97" x="42" y="4929"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="48" language="java" name="ui.SynthiStatusBar" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/SynthiStatusBar.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="351" width="280" x="1273" y="1930"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="49" language="java" name="ui.UiUtils" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/UiUtils.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="357" x="619" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="50" language="java" name="ui.VolumeController" project="Seminarfacharbeit" 
-    file="/Seminarfacharbeit/src/ui/VolumeController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="205" x="1656" y="2321"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <generalization id="51">    
-    <end type="SOURCE" refId="36"/>    
-    <end type="TARGET" refId="43"/>  
-  </generalization>  
-  <generalization id="52">    
-    <end type="SOURCE" refId="45"/>    
-    <end type="TARGET" refId="43"/>  
-  </generalization>  
-  <generalization id="53">    
-    <end type="SOURCE" refId="50"/>    
-    <end type="TARGET" refId="43"/>  
-  </generalization>  
-  <association id="54">    
-    <end type="SOURCE" refId="32" navigable="false">      
-      <attribute id="55" name="connectedLine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="56" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+  <association id="38">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="39" name="outputModule"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="30" navigable="true"/>    
+    <end type="TARGET" refId="20" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="57">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="58" name="midiPlayer">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="59" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="60">    
-    <end type="SOURCE" refId="26"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="61">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="62" name="osciContainer">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="63" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="64">    
-    <end type="SOURCE" refId="48" navigable="false">      
-      <attribute id="65" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="66" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="38" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="67">    
-    <end type="SOURCE" refId="31" navigable="false">      
-      <attribute id="68" name="owner">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="69" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="33" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="70">    
-    <bendpoint x="2164" y="878"/>    
-    <bendpoint x="2164" y="1377"/>    
-    <end type="SOURCE" refId="31" navigable="false">      
-      <attribute id="71" name="inputs">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="72" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="32" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="73">    
-    <end type="SOURCE" refId="38" navigable="false">      
-      <attribute id="74" name="moduleControllers">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="75" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="43" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="76">    
-    <bendpoint x="1661" y="878"/>    
-    <bendpoint x="1643" y="1377"/>    
-    <bendpoint x="1625" y="1930"/>    
-    <bendpoint x="1625" y="2321"/>    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="77" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="78" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="79">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="80" name="filter">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="81" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="28" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="82">    
-    <end type="SOURCE" refId="27"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="83">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="6"/>  
-  </generalization>  
-  <realization id="84">    
-    <bendpoint x="2864" y="2946"/>    
-    <bendpoint x="2864" y="3985"/>    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="17"/>  
-  </realization>  
-  <association id="85">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="86" name="inputWires">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="87" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="88">    
-    <bendpoint x="2014" y="2946"/>    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="89" name="allContainers">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="90" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="91">    
-    <end type="SOURCE" refId="33" navigable="false">      
-      <attribute id="92" name="currentLine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="93" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="30" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="94">    
-    <end type="SOURCE" refId="46"/>    
-    <end type="TARGET" refId="47"/>  
-  </nesting>  
-  <association id="95">    
-    <bendpoint x="1625" y="3985"/>    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="96" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="97" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="98">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="99" name="listeners">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="100" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="17" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="101">    
-    <bendpoint x="1583" y="1930"/>    
-    <bendpoint x="1583" y="2321"/>    
-    <end type="SOURCE" refId="38" navigable="false">      
-      <attribute id="102" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="103" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="104">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="105" name="moduleDataIsGrabbedFrom">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="106" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="107">    
-    <bendpoint x="2143" y="1377"/>    
-    <bendpoint x="2143" y="1930"/>    
-    <bendpoint x="2143" y="2321"/>    
-    <end type="SOURCE" refId="33" navigable="false">      
-      <attribute id="108" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="109" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="110">    
-    <bendpoint x="2253" y="3985"/>    
-    <bendpoint x="2530" y="4322"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="111" name="outputModule">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="112" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+  <association id="41">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="42" name="outputBackend"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="27" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="113">    
-    <bendpoint x="2566" y="4929"/>    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="15"/>  
-  </realization>  
-  <realization id="114">    
-    <bendpoint x="2274" y="2946"/>    
-    <bendpoint x="2274" y="3985"/>    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="11"/>  
-  </realization>  
-  <association id="115">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="116" name="allContainer">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="117" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="118">    
-    <bendpoint x="1200" y="878"/>    
-    <bendpoint x="1200" y="1377"/>    
-    <bendpoint x="1200" y="1930"/>    
-    <bendpoint x="1200" y="2321"/>    
-    <end type="SOURCE" refId="39" navigable="false">      
-      <attribute id="119" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="120" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="121">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="122" name="moduleDataIsSentTo">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="123" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="124">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="125" name="inputModule">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="126" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="127">    
-    <bendpoint x="1242" y="878"/>    
-    <end type="SOURCE" refId="38" navigable="false">      
-      <attribute id="128" name="menuController">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="129" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="39" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="130">    
-    <end type="SOURCE" refId="39" navigable="false">      
-      <attribute id="131" name="midiPlayerController">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="132" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="41" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="133">    
-    <end type="SOURCE" refId="24"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="134">    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="135">    
-    <end type="SOURCE" refId="42" navigable="false">      
-      <attribute id="136" name="controller">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="137" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="41" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="138">    
-    <end type="SOURCE" refId="41" navigable="false">      
-      <attribute id="139" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="140" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="38" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="141">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="142" name="listeners">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="143" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+  <association id="44">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="45" name="listeners"/>      
+      <multiplicity id="46" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="14" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="144">    
-    <end type="SOURCE" refId="21"/>    
-    <end type="TARGET" refId="2"/>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
   </generalization>  
-  <generalization id="145">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="25"/>  
-  </generalization>  
-  <generalization id="146">    
-    <end type="SOURCE" refId="29"/>    
-    <end type="TARGET" refId="10"/>  
-  </generalization>  
-  <realization id="147">    
-    <end type="SOURCE" refId="40"/>    
-    <end type="TARGET" refId="16"/>  
-  </realization>  
-  <association id="148">    
-    <end type="SOURCE" refId="46" navigable="false">      
-      <attribute id="149" name="sampleFilter">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="150" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="28" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="151">    
-    <end type="SOURCE" refId="28"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="152">    
-    <bendpoint x="1990" y="1377"/>    
-    <end type="SOURCE" refId="32" navigable="false">      
-      <attribute id="153" name="owner">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="154" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="33" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="155">    
-    <end type="SOURCE" refId="30" navigable="false">      
-      <attribute id="156" name="output">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="157" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="32" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="158">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="43"/>  
-  </generalization>  
-  <association id="159">    
-    <bendpoint x="1063" y="3985"/>    
-    <bendpoint x="1063" y="4322"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="160" name="outputMixer">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="161" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="25" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="162">    
-    <bendpoint x="1221" y="878"/>    
-    <end type="SOURCE" refId="39" navigable="false">      
-      <attribute id="163" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="164" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="38" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="165">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="166" name="preset">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="167" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="168">    
-    <end type="SOURCE" refId="21" navigable="false">      
-      <attribute id="169" name="listener">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="170" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="15" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="171">    
-    <bendpoint x="1604" y="1377"/>    
-    <bendpoint x="1604" y="1930"/>    
-    <bendpoint x="1604" y="2321"/>    
-    <end type="SOURCE" refId="41" navigable="false">      
-      <attribute id="172" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="173" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="174">    
-    <bendpoint x="1891" y="2321"/>    
-    <end type="SOURCE" refId="43" navigable="false">      
-      <attribute id="175" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="176" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="177">    
-    <end type="SOURCE" refId="37"/>    
-    <end type="TARGET" refId="43"/>  
-  </generalization>  
-  <association id="178">    
-    <bendpoint x="1562" y="2321"/>    
-    <end type="SOURCE" refId="48" navigable="false">      
-      <attribute id="179" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="180" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="181">    
+  <association id="48">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="182" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="183" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="49" name="midiPlayer"/>      
+      <multiplicity id="50" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="18" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="184">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <realization id="185">    
-    <bendpoint x="1093" y="2321"/>    
-    <bendpoint x="1093" y="2946"/>    
-    <end type="SOURCE" refId="48"/>    
-    <end type="TARGET" refId="14"/>  
-  </realization>  
-  <association id="186">    
-    <end type="SOURCE" refId="50" navigable="false">      
-      <attribute id="187" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="188" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+  <association id="51">    
+    <bendpoint x="1528" y="428"/>    
+    <bendpoint x="1528" y="819"/>    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="52" name="engine"/>      
+      <multiplicity id="53" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="189">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="190" name="parent">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="191" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="192">    
-    <end type="SOURCE" refId="20"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="193">    
-    <bendpoint x="2185" y="878"/>    
-    <bendpoint x="2185" y="1377"/>    
-    <end type="SOURCE" refId="31" navigable="false">      
-      <attribute id="194" name="outputs">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="195" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="32" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="196">    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="197">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="198" name="listeners">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="199" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="16" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="200">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="201">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="202" name="modules">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="203" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="204">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="205" name="programPresets">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="206" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="207">    
-    <end type="SOURCE" refId="38" navigable="false">      
-      <attribute id="208" name="statusBar">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="209" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="48" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="210">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="211" name="logger">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="212" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="213">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="6"/>  
-  </generalization>  
-  <association id="214">    
-    <end type="SOURCE" refId="35" navigable="false">      
-      <attribute id="215" name="engine">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="216" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="217">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="218" name="programManager">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="219" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="220">    
-    <end type="SOURCE" refId="30" navigable="false">      
-      <attribute id="221" name="input">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="222" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="32" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="223">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="224" name="outputWires">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="225" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="226">    
+  <association id="54">    
     <end type="SOURCE" refId="33" navigable="false">      
-      <attribute id="227" name="owner">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="228" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="55" name="statusBar"/>      
+      <multiplicity id="56" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="38" navigable="true"/>    
+    <end type="TARGET" refId="36" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="229">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="230" name="listeners">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="231" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+  <association id="57">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="58" name="inputs"/>      
+      <multiplicity id="59" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="60">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="61" name="engine"/>      
+      <multiplicity id="62" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="63">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="64">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="65" name="engine"/>      
+      <multiplicity id="66" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="67">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="68" name="owner"/>      
+      <multiplicity id="69" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="70">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="71" name="input"/>      
+      <multiplicity id="72" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="73">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="74" name="parent"/>      
+      <multiplicity id="75" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="76">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="77" name="listeners"/>      
+      <multiplicity id="78" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="79">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="80" name="owner"/>      
+      <multiplicity id="81" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="82">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="83" name="parent"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="85">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="86" name="highlightedLine"/>      
+      <multiplicity id="87" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="88">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="89" name="editor"/>      
+      <multiplicity id="90" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="91">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="12"/>  
+  </realization>  
+  <association id="92">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="93" name="outputs"/>      
+      <multiplicity id="94" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="95">    
+    <bendpoint x="2544" y="1336"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="96" name="modules"/>      
+      <multiplicity id="97" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="98">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="99" name="parent"/>      
+      <multiplicity id="100" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="101">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="102" name="parent"/>      
+      <multiplicity id="103" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="104">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="105" name="programManager"/>      
+      <multiplicity id="106" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="107">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="108">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="109" name="preset"/>      
+      <multiplicity id="110" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="111">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="112" name="module"/>      
+      <multiplicity id="113" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="114">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="115" name="parent"/>      
+      <multiplicity id="116" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="117">    
+    <bendpoint x="2817" y="819"/>    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="118" name="type"/>      
+      <multiplicity id="119" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="120">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="34"/>  
+  </nesting>  
+  <association id="121">    
+    <bendpoint x="2586" y="1336"/>    
+    <bendpoint x="2586" y="2141"/>    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="122" name="inputWires"/>      
+      <multiplicity id="123" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="124">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="125" name="wires"/>      
+      <multiplicity id="126" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="127">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="128" name="listeners"/>      
+      <multiplicity id="129" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="130">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="131" name="moduleControllers"/>      
+      <multiplicity id="132" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="133">    
+    <bendpoint x="1911" y="1336"/>    
+    <bendpoint x="1911" y="2141"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="14"/>  
+  </realization>  
+  <realization id="134">    
+    <bendpoint x="729" y="1336"/>    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <association id="135">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="136" name="listeners"/>      
+      <multiplicity id="137" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="138">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="139" name="owner"/>      
+      <multiplicity id="140" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="141">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="142" name="menuController"/>      
+      <multiplicity id="143" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <bendpoint x="2607" y="2141"/>    
+    <bendpoint x="2607" y="1336"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="145" name="moduleDataIsSentTo"/>      
+      <multiplicity id="146" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="147">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="148" name="inputModule"/>      
+      <multiplicity id="149" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="150">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="151">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="152">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="153" name="allContainer"/>      
+      <multiplicity id="154" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="155">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="156" name="owner"/>      
+      <multiplicity id="157" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="158">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="159" name="engine"/>      
+      <multiplicity id="160" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="161">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="162" name="type"/>      
+      <multiplicity id="163" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="164">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="165" name="drawnLine"/>      
+      <multiplicity id="166" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="167">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="168" name="programPresets"/>      
+      <multiplicity id="169" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="170">    
+    <bendpoint x="1975" y="1336"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="171" name="allContainers"/>      
+      <multiplicity id="172" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="173">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="174" name="logger"/>      
+      <multiplicity id="175" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="176">    
+    <bendpoint x="2565" y="1336"/>    
+    <bendpoint x="2565" y="2141"/>    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="177" name="outputWires"/>      
+      <multiplicity id="178" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="179">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="180" name="connectedLine"/>      
+      <multiplicity id="181" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="182">    
+    <bendpoint x="2145" y="428"/>    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="183" name="editor"/>      
+      <multiplicity id="184" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="185">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="186" name="output"/>      
+      <multiplicity id="187" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="188">    
+    <bendpoint x="1824" y="1336"/>    
+    <bendpoint x="1824" y="2141"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="13"/>  
+  </realization>  
+  <generalization id="189">    
+    <bendpoint x="2523" y="1336"/>    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="190">    
+    <bendpoint x="1845" y="2141"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="191" name="synthesizerContainer"/>      
+      <multiplicity id="192" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="193">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="194" name="moduleGuis"/>      
+      <multiplicity id="195" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="196">    
+    <bendpoint x="2628" y="2141"/>    
+    <bendpoint x="2628" y="1336"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="197" name="moduleDataIsGrabbedFrom"/>      
+      <multiplicity id="198" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="199">    
+    <bendpoint x="1507" y="819"/>    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="200" name="engine"/>      
+      <multiplicity id="201" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="202">    
+    <bendpoint x="1996" y="1336"/>    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
-    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
-    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+    <attributes public="true" package="true" protected="false" private="false" static="false"/>    
+    <operations public="true" package="true" protected="false" private="false" static="true"/>  
   </classifier-display>  
   <association-display labels="true" multiplicity="true"/>
 </class-diagram>

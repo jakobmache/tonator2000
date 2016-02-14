@@ -24,10 +24,10 @@ public class Strings
 	public static final String OE = "\u00d6";
 	public static final String SS = "\u00df";
 
-	public static final String APPLICATION_NAME = "Tonator 2000 Professional Edition";
+	public static final String APPLICATION_NAME = "Tonator 2000";// Professional Edition";
 	//public static final String APPLICATION_NAME = "Seminarfacharbeit";
 	
-	public static final String VERSION_NUMBER = "v2.0.2 beta [unstable]";
+	public static final String VERSION_NUMBER = "v2.0.2";// beta [unstable]";
 
 	public static final String ERROR_TITLE = "Fehler";
 	public static final String WARNING_TITLE = "Warnung";

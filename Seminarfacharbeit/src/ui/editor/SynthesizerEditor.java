@@ -252,7 +252,7 @@ public class SynthesizerEditor extends Stage
 			}
 
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle(Strings.TITLE_LOAD_SYNTHESIZER);
+			fileChooser.setTitle(Strings.TITLE_SAVE_SYNTHESIZER);
 			fileChooser.getExtensionFilters().add(new ExtensionFilter("XML-Dateien", "*.xml"));
 			fileChooser.setInitialFileName(Strings.SAVE_SYNTH_DEFAULT_FILENAME);
 
@@ -277,7 +277,7 @@ public class SynthesizerEditor extends Stage
 		loadItem.setOnAction((value) -> 
 		{
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle(Strings.TITLE_SAVE_SYNTHESIZER);
+			fileChooser.setTitle(Strings.TITLE_LOAD_SYNTHESIZER);
 			fileChooser.getExtensionFilters().add(new ExtensionFilter("XML-Dateien", "*.xml"));
 
 			File file = fileChooser.showOpenDialog(this);
