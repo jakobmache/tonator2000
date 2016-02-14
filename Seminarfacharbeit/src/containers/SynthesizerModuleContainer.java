@@ -55,10 +55,12 @@ public class SynthesizerModuleContainer extends PlayableModuleContainer
 				((Envelope) module).release();
 		}
 		
-		if (isFreqToZeroOnStop())
+		for (Module module:modules)
 		{
-			((Constant)findModuleById(getFrequencyId())).setValue(0.0F);
-			((Constant)findModuleById(getAmplitudeId())).setValue(0.0F);
+			if (module.getType() == ModuleType.CONSTANT && ((Constant) module).isToZeroOnStop())
+			{
+				((Constant) module).setValue(0.0F);
+			}
 		}
 	}
 	

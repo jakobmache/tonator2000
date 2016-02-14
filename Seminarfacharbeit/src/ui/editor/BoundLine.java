@@ -27,9 +27,18 @@ class BoundLine extends Line
 	{
 		input = circle;
 		
-		Point2D point = new Point2D((float) input.getCenterX(), (float) input.getCenterY());
-		setStartX(input.localToScene(point).getX());
-		setStartY(input.localToScene(point).getY());
+		Point2D point = new Point2D((float) input.getCenterX(), (float) input.getCenterY());	
+		
+		setStartX(input.getParent().getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().localToParent(
+				input.getParent().localToParent(
+				input.localToParent(point))))).getX());
+		setStartY(input.getParent().getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().localToParent(
+				input.getParent().localToParent(
+				input.localToParent(point))))).getY());
 		
 		input.setConnectedLine(this);
 	}
@@ -45,8 +54,17 @@ class BoundLine extends Line
 		output = circle;
 		
 		Point2D point = new Point2D((float) output.getCenterX(), (float) output.getCenterY());
-		setEndX(output.localToScene(point).getX());
-		setEndY(output.localToScene(point).getY());
+		
+		setEndX(output.getParent().getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().localToParent(
+				output.getParent().localToParent(
+				output.localToParent(point))))).getX());
+		setEndY(output.getParent().getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().localToParent(
+				output.getParent().localToParent(
+				output.localToParent(point))))).getY());
 		
 		output.setConnectedLine(this);
 	}
@@ -64,12 +82,30 @@ class BoundLine extends Line
 	public void update()
 	{
 		Point2D point = new Point2D((float) input.getCenterX(), (float) input.getCenterY());
-		setStartX(input.localToScene(point).getX());
-		setStartY(input.localToScene(point).getY());
+		
+		setStartX(input.getParent().getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().localToParent(
+				input.getParent().localToParent(
+				input.localToParent(point))))).getX());
+		setStartY(input.getParent().getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().getParent().localToParent(
+				input.getParent().getParent().localToParent(
+				input.getParent().localToParent(
+				input.localToParent(point))))).getY());
 
 		point = new Point2D((float) output.getCenterX(), (float) output.getCenterY());
-		setEndX(output.localToScene(point).getX());
-		setEndY(output.localToScene(point).getY());
+		
+		setEndX(output.getParent().getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().localToParent(
+				output.getParent().localToParent(
+				output.localToParent(point))))).getX());
+		setEndY(output.getParent().getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().getParent().localToParent(
+				output.getParent().getParent().localToParent(
+				output.getParent().localToParent(
+				output.localToParent(point))))).getY());
 	}
 	
 	private void initBindings()

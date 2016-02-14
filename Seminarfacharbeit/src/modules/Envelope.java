@@ -98,7 +98,6 @@ public class Envelope extends Module
 			else if (phase == RELEASE && sampleCounter[RELEASE] >= numSamples[RELEASE])
 			{
 				currFactor = endAmplitudes[RELEASE];
-				//listener.onEnvelopeFinished(this);
 			}
 		}
 		

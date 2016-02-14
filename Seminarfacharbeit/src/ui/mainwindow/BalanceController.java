@@ -39,6 +39,7 @@ public class BalanceController extends ModuleController
 		{
 			update();
 		});
+		loadData();
 	}
 
 	@Override

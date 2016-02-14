@@ -40,6 +40,7 @@ import javax.xml.transform.TransformerException;
 
 import midi.MidiUtils;
 import resources.Strings;
+import ui.editor.SynthesizerEditor;
 import ui.utils.NumberInputDialog;
 import containers.ContainerPreset;
 import engine.ProgramManager;
@@ -455,6 +456,20 @@ public class MenuController
 		{
 			midiLoggerStage.requestFocus();
 		}
+	}
+	
+	//Editor actions
+	
+	public void onOpenEditor()
+	{
+		SynthesizerEditor editor = parent.getEditor();
+		if (!editor.isShowing())
+			editor.show();
+	}
+	
+	public void onResetLayout()
+	{
+		parent.showStandardConfiguration();
 	}
 
 	public MidiPlayerController getMidiPlayerController()

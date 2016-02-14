@@ -22,6 +22,7 @@ public class NumberInputField extends TextField
 			{
 				if (Float.valueOf(newValue) < this.minValue || Float.valueOf(newValue) > this.maxValue)
 				{
+					System.out.println(newValue + "|" + minValue + "|" + maxValue);
 					DropShadow borderGlow = new DropShadow();
 					borderGlow.setColor(Color.RED);
 					borderGlow.setOffsetX(0f);

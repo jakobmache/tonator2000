@@ -18,7 +18,6 @@ public abstract class Module
 	public static final int VOLUME = 9;
 	public static final int OUTPUT_MODULE = 10;
 	
-
 	protected SynthesizerEngine parent;
 
 	protected Wire[] inputWires;
@@ -67,8 +66,8 @@ public abstract class Module
 		if (enabled)
 		{
 			float value =  calcNextSample(index);
-			//if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
-				//System.out.println("Value too high at " + moduleId + " with " + value);
+			if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
+				System.out.println("Value too high at " + moduleId + " with " + value);
 			return value;
 		}
 		else 

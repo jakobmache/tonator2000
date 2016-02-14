@@ -1,6 +1,7 @@
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					package containers;
+package containers;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																														
 
-import resources.Strings;
+import engine.ModuleContainer;
+import engine.SynthesizerEngine;
 import listener.EnvelopeFinishedListener;
 import modules.BalancedMixer;
 import modules.Constant;
@@ -8,16 +9,9 @@ import modules.Envelope;
 import modules.HighpassFilter;
 import modules.Ids;
 import modules.LowpassFilter;
-import modules.OutputMixer;
 import modules.Oscillator;
-
-import java.io.FileNotFoundException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import engine.ModuleContainer;
-import engine.SynthesizerEngine;
+import modules.OutputMixer;
+import resources.Strings;
 
 public class OscillatorContainer extends PlayableModuleContainer implements EnvelopeFinishedListener 
 {
@@ -37,13 +31,6 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		initModules();
 		setFrequencyId(Ids.ID_CONSTANT_FREQUENCY_1);
 		setAmplitudeId(Ids.ID_CONSTANT_AMPLITUDE_1);
-		try {
-			getPreset().writeToFile("osciFile.xml");
-		}
-		catch (FileNotFoundException | ParserConfigurationException | TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private void initModules()
@@ -147,6 +134,7 @@ public class OscillatorContainer extends PlayableModuleContainer implements Enve
 		((Constant)findModuleById(Ids.ID_CONSTANT_RESONANCE_1)).setValue(0.0F);
 		((Constant)findModuleById(Ids.ID_CONSTANT_RESONANCE_2)).setValue(0.0F);
 		
+		((Constant)findModuleById(Ids.ID_CONSTANT_OSCIBALANCE_1)).setValue(0.5F);	
 //		findModuleById(Ids.ID_LOWPASS_1).setEnabled(false);
 //		findModuleById(Ids.ID_ENVELOPE_1).setEnabled(false);
 //		findModuleById(Ids.ID_HIGHPASS_1).setEnabled(false);

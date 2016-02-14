@@ -113,7 +113,7 @@ public class ModuleGuiBackend
 	 */
 	protected void initSize()
 	{
-		int max = Math.max(Strings.INPUT_NAMES[type.getIndex()].length, Strings.OUTPUT_NAMES[type.getIndex()].length);
+		int max = Math.max(Strings.INPUT_NAMES_EDITOR[type.getIndex()].length, Strings.OUTPUT_NAMES_EDITOR[type.getIndex()].length);
 		if (width == 0)
 			width = 2 * radius * max + (max + 1) * xOffset;
 		if (height == 0)
@@ -188,8 +188,8 @@ public class ModuleGuiBackend
 
 	protected void drawInputs()
 	{
-		inputs = new PortCircle[Strings.INPUT_NAMES[type.getIndex()].length];
-		for (int i = 0; i < Strings.INPUT_NAMES[type.getIndex()].length; i++)
+		inputs = new PortCircle[Strings.INPUT_NAMES_EDITOR[type.getIndex()].length];
+		for (int i = 0; i < Strings.INPUT_NAMES_EDITOR[type.getIndex()].length; i++)
 		{
 			PortCircle circle = new PortCircle(owner, this, radius, i, PortCircleType.INPUT);
 			circle.setStroke(Color.BLACK);
@@ -198,12 +198,12 @@ public class ModuleGuiBackend
 
 			inputs[i] = circle;
 
-			double x = (i + 1) * (width / (Strings.INPUT_NAMES[type.getIndex()].length + 1));
+			double x = (i + 1) * (width / (Strings.INPUT_NAMES_EDITOR[type.getIndex()].length + 1));
 			double y = height / 4;
 
 			circle.setCenterX(x);
 			circle.setCenterY(y);
-			Tooltip tooltip = new Tooltip(Strings.INPUT_NAMES[type.getIndex()][i]);
+			Tooltip tooltip = new Tooltip(Strings.INPUT_NAMES_EDITOR[type.getIndex()][i]);
 			Tooltip.install(circle, tooltip);
 
 			gui.getChildren().add(circle);
@@ -223,8 +223,8 @@ public class ModuleGuiBackend
 
 	protected void drawOutputs()
 	{
-		outputs = new PortCircle[Strings.OUTPUT_NAMES[type.getIndex()].length];
-		for (int i = 0; i < Strings.OUTPUT_NAMES[type.getIndex()].length; i++)
+		outputs = new PortCircle[Strings.OUTPUT_NAMES_EDITOR[type.getIndex()].length];
+		for (int i = 0; i < Strings.OUTPUT_NAMES_EDITOR[type.getIndex()].length; i++)
 		{
 			PortCircle circle = new PortCircle(owner, this, radius, i, PortCircleType.OUTPUT);
 			circle.setStroke(Color.BLACK);
@@ -233,12 +233,12 @@ public class ModuleGuiBackend
 
 			outputs[i] = circle;
 
-			double x = (i + 1) * (width / (Strings.OUTPUT_NAMES[type.getIndex()].length + 1));
+			double x = (i + 1) * (width / (Strings.OUTPUT_NAMES_EDITOR[type.getIndex()].length + 1));
 			double y = 0.75 * height;
 
 			circle.setCenterX(x);
 			circle.setCenterY(y);
-			Tooltip tooltip = new Tooltip(Strings.OUTPUT_NAMES[type.getIndex()][i]);
+			Tooltip tooltip = new Tooltip(Strings.OUTPUT_NAMES_EDITOR[type.getIndex()][i]);
 			Tooltip.install(circle, tooltip);
 
 			gui.getChildren().add(circle);

@@ -57,7 +57,7 @@ public class MixerBackend extends ModuleGuiBackend
 
 			circle.setCenterX(x);
 			circle.setCenterY(y);
-			Tooltip tooltip = new Tooltip(Strings.INPUT_NAMES[ModuleType.MIXER.getIndex()][0] + " " + Integer.toString(i + 1));
+			Tooltip tooltip = new Tooltip(Strings.INPUT_NAMES_EDITOR[ModuleType.MIXER.getIndex()][0] + " " + Integer.toString(i + 1));
 			Tooltip.install(circle, tooltip);
 
 			gui.getChildren().add(circle);

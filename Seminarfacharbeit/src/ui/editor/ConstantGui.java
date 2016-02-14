@@ -32,6 +32,9 @@ public class ConstantGui extends ModuleGuiBackend
 //		slider.setMax(maxValue);
 //		vBox.getChildren().add(slider);
 		
+		if (getClass() == ConstantGui.class)
+			drawCustomInputs();
+		
 		owner.requestFocus();
 		if (input != null)
 			input.setEditable(true);
@@ -40,10 +43,14 @@ public class ConstantGui extends ModuleGuiBackend
 	@Override
 	protected void drawInputs()
 	{
+		
+	}
+
+	protected void drawCustomInputs()
+	{
 		VBox vBox = new VBox();
 		vBox.setAlignment(Pos.CENTER);
 		input = new NumberInputField(this.maxValue, this.minValue, false);
-		input.setText(Float.toString(this.defaultValue));
 		vBox.getChildren().add(input);
 		
 		gui.getChildren().add(vBox);
@@ -51,6 +58,8 @@ public class ConstantGui extends ModuleGuiBackend
 		input.setLayoutY(0);
 		input.setMaxHeight(2 * radius);
 		input.setMaxWidth(width);
+		
+		input.setText(Float.toString(this.defaultValue));
 	}
 	
 	@Override
@@ -58,7 +67,7 @@ public class ConstantGui extends ModuleGuiBackend
 	{
 		int oldRadius = radius;
 		radius = 16;
-		int max = Math.max(Strings.INPUT_NAMES[type.getIndex()].length, Strings.OUTPUT_NAMES[type.getIndex()].length);
+		int max = Math.max(Strings.INPUT_NAMES_EDITOR[type.getIndex()].length, Strings.OUTPUT_NAMES_EDITOR[type.getIndex()].length);
 		if (width == 0)
 			width = 2 * radius * max + (max + 1) * xOffset;
 		if (height == 0)

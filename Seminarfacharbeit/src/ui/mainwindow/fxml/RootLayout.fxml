@@ -40,6 +40,12 @@
                   <MenuItem fx:id="onLoadPresetMenuItem" mnemonicParsing="false" onAction="#onLoadPreset" text="Laden" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Editor">
+              <items>
+                <MenuItem fx:id="openEditorMenuItem" mnemonicParsing="false" onAction="#onOpenEditor" text="Öffnen" />
+                  <MenuItem fx:id="resetLayoutMenuItem" mnemonicParsing="false" onAction="#onResetLayout" text="Standard-Layout laden" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Hilfe">
               <items>
                 <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="Über das Programm" />

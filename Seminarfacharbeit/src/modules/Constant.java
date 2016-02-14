@@ -8,6 +8,7 @@ public class Constant extends Module
 	public static final int VALUE_OUTPUT = 0;
 	
 	private float value = 100;
+	private boolean toZeroOnStop = false;
 	
 	/**
 	 * Eine Konstante hält einen konstanten Wert.
@@ -37,6 +38,14 @@ public class Constant extends Module
 	public float calcNextSample(int index)
 	{
 		return value;
+	}
+
+	public boolean isToZeroOnStop() {
+		return toZeroOnStop;
+	}
+
+	public void setToZeroOnStop(boolean toZeroOnStop) {
+		this.toZeroOnStop = toZeroOnStop;
 	}
 
 

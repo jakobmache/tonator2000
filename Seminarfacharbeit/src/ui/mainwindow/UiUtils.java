@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.controlsfx.tools.Borders;
+
+import engine.SynthesizerEngine;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -15,22 +18,23 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import org.controlsfx.tools.Borders;
-
+import modules.ModuleType;
 import resources.Strings;
-import engine.Module;
-import engine.SynthesizerEngine;
 
 public class UiUtils 
 {
+	
+	static double radius = 5;
+	static double thickness = 1;
 
 	public static final String[] layoutPaths = new String[] {
 		"fxml/OscillatorLayout.fxml", "fxml/LowpassFilterLayout.fxml",
 		"fxml/EnvelopeLayout.fxml", "", "", 
-		"fxml/BalancedMixerLayout.fxml", "fxml/LowpassFilterLayout.fxml", "", "", 
+		"fxml/BalancedMixerLayout.fxml", "fxml/LowpassFilterLayout.fxml", "fxml/ConstantLayout.fxml", "", 
 		"fxml/SimpleSliderLayout.fxml"
 	};
+	
+	public static final String WAVEFORM_PATH = "fxml/WaveformLayout.fxml";
 
 	public static Alert generateAlert(Stage owner, AlertType type, String title, String header, String text)
 	{
@@ -84,57 +88,68 @@ public class UiUtils
 		return alert;
 	}
 
-	public static Node generateModuleGui(SynthesizerEngine engine, MainApplication application, int type, int[] ids) throws IOException
+	public static Node generateModuleGui(SynthesizerEngine engine, MainApplication application, ModuleType type, float[] ids) throws IOException
 	{
 		//Ids ist ein Array mit den Ids: Sie müssen folgende Form haben:
 		//	-Oszillator: 	0: Oszillator-ID; 1: Oszillatortyp-ID
 		//  -Lowpass/Highpass: 		0: Lowpass-ID; 1: Cutoffkonstanten-ID; 2: Resonanzkonstanten-ID
 		//	-Envelope:		0: Envelope-ID; 1: Attack-ID; 2: Decay-ID; 3: Sustain-ID; 4: Release-ID, 5:Steilheit-ID
 		//	-BalancedMixer:	0: Mixer-ID; 1: Modul1-ID; 2:Module2-ID; : Balancekonstanten-ID
+		//	-Konstante:		0: Konstanten-ID, 1: Minimum, 2: Maximum, 3: Standard
 
+
+		String title = Strings.MODULE_NAMES[type.getIndex()];
+		return generateModuleGui(engine, title, application, type, ids);
+	}
+	
+	public static Node generateModuleGui(SynthesizerEngine engine, String title, MainApplication application, ModuleType type, float[] ids) throws IOException
+	{
 		Node pane = null;
-		String title = Strings.MODULE_NAMES[type];
-		double radius = 5;
-		double thickness = 1;
 
 		ModuleController controller = null;
+		
+		thickness = 1;
 
-		if (type == Module.PLOTTER)
+		if (type == ModuleType.PLOTTER)
 		{
 			pane = new Plotter(engine);
 			thickness = 2;
 		}
 
-		else if (type == Module.OSCILLATOR)
+		else if (type == ModuleType.OSCILLATOR)
 		{
-			controller = new OscillatorController(engine, ids[0], ids[1]);
+			controller = new OscillatorController(engine, Math.round(ids[0]), Math.round(ids[1]));
 		}
 		
-		else if (type == Module.LOWPASS || type == Module.HIGHPASS)
+		else if (type ==  ModuleType.LOWPASS || type == ModuleType.HIGHPASS)
 		{
-			controller = new LowpassFilterController(engine, ids[0], ids[1], ids[2]);
+			controller = new LowpassFilterController(engine, Math.round(ids[0]), Math.round(ids[1]), Math.round(ids[2]));
 		}
 		
-		else if (type == Module.ENVELOPE)
+		else if (type ==  ModuleType.ENVELOPE)
 		{
-			controller = new EnvelopeController(engine, ids[0], ids[1], ids[2], ids[3], ids[4], ids[5]);
+			controller = new EnvelopeController(engine, Math.round(ids[0]), Math.round(ids[1]), Math.round(ids[2]), Math.round(ids[3]), Math.round(ids[4]), Math.round(ids[5]));
 		}
 		
-		else if (type == Module.VOLUME)
+		else if (type ==  ModuleType.VOLUME)
 		{
 			controller = new VolumeController(engine);
 		}
 		
-		else if (type == Module.BALANCED_MIXER)
+		else if (type ==  ModuleType.BALANCED_MIXER)
 		{
-			controller = new BalanceController(engine, ids[0], ids[1], ids[2], ids[3]);
+			controller = new BalanceController(engine, Math.round(ids[0]), Math.round(ids[1]), Math.round(ids[2]), Math.round(ids[3]));
+		}
+		
+		else if (type ==  ModuleType.CONSTANT)
+		{
+			controller = new ConstantController(engine, Math.round(ids[0]), ids[1], ids[2], ids[3]);
 		}
 
-		if (type != Module.PLOTTER)
+		if (type !=  ModuleType.PLOTTER )
 		{	
-			title = Strings.getStandardModuleName(ids[0]);
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(UiUtils.class.getResource(layoutPaths[type]));
+			loader.setLocation(UiUtils.class.getResource(layoutPaths[type.getIndex()]));
 			loader.setController(controller);
 			
 			pane = loader.load();
@@ -143,7 +158,7 @@ public class UiUtils
 
 			application.getModuleControllers().add(controller);
 		}
-		
+
 		pane = (Pane) Borders.wrap(pane).lineBorder().title(title)
 				.radius(radius).thickness(thickness).buildAll();
 		
@@ -153,8 +168,26 @@ public class UiUtils
 		VBox.setVgrow(pane, Priority.ALWAYS);
 
 		application.initMouseHandler(pane, type);
-		
-		
+	
 		return (Node) layout;
+	}
+	
+	public static Node generateWaveformSelector(SynthesizerEngine engine, String title, MainApplication application, int waveformId) throws IOException
+	{
+		WaveformController controller = new WaveformController(engine, 0, waveformId);
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(UiUtils.class.getResource(WAVEFORM_PATH));
+		loader.setController(controller);
+		
+		Pane pane = loader.load();
+		
+		controller.init();
+		
+		pane = (Pane) Borders.wrap(pane).lineBorder().title(title)
+				.radius(radius).thickness(thickness).buildAll();
+
+		application.getModuleControllers().add(controller);
+		
+		return pane;
 	}
 }

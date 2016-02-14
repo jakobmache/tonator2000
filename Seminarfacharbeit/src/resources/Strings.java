@@ -24,10 +24,10 @@ public class Strings
 	public static final String OE = "\u00d6";
 	public static final String SS = "\u00df";
 
-	public static final String APPLICATION_NAME = "Ton Total 2000";
+	public static final String APPLICATION_NAME = "Tonator 2000 Professional Edition";
 	//public static final String APPLICATION_NAME = "Seminarfacharbeit";
 	
-	public static final String VERSION_NUMBER = "v2.0 beta [unstable]";
+	public static final String VERSION_NUMBER = "v2.0.2 beta [unstable]";
 
 	public static final String ERROR_TITLE = "Fehler";
 	public static final String WARNING_TITLE = "Warnung";
@@ -54,11 +54,11 @@ public class Strings
 		"Die Preset-Dateien konnten nicht vollst" + ae + "ndig geladen werden. Bitte " + ue + "berpr" + ue + "fen Sie die Dateien.",
 		"Die Engine konnte nicht mit dem gew" + ue + "nschten MIDI-Ger" + ae + "t verbunden werden.  Bitte "+ ue + "berpr" + ue + "fen Sie,"
 				+ "ob es von einer anderen Anwendung blockiert wird und trennen es gegebenenfalls.",
-				"Es konnten keine MIDI-Ger" + ae + "te erkannt werden. Bitte verbinden Sie eines mit dem Computer.",
-				"Das Programm konnte die angegebene Datei nicht finden. Bitte " + ue + "berpr" + ue + "fen sie den Pfad.",
-				"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
-				"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
-				"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei.",
+		"Es konnten keine MIDI-Ger" + ae + "te erkannt werden. Bitte verbinden Sie eines mit dem Computer.",
+		"Das Programm konnte die angegebene Datei nicht finden. Bitte " + ue + "berpr" + ue + "fen sie den Pfad.",
+		"Es ist ein Fehler beim Schreiben der Datei aufgetreten. Wir bitten um Entschuldigung.",
+		"Die angegebene Datei konnte nicht gelesen werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob die Datei g" + ue + "ltig ist.",
+		"Die angegebene Datei ist nicht vollst" + ae + "ndig. Nicht genauer belegte Parameter behalten ihren alten Wert bei.",
 		"Der Synthesizer konnte nicht erstellt werden. Bitte " + ue + "berpr" + ue + "fen Sie, ob mit jedem Ein-und Ausgang ein Kabel verbunden ist.",
 		"Der Synthesizer konnte nicht geladen werden. Bitte " + ue + "berpr " + ue + "fen Sie, ob die Datei fehlerfrei erstellt wurde."
 			};
@@ -112,7 +112,9 @@ public class Strings
 		{}
 			};
 
-	public static final String[][] INPUT_NAMES = new String[][]
+			
+			
+	public static final String[][] INPUT_NAMES_EDITOR = new String[][]
 			{
 		{"Frequenz", "Amplitude", "Wellenform"},
 		{"Sample-Input", "Cutoff-Frequenz", "Resonanz"},
@@ -128,7 +130,7 @@ public class Strings
 		{"Sample-Input"}
 			};
 
-	public static final String[][] OUTPUT_NAMES = new String[][]
+	public static final String[][] OUTPUT_NAMES_EDITOR = new String[][]
 			{
 		{"Sample-Output"},
 		{"Sample-Output"},
@@ -143,6 +145,38 @@ public class Strings
 		{},
 		{"Sample-Output 1", "Sample-Output 2"}
 			};
+			
+	public static final String MIN_SHORT = Short.toString(Short.MIN_VALUE);
+	public static final String MAX_SHORT = Short.toString(Short.MAX_VALUE);
+	public static final String INFINITY = "Nicht beschr" + ae + "nkt";
+			
+	public static final String[][] MINS_EDITOR = new String[][]
+			{
+		{"0", MIN_SHORT, "/"},
+		{MIN_SHORT, "0", "0"},
+		{MIN_SHORT, "0", "0", "0", "0", "-20", "0", "0"},
+		{MIN_SHORT, "0"},
+		{MIN_SHORT},
+		{MIN_SHORT, MIN_SHORT, "0"},
+		{MIN_SHORT, "0", "0"},
+		{}, {}, {},
+		{MIN_SHORT},
+		{MIN_SHORT}
+			};
+			
+	public static final String[][] MAXS_EDITOR = new String[][]
+					{
+				{INFINITY, MAX_SHORT, "/"},
+				{MAX_SHORT, "1", "1"},
+				{MAX_SHORT, INFINITY, INFINITY, INFINITY, INFINITY, "-1", INFINITY, INFINITY},
+				{MAX_SHORT, "0"},
+				{MAX_SHORT},
+				{MAX_SHORT, MAX_SHORT, "0"},
+				{MAX_SHORT, "0", "0"},
+				{}, {}, {},
+				{MAX_SHORT},
+				{MAX_SHORT}
+					};
 
 	public static final String[] MODULE_DESCRIPTIONS = new String[]
 			{
@@ -150,13 +184,15 @@ public class Strings
 		"Der Tiefpassfilter l" + ae + "sst Obert" + oe + "ne " + ue + "ber einer bestimmten Cutoff-Frequenz nicht passieren.",
 		"Die H" + ue + "llkurve beschreibt den Amplitudenverlauf eines bestimmten Parameters in vier Phasen.",
 		"",
-		"",
+		"Der Mixer mixt alle eingehenden Signale im selben Verh" + ae + "ltnis zusammen.",
 		"Der balancierte Mixer addiert zwei Eingangssignale und wichtet diese unterschiedlich stark.",
 		"Der Hochpassfilter l" + ae + "sst Obert" + oe + "ne unter einer bestimmten Cutoff-Frequenz nicht passieren.",
 		"",
 		"Das Oszilloskop zeigt die entstehenden Kl" + ae + "nge. Achtung: Es zeichnet diese nicht exakt, sondern plottet aus Performancegründen nur einen Teil der Daten!"
 				+ " Deshalb kann es zu Ungenauigkeiten bei der Darstellung kommen.",
-		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert die Amplitude des entstehenden Klanges nicht, nur die Lautstärke der Audioausgabe."
+		"Der Lautst" + ae +"rkeregler stellt die Lautst" + ae + "rke der Applikation ein. Er ver" + ae + "ndert die Amplitude des entstehenden Klanges nicht, nur die Lautstärke der Audioausgabe.",
+		"",
+		"Der Verdoppler verdoppelt ein Eingangssignal auf beide Ausg" + ae + "nge."
 			};
 	
 	public static final String[] WAVEFORMS = new String[]
@@ -282,7 +318,14 @@ public class Strings
 	public static final String HEADER_MIXER_DIALOG = "Bitte geben Sie die Anzahl an Eing" + ae + "ngen des Mixers an!";
 	public static final String TEXT_MIXER_DIALOG = "Anzahl an Eing" + ae + "ngen:";
 	
+	public static final String TITLE_ZERO_DIALOG = "Nullzusetzende Module";
+	public static final String HEADER_ZERO_DIALOG = "Bitte w" + ae + "hlen Sie aus, welche Module bei Stoppen des Tones ausgeschaltet werden sollen.";
+	
 	public static final String SAVE_SYNTH_DEFAULT_FILENAME = "synthesizer.xml";
+	
+	public static final String ADD_MODULE_MENU_ITEM_TEXT = "Modul hinzuf" + ue + "gen";
+	public static final String CLEAR_MENU_ITEM_TEXT = "Alles l" + oe + "schen";
+	public static final String ZERO_MODULES_MENU_ITEM_TEXT = "Nullzusetzende Konstanten festlegen";
 
 
 }

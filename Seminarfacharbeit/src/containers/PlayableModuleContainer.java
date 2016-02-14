@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import javax.sound.sampled.LineUnavailableException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,8 +37,6 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	private int frequencyId;
 	private int amplitudeId;
 	
-	private boolean freqToZeroOnStop = false;
-	
 	public static final String XML_ROOT = "ModuleContainer";
 	
 	public static final String XML_MODULE = "Module";
@@ -61,7 +58,7 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	public static final String XML_WIRE_FROM_INDEX = "FromIndex";
 	public static final String XML_WIRE_TO_INDEX = "ToIndex";
 	
-	public static final String XML_PROPERTY_FREQTOZERO = "FreqToZeroOnStop";
+	public static final String XML_MODULE_STOPTOZERO = "FreqToZeroOnStop";
 	public static final String XML_PROPERTY_AMPLITUDEID = "AmplitudeId";
 	public static final String XML_PROPERTY_FREQUENCYID = "FrequencyId";
 	public static final String XML_PROPERTY_CONTAINERID = "ContainerId";
@@ -81,7 +78,10 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 				copy = ModuleGenerator.createModule(module.getType(), parent, module.getName(), module.getId());
 
 			if (module.getType() == ModuleType.CONSTANT)
+			{
 				((Constant) copy).setValue(((Constant)module).requestNextSample(Constant.VALUE_OUTPUT));
+				((Constant) copy).setToZeroOnStop(((Constant) module).isToZeroOnStop());
+			}
 			
 			modules.add(copy);
 		}
@@ -104,9 +104,6 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 		
 		this.frequencyId = container.getFrequencyId();
 		this.amplitudeId = container.getAmplitudeId();
-		
-		if (container.isFreqToZeroOnStop())
-			freqToZeroOnStop = true;
 	}
 	
 	public PlayableModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id, String name)
@@ -157,8 +154,7 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 		Node amplIdNode = document.getElementsByTagName(XML_PROPERTY_AMPLITUDEID).item(0);
 		setAmplitudeId(Integer.valueOf(amplIdNode.getTextContent()));
 		
-		Node freqToZeroNode = document.getElementsByTagName(XML_PROPERTY_FREQTOZERO).item(0);
-		setFreqToZeroOnStop(Boolean.valueOf(freqToZeroNode.getTextContent()));
+		
 		
 		Node containerIdNode = document.getElementsByTagName(XML_PROPERTY_CONTAINERID).item(0);
 		this.moduleId = Integer.valueOf(containerIdNode.getTextContent());
@@ -179,7 +175,9 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 			if (moduleType == ModuleType.CONSTANT)
 			{
 				Float value = Float.valueOf(node.getElementsByTagName(XML_MODULE_DEFAULT_VALUE).item(0).getTextContent());
+				Node freqToZeroNode = document.getElementsByTagName(XML_MODULE_STOPTOZERO).item(0);
 				((Constant) module).setValue(value);
+				((Constant) module).setToZeroOnStop(Boolean.valueOf(freqToZeroNode.getTextContent()));
 			}
 		}
 		
@@ -232,7 +230,12 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 				Element defaultValue = document.createElement(XML_MODULE_DEFAULT_VALUE);
 				Float value = ((Constant) module).requestNextSample(Constant.VALUE_OUTPUT);
 				defaultValue.setTextContent(Float.toString(value));
+				
+				Element moduleToZeroNode = document.createElement(XML_MODULE_STOPTOZERO);
+				moduleToZeroNode.setTextContent(Boolean.toString(((Constant) module).isToZeroOnStop()));
+				
 				element.appendChild(defaultValue);
+				element.appendChild(moduleToZeroNode);
 			}
 			
 			rootElement.appendChild(element);
@@ -251,9 +254,6 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 			fromIndex.setTextContent(Integer.toString(wire.getIndexDataIsGrabbedFrom()));
 			toIndex.setTextContent(Integer.toString(wire.getIndexDataIsSentTo()));
 			
-			System.out.println(wire.getModuleDataIsGrabbedFrom());
-			System.out.println(wire.getIndexDataIsGrabbedFrom());
-			
 			element.appendChild(fromId);
 			element.appendChild(toId);
 			element.appendChild(fromIndex);
@@ -268,15 +268,11 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 		Element amplIdNode = document.createElement(XML_PROPERTY_AMPLITUDEID);
 		amplIdNode.setTextContent(Integer.toString(getAmplitudeId()));
 		
-		Element freqToZeroNode = document.createElement(XML_PROPERTY_FREQTOZERO);
-		freqToZeroNode.setTextContent(Boolean.toString(isFreqToZeroOnStop()));
-		
 		Element containerIdNode = document.createElement(XML_PROPERTY_CONTAINERID);
 		containerIdNode.setTextContent(Integer.toString(getId()));
 		
 		rootElement.appendChild(freqIdNode);
 		rootElement.appendChild(amplIdNode);
-		rootElement.appendChild(freqToZeroNode);
 		rootElement.appendChild(containerIdNode);
 		
 		document.appendChild(rootElement);
@@ -309,21 +305,4 @@ public abstract class PlayableModuleContainer extends ModuleContainer
 	public void setAmplitudeId(int amplitudeId) {
 		this.amplitudeId = amplitudeId;
 	}
-
-	public boolean isFreqToZeroOnStop() {
-		return freqToZeroOnStop;
-	}
-
-	public void setFreqToZeroOnStop(boolean freqToZeroOnStop) {
-		this.freqToZeroOnStop = freqToZeroOnStop;
-	}
-	
-	public static void main(String[] args) throws LineUnavailableException, IOException, ParserConfigurationException, SAXException, TransformerFactoryConfigurationError, TransformerException {
-		SynthesizerEngine engine = new SynthesizerEngine();
-
-		SynthesizerModuleContainer container = new SynthesizerModuleContainer(engine, 1, 1, Ids.getNextId(), "Test", new TestContainer(engine));
-		container.writeToXmlFile("lululu.xml");
-		//SynthesizerModuleContainer container = new SynthesizerModuleContainer(engine, 1, 1, 1, "ModuleContainer", "C:\\Users\\Jakob\\git\\semi\\Seminarfacharbeit\\src\\test\\testContainer.xml");
-	}
-
 }

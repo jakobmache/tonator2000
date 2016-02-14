@@ -32,8 +32,6 @@ public class TestContainer extends PlayableModuleContainer
 		addConnection(wfConstant, oscillator, Constant.VALUE_OUTPUT, Oscillator.TYPE_INPUT);
 		
 		addConnection(oscillator, this, Oscillator.SAMPLE_OUTPUT, ModuleContainer.SAMPLE_INPUT);
-		
-		setFreqToZeroOnStop(true);
 	}
 
 	@Override

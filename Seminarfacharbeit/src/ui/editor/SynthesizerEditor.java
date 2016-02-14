@@ -3,10 +3,13 @@ package ui.editor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +23,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+import org.controlsfx.tools.Borders;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -34,6 +40,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -43,9 +50,11 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import modules.Constant;
 import modules.Ids;
 import modules.ModuleType;
 import resources.Strings;
@@ -54,17 +63,15 @@ import ui.mainwindow.UiUtils;
 import ui.utils.MultipleInputDialog;
 import ui.utils.NumberInputDialog;
 
-//TODO: Gui for synthesizer
-//TODO: Menu, ....
 //TODO: Recording
-//TODO: VST-Test 
 //TODO: Highpass fix (Synthesizer)
-//TODO: Fix envelope release in editor
 //TODO: Help for editor modules
+//TODO: Fix scrolling 
+//TODO: Layout in main window
 
 public class SynthesizerEditor extends Stage
 {
-	
+
 	public static final int WIDTH = 3000;
 	public static final int HEIGHT = 3000;
 	private SynthesizerEngine engine;
@@ -75,6 +82,7 @@ public class SynthesizerEditor extends Stage
 	private MenuBar menuBar;
 
 	private Pane editorPane;
+	private VBox mainLayout;
 
 	private Node selectedNode;
 
@@ -85,26 +93,35 @@ public class SynthesizerEditor extends Stage
 	private ConstantGui freqBackend;
 	private ConstantGui amplBackend;
 
+	private Map<ModuleGuiBackend, Boolean> setToZeroOnStop;
+
+	protected MainApplication owner;
+
 	public SynthesizerEditor(MainApplication owner, SynthesizerEngine engine)
 	{
 		super();
 		this.engine = engine;
+		this.owner = owner;
+		mainLayout = new VBox();
 
 		initOwner(owner.getPrimaryStage());
 
 		initEditor();
+		initMenu();
+		initModules();
 
 		ScrollPane root = new ScrollPane(editorPane);
 		root.setPrefSize(WIDTH, HEIGHT);
-		Scene scene = new Scene(root, 1000, 1000);
+
+		editorPane.setMinHeight(HEIGHT);
+		editorPane.setMinWidth(WIDTH);
+
+		mainLayout.getChildren().add(root);
+		Scene scene = new Scene(mainLayout);
 		setScene(scene);
 
-		initMenu();
-
-		initModules();
-
 		editorPane.requestFocus();
-		
+
 		menuBar.prefWidthProperty().bind(scene.widthProperty());
 	}
 
@@ -113,6 +130,7 @@ public class SynthesizerEditor extends Stage
 		Pane node = moduleGui.getGui();
 		node.setLayoutX(layoutX);
 		node.setLayoutY(layoutY);
+
 		editorPane.getChildren().add(node);
 		moduleGuis.put(node, moduleGui);
 	}
@@ -195,13 +213,18 @@ public class SynthesizerEditor extends Stage
 					removeBoundLine(highlightedLine);
 				}
 			}
+
+			if (event.getCode() == KeyCode.A)
+			{
+				moveGuis(10);
+			}
 		});
 	}
 
 	private void initMenu()
 	{
 		menuBar = new MenuBar();
-		menuBar.prefWidthProperty().bind(editorPane.widthProperty());
+		menuBar.prefWidthProperty().bind(mainLayout.widthProperty());
 		Menu fileMenu = new Menu(Strings.MENU_FILE);
 		MenuItem saveItem = new MenuItem(Strings.MENU_SAVE);
 		MenuItem loadItem = new MenuItem(Strings.MENU_LOAD);
@@ -259,6 +282,9 @@ public class SynthesizerEditor extends Stage
 
 			File file = fileChooser.showOpenDialog(this);
 
+			if (file == null)
+				return;
+
 			try 
 			{
 				clear();
@@ -269,6 +295,7 @@ public class SynthesizerEditor extends Stage
 				Alert alert = UiUtils.generateExceptionDialog(this, e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_LOADING_SYNTHESIZER], 
 						Strings.ERROR_EXPLANATIONS[Strings.ERROR_LOADING_SYNTHESIZER]);
 				alert.showAndWait();
+				initModules();
 			}
 		});
 
@@ -276,8 +303,7 @@ public class SynthesizerEditor extends Stage
 		{
 			try
 			{
-				PlayableModuleContainer container = buildSynthesizer();
-				engine.setSynthesizerContainer(container);
+				owner.showSynthesizer();
 			}
 			catch (Exception e)
 			{
@@ -290,13 +316,23 @@ public class SynthesizerEditor extends Stage
 		});
 
 		menuBar.getMenus().add(fileMenu);
-		editorPane.getChildren().add(menuBar);
+		mainLayout.getChildren().add(menuBar);
+	}
+
+	protected void moveGuis(int offset)
+	{
+		System.out.printf("Move guis %d px\n", offset);
+		for (Node gui:moduleGuis.keySet())
+		{
+			gui.setLayoutX(gui.getLayoutX() + offset);
+			//			gui.setLayoutX(gui.getLayoutX() - offset);
+		}
 	}
 
 	private void initContextMenu()
 	{
 		menu = new ContextMenu();
-		Menu addModuleMenu = new Menu("Modul hinzufügen");
+		Menu addModuleMenu = new Menu(Strings.ADD_MODULE_MENU_ITEM_TEXT);
 		menu.getItems().add(addModuleMenu);
 
 		for (int i = 0; i < ModuleType.values().length; i++)
@@ -358,10 +394,79 @@ public class SynthesizerEditor extends Stage
 				});
 				menu.getItems().add(deleteItem);
 			}
+
+			ModuleType type = moduleGuis.get(selectedNode).getModuleType();
+			if (type != ModuleType.CONSTANT && type != ModuleType.OUTPUT_MODULE)
+			{
+
+				MenuItem helpItem = new MenuItem("Hilfe");
+				helpItem.setOnAction((event) -> 
+				{
+
+					//Init help
+					PopOver popOver = new PopOver();
+					popOver.setDetachable(true);
+					popOver.setTitle(Strings.MODULE_NAMES[type.getIndex()]);
+					popOver.setDetached(true);
+					popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
+
+					VBox content = new VBox();
+					Label mainInfo = new Label(Strings.MODULE_DESCRIPTIONS[type.getIndex()]);
+					mainInfo.setMaxWidth(500);
+					mainInfo.setWrapText(true);
+					Node borderedInfo = Borders.wrap(mainInfo).lineBorder().buildAll();
+					content.getChildren().add(borderedInfo);
+
+					StringBuilder builder = new StringBuilder();
+					//Modul hat Parameter zum Darstellen
+					for (int index = 0; index < Strings.INPUT_NAMES_EDITOR[type.getIndex()].length; index++)
+					{
+						builder.append("Minimaler Wert: ");
+						builder.append(Strings.MINS_EDITOR[type.getIndex()][index]);
+						builder.append(System.lineSeparator());
+
+						builder.append("Maximaler Wert: ");
+						builder.append(Strings.MAXS_EDITOR[type.getIndex()][index]);
+
+						Node label = MainApplication.createTitledPane(Strings.INPUT_NAMES_EDITOR[type.getIndex()][index], builder.toString());
+						content.getChildren().add(label);
+						
+						builder.setLength(0);
+					}
+					
+					popOver.setContentNode(content);
+					popOver.setAnchorX(menu.getAnchorX());
+					popOver.setAnchorY(menu.getAnchorY());
+
+					popOver.show(editorPane);
+				});
+				menu.getItems().add(helpItem);
+			}
 		}
+		
+		SeparatorMenuItem sep = new SeparatorMenuItem();
+		menu.getItems().add(sep);
+
+		MenuItem clearItem = new MenuItem(Strings.CLEAR_MENU_ITEM_TEXT);
+		clearItem.setOnAction((value) -> 
+		{
+			clear();
+			initModules();
+		});
+
+		menu.getItems().add(clearItem);
+
+		MenuItem setToZeroOnStopItem = new MenuItem(Strings.ZERO_MODULES_MENU_ITEM_TEXT);
+		setToZeroOnStopItem.setOnAction((value) -> 
+		{
+			editSetToZeroOnStop();
+		});
+
+		menu.getItems().add(setToZeroOnStopItem);
 
 	}
 
+	//TODO: Fix constant loading
 	public void loadSynthesizer(String path) throws ParserConfigurationException, SAXException, IOException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -380,6 +485,8 @@ public class SynthesizerEditor extends Stage
 		int containerId = Integer.valueOf(containerNode.getTextContent());
 		double audioX = Double.valueOf(audioXNode.getTextContent());
 		double audioY = Double.valueOf(audioYNode.getTextContent());
+
+		setToZeroOnStop = new HashMap<>();
 
 		//Create each module
 		NodeList moduleNodes = document.getElementsByTagName(PlayableModuleContainer.XML_MODULE);
@@ -408,11 +515,13 @@ public class SynthesizerEditor extends Stage
 				org.w3c.dom.Node maxValueNode = node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_MAX_VALUE).item(0);
 				org.w3c.dom.Node defValueNode = node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_DEFAULT_VALUE).item(0);
 				org.w3c.dom.Node editableNode = node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_IS_EDITABLE).item(0);
+				org.w3c.dom.Node setToZeroNode = node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_STOPTOZERO).item(0);
 
 				float minValue = Float.valueOf(minValueNode.getTextContent());
 				float maxValue = Float.valueOf(maxValueNode.getTextContent());
 				float defaultValue = Float.valueOf(defValueNode.getTextContent());
 				boolean isEditable = Boolean.valueOf(editableNode.getTextContent());
+				boolean setToZero = Boolean.valueOf(setToZeroNode.getTextContent());
 
 				//Look whether it is a waveform selector
 				if (node.getElementsByTagName(PlayableModuleContainer.XML_MODULE_SUBTYPE).getLength() > 0)
@@ -437,6 +546,9 @@ public class SynthesizerEditor extends Stage
 					backend.setDestroyable(false);
 					freqBackend = (ConstantGui) backend;
 				}
+
+				//Check freq to zero
+				setToZeroOnStop.put(backend, setToZero);
 			}
 			else 
 			{
@@ -497,12 +609,6 @@ public class SynthesizerEditor extends Stage
 
 			line.update();
 		}
-		
-		for (Node moduleGui:moduleGuis.keySet())
-		{
-			moduleGui.setLayoutX(moduleGui.getLayoutX() + 100);
-			moduleGui.setLayoutY(moduleGui.getLayoutY() + 100);
-		}
 	}
 
 	public void clear()
@@ -513,10 +619,32 @@ public class SynthesizerEditor extends Stage
 		}
 
 		moduleGuis.clear();
+
+		setToZeroOnStop = null;
+	}
+
+	public void editSetToZeroOnStop()
+	{
+		if (setToZeroOnStop == null)
+		{
+			setToZeroOnStop = new HashMap<>();
+			for (ModuleGuiBackend backend:getBackends())
+				setToZeroOnStop.put(backend, false);
+		}
+
+		CheckListViewDialog dialog = new CheckListViewDialog(this, Strings.TITLE_ZERO_DIALOG, Strings.HEADER_ZERO_DIALOG, setToZeroOnStop);
+		Optional<Map<ModuleGuiBackend, Boolean>> optResult = dialog.showAndWait();
+		if (optResult.isPresent())
+			setToZeroOnStop = optResult.get();
+		else 
+			setToZeroOnStop = null;
 	}
 
 	public void writeToFile(String path, PlayableModuleContainer container) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, SAXException, IOException
 	{
+		if (setToZeroOnStop == null)
+			editSetToZeroOnStop();
+
 		container.writeToXmlFile(path);
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -702,19 +830,29 @@ public class SynthesizerEditor extends Stage
 	//TODO:Fix connection between Two Inputs! What to do there?
 	public PlayableModuleContainer buildSynthesizer()
 	{
+		System.out.println("Try to build synthesizer: " + setToZeroOnStop);
 		SynthesizerModuleContainer returnContainer = new SynthesizerModuleContainer(engine, 1, 1, Ids.getNextId(), "ModuleContainer");
 		Set<PortCircle> checkedPorts = new HashSet<PortCircle>();
 
+		if (setToZeroOnStop == null)
+			editSetToZeroOnStop();
+
 		System.out.println("================Creating modules=====================");
 		//Create each module
-		for (ModuleGuiBackend backend:moduleGuis.values())
+		for (int i = 0; i < getBackends().size(); i++)
 		{
+			ModuleGuiBackend backend = getBackends().get(i);
 			if (backend.getModuleType() == ModuleType.OUTPUT_MODULE)
 				continue;
 
 			System.out.println("Added backend module: " + backend + "(" + backend.getModule() + ")");
 			Module module = backend.getModule();
 			returnContainer.addModule(module);
+
+			System.out.println(setToZeroOnStop);
+			System.out.println(module);
+			if (module.getType() == ModuleType.CONSTANT)
+				((Constant) module).setToZeroOnStop(setToZeroOnStop.get(backend));
 		}
 
 		System.out.println("================Creating wires=====================");
@@ -735,7 +873,7 @@ public class SynthesizerEditor extends Stage
 					{
 						//First look for the start circle
 						PortCircle startCircle = line.getStartCircle();
-						
+
 						//Line was drawn the other way
 						if (startCircle.getOwner() == endBackend)
 							startCircle = line.getEndCircle();
@@ -746,7 +884,7 @@ public class SynthesizerEditor extends Stage
 							continue;
 
 						int fromIndex = indexOf(startBackend.getOutputs(), startCircle);
-						
+
 						System.out.printf("Start circle index: %d, End circle index: %d\n", startCircle.getIndex(), input.getIndex());
 
 						Module moduleDataIsGrabbedFrom = returnContainer.findModuleById(startBackend.getId());
@@ -767,13 +905,11 @@ public class SynthesizerEditor extends Stage
 
 		Module lastModule = returnContainer.findModuleById(circle.getOwner().getId());
 		returnContainer.addConnection(lastModule, returnContainer, circle.getIndex(), ModuleContainer.SAMPLE_INPUT);
-		
+
 		System.out.printf("Wire from %s (%s) to %s (%s)\n", lastModule, lastModule.getName(), returnContainer, returnContainer.getName());
 
 		returnContainer.setAmplitudeId(amplBackend.getId());
 		returnContainer.setFrequencyId(freqBackend.getId());
-
-		returnContainer.setFreqToZeroOnStop(true);
 
 		return returnContainer;
 	}
@@ -794,7 +930,12 @@ public class SynthesizerEditor extends Stage
 	{
 		return engine;
 	}
-	
+
+	public List<ModuleGuiBackend> getBackends()
+	{
+		return  new ArrayList<ModuleGuiBackend>(moduleGuis.values());
+	}
+
 	public static int indexOf(Object[] array, Object object)
 	{
 		for (int i = 0; i < array.length; i++)

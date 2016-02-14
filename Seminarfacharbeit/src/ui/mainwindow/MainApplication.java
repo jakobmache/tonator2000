@@ -13,7 +13,8 @@ import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.tools.Borders;
 
-import engine.Module;
+import containers.OscillatorContainer;
+import containers.PlayableModuleContainer;
 import engine.SynthesizerEngine;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +32,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.Ids;
+import modules.ModuleType;
 import resources.Strings;
+import ui.editor.ConstantGui;
+import ui.editor.ModuleGuiBackend;
 import ui.editor.SynthesizerEditor;
+import ui.editor.WaveformSelector;
 
 //TODO: Fix disablen
 //TODO: ChannelVolumeInput
@@ -52,6 +57,8 @@ public class MainApplication extends Application
 
 	private MenuController menuController;
 	private List<ModuleController> moduleControllers = new ArrayList<ModuleController>();
+
+	private SynthesizerEditor editor;
 
 	private int currProgram = 0;
 
@@ -75,21 +82,28 @@ public class MainApplication extends Application
 
 		showProgram(0);
 		updateModules();
-		
+
 		primaryStage.show();
 
 		showOverlay(OVERLAY_MIDI);
 
 		engine.run();
 
+		editor = new SynthesizerEditor(this, engine);
+		editor.setTitle("Synthesizer-Editor");
+		editor.getIcons().add(new Image(iconUrl.toString()));
+
 		//Mit E kann man den Editor aufrufen
 		rootLayout.setOnKeyPressed((event) ->
 		{
 			if (event.getCode() == KeyCode.E)
 			{
-				SynthesizerEditor editor = new SynthesizerEditor(this, engine);
-				editor.setTitle("Synthesizer-Editor");
-				editor.getIcons().add(new Image(iconUrl.toString()));
+				if (editor == null)
+				{
+					editor = new SynthesizerEditor(this, engine);
+					editor.setTitle("Synthesizer-Editor");
+					editor.getIcons().add(new Image(iconUrl.toString()));
+				}
 				editor.show();
 			}
 		});
@@ -152,7 +166,7 @@ public class MainApplication extends Application
 	private void initStaticModules(BorderPane rootLayout)
 	{
 		//Die festen Module wie Plotter, usw... initialisieren
-		
+
 		VBox mainLayout = new VBox(5);
 		mainLayout.setMaxHeight(Double.MAX_VALUE);
 		mainLayout.setMaxWidth(Double.MAX_VALUE);
@@ -177,8 +191,8 @@ public class MainApplication extends Application
 		Node plotter = null;
 		try 
 		{
-			plotter = UiUtils.generateModuleGui(engine, this, Module.PLOTTER, null);
-			initMouseHandler(plotter, Module.PLOTTER);
+			plotter = UiUtils.generateModuleGui(engine, this, ModuleType.PLOTTER, null);
+			initMouseHandler(plotter, ModuleType.PLOTTER);
 			mainLayout.getChildren().add(plotter);
 			VBox.setVgrow(plotter, Priority.ALWAYS);
 		} 
@@ -190,10 +204,55 @@ public class MainApplication extends Application
 		rootLayout.setCenter(mainLayout);
 	}
 
-	private void showStandardConfiguration()
+	public void showSynthesizer()
+	{
+		engine.setSynthesizerContainer(editor.buildSynthesizer());
+		synthesizerLayout.getChildren().clear();
+
+		PlayableModuleContainer container = engine.getSynthesizerContainer();
+
+		for (ModuleGuiBackend backend:editor.getBackends())
+		{
+			if (backend.getModuleType() == ModuleType.CONSTANT && backend.getId() != container.getAmplitudeId() &&
+					container.getFrequencyId() != backend.getId())
+			{
+				ConstantGui constantBackend = (ConstantGui) backend;
+
+				float max = constantBackend.getMaxValue();
+				float min = constantBackend.getMinValue();
+				float def = constantBackend.getDefaultValue();
+
+				try 
+				{
+					Node constantGui = null;
+					if (backend.getClass() == WaveformSelector.class)
+					{
+						constantGui = UiUtils.generateWaveformSelector(engine, backend.getName(), this, backend.getId());
+					}
+					else
+					{
+						constantGui = UiUtils.generateModuleGui(engine, constantBackend.getName(), this, ModuleType.CONSTANT, 
+								new float[]{(float) constantBackend.getId(), min, max, def});
+					}
+					synthesizerLayout.getChildren().add(constantGui);
+				}
+				catch (IOException e) 
+				{
+					Alert alert = UiUtils.generateExceptionDialog(this.getPrimaryStage(), e, Strings.ERROR_TITLE, Strings.ERROR_HEADERS[Strings.ERROR_UNKNOWN], 
+							Strings.ERROR_EXPLANATIONS[Strings.ERROR_UNKNOWN]);
+					alert.showAndWait();
+					showStandardConfiguration();
+				}
+			}
+		}
+	}
+
+	public void showStandardConfiguration()
 	{
 		// Lädt die Standardkonfiguration
-		
+		engine.setSynthesizerContainer(new OscillatorContainer(engine, "OscillatorContainer"));
+		synthesizerLayout.getChildren().clear();
+
 		VBox osciBox = new VBox();
 		osciBox.setSpacing(5);
 		HBox balanceBox = new HBox();
@@ -201,16 +260,16 @@ public class MainApplication extends Application
 
 		try
 		{
-			Node oscillator1 = UiUtils.generateModuleGui(engine, this, Module.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1});
-			Node oscillator2 = UiUtils.generateModuleGui(engine, this, Module.OSCILLATOR, new int[]{Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2});
-			Node lowpass = UiUtils.generateModuleGui(engine, this, Module.LOWPASS, new int[]{Ids.ID_LOWPASS_1, Ids.ID_CONSTANT_CUTOFF_1, Ids.ID_CONSTANT_RESONANCE_1});
-			Node envelope1 = UiUtils.generateModuleGui(engine, this, Module.ENVELOPE, new int[]{Ids.ID_ENVELOPE_1, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1,
+			Node oscillator1 = UiUtils.generateModuleGui(engine, this, ModuleType.OSCILLATOR, new float[]{Ids.ID_OSCILLATOR_1, Ids.ID_CONSTANT_OSCITYPE_1});
+			Node oscillator2 = UiUtils.generateModuleGui(engine, this, ModuleType.OSCILLATOR, new float[]{Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCITYPE_2});
+			Node lowpass = UiUtils.generateModuleGui(engine, this, ModuleType.LOWPASS, new float[]{Ids.ID_LOWPASS_1, Ids.ID_CONSTANT_CUTOFF_1, Ids.ID_CONSTANT_RESONANCE_1});
+			Node envelope1 = UiUtils.generateModuleGui(engine, this, ModuleType.ENVELOPE, new float[]{Ids.ID_ENVELOPE_1, Ids.ID_CONSTANT_ATTACK_1, Ids.ID_CONSTANT_DECAY_1,
 					Ids.ID_CONSTANT_SUSTAIN_1, Ids.ID_CONSTANT_RELEASE_1, Ids.ID_CONSTANT_STEEPNESS_1});
-			Node envelope2 = UiUtils.generateModuleGui(engine, this, Module.ENVELOPE, new int[]{Ids.ID_ENVELOPE_2, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2,
+			Node envelope2 = UiUtils.generateModuleGui(engine, this, ModuleType.ENVELOPE, new float[]{Ids.ID_ENVELOPE_2, Ids.ID_CONSTANT_ATTACK_2, Ids.ID_CONSTANT_DECAY_2,
 					Ids.ID_CONSTANT_SUSTAIN_2, Ids.ID_CONSTANT_RELEASE_2, Ids.ID_CONSTANT_STEEPNESS_2});
-			Node volume = UiUtils.generateModuleGui(engine, this, Module.VOLUME, new int[]{Ids.ID_VOLUME});
-			Node balance = UiUtils.generateModuleGui(engine, this, Module.BALANCED_MIXER, new int[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
-			Node highpass = UiUtils.generateModuleGui(engine, this, Module.HIGHPASS, new int[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
+			Node volume = UiUtils.generateModuleGui(engine, this, ModuleType.VOLUME, new float[]{Ids.ID_VOLUME});
+			Node balance = UiUtils.generateModuleGui(engine, this, ModuleType.BALANCED_MIXER, new float[]{Ids.ID_MIXER_2, Ids.ID_OSCILLATOR_1, Ids.ID_OSCILLATOR_2, Ids.ID_CONSTANT_OSCIBALANCE_1});
+			Node highpass = UiUtils.generateModuleGui(engine, this, ModuleType.HIGHPASS, new float[]{Ids.ID_HIGHPASS_1, Ids.ID_CONSTANT_CUTOFF_2, Ids.ID_CONSTANT_RESONANCE_2});
 
 			osciBox.getChildren().add(oscillator1);
 			osciBox.getChildren().add(oscillator2);
@@ -307,7 +366,7 @@ public class MainApplication extends Application
 		}
 	}
 
-	public void initMouseHandler(Node pane, int module)
+	public void initMouseHandler(Node pane, ModuleType type)
 	{
 		pane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> 
 		{
@@ -315,22 +374,22 @@ public class MainApplication extends Application
 			{
 				PopOver popOver = new PopOver();
 				popOver.setDetachable(true);
-				popOver.setTitle(Strings.MODULE_NAMES[module]);
+				popOver.setTitle(Strings.MODULE_NAMES[type.getIndex()]);
 				popOver.setDetached(true);
 				popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
 
 				VBox content = new VBox();
-				Label mainInfo = new Label(Strings.MODULE_DESCRIPTIONS[module]);
+				Label mainInfo = new Label(Strings.MODULE_DESCRIPTIONS[type.getIndex()]);
 				mainInfo.setMaxWidth(500);
 				mainInfo.setWrapText(true);
 				Node borderedInfo = Borders.wrap(mainInfo).lineBorder().buildAll();
 				content.getChildren().add(borderedInfo);
 
 				//Modul hat Parameter zum Darstellen
-				if (Strings.PARAM_NAMES_MAIN.length > module)
+				if (Strings.PARAM_NAMES_MAIN.length > type.getIndex())
 				{
-					String[] paramNames = Strings.PARAM_NAMES_MAIN[module];
-					String[] paramDescriptions = Strings.PARAM_DESCRIPTIONS[module];
+					String[] paramNames = Strings.PARAM_NAMES_MAIN[type.getIndex()];
+					String[] paramDescriptions = Strings.PARAM_DESCRIPTIONS[type.getIndex()];
 					for (int i = 0; i < paramNames.length; i++)
 					{
 						Node label = createTitledPane(paramNames[i], paramDescriptions[i]);
@@ -346,7 +405,7 @@ public class MainApplication extends Application
 		});
 	}
 
-	private Node createTitledPane(String title, String text) 
+	public static Node createTitledPane(String title, String text) 
 	{
 		Label label = new Label(text);
 		label.setWrapText(true);
@@ -368,6 +427,11 @@ public class MainApplication extends Application
 	public SynthiStatusBar getStatusBar()
 	{
 		return statusBar;
+	}
+
+	public SynthesizerEditor getEditor()
+	{
+		return editor;
 	}
 
 	public static void main(String[] args) {
