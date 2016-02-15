@@ -46,6 +46,11 @@ public class HighpassFilter extends Module
 		{
 			setResonance(inputWires[RESONANCE_INPUT].getNextSample());
 		}
+		
+		if (cutoffFrequency > 1)
+			cutoffFrequency = 1;
+		if (resonance > 1)
+			resonance = 1;
 
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample() / Short.MAX_VALUE;
 		

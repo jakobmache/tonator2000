@@ -388,7 +388,6 @@ public class MenuController
 		{
 			try 
 			{
-				System.out.println("Try to load preset!");
 				engine.getProgramManager().setInstrumentPreset(parent.getCurrProgram(), new ContainerPreset(file.getPath()));
 				parent.updateModules();
 			} 
@@ -397,7 +396,8 @@ public class MenuController
 				Alert alert = UiUtils.generateAlert(parent.getPrimaryStage(), AlertType.WARNING, Strings.WARNING_TITLE, 
 						Strings.ERROR_HEADERS[Strings.ERROR_TOO_LESS_DATA], Strings.ERROR_EXPLANATIONS[Strings.ERROR_TOO_LESS_DATA]);
 				alert.showAndWait();
-				System.out.println("NPE!");
+				e.printStackTrace();
+				System.out.println(parent.getModuleControllers());
 			}
 			catch (ParserConfigurationException | SAXException | IOException e) 
 			{

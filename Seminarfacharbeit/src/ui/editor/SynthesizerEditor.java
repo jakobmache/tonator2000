@@ -810,6 +810,7 @@ public class SynthesizerEditor extends Stage
 			if (output.getBoundLine() != null)
 				removeBoundLine(output.getBoundLine());
 		}
+		moduleGuis.remove(moduleGui);
 	}
 
 	public BoundLine getBoundLine()

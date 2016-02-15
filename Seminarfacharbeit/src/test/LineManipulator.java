@@ -1,7 +1,6 @@
 package test;
 
 import org.controlsfx.tools.Borders;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
@@ -13,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -76,7 +74,6 @@ public class LineManipulator extends Application {
 	    Node endNode = Borders.wrap(end).lineBorder().title("Node").buildAll();
 	    
 	   
-	    
 	    Line line = new BoundLine(startXProperty, startYProperty, endXProperty, endYProperty);
 	    
 	    editor.getChildren().addAll(startNode, endNode, line);

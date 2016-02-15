@@ -47,9 +47,16 @@ public class LowpassFilter extends Module
 		{
 			setResonance(inputWires[RESONANCE_INPUT].getNextSample());
 		}
+		
+		if (cutoffFrequency > 1)
+			cutoffFrequency = 1;
+		if (resonance > 1)
+			resonance = 1;
 
 		float inputSample = inputWires[SAMPLE_INPUT].getNextSample() / Short.MAX_VALUE;
 
+		if (inputSample == 0)
+			return 0;
 		
 		inputSample -= q * b4;                          //feedback
 

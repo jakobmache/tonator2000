@@ -27,7 +27,7 @@ public class Strings
 	public static final String APPLICATION_NAME = "Tonator 2000";// Professional Edition";
 	//public static final String APPLICATION_NAME = "Seminarfacharbeit";
 	
-	public static final String VERSION_NUMBER = "v2.0.2";// beta [unstable]";
+	public static final String VERSION_NUMBER = "v2.1";// beta [unstable]";
 
 	public static final String ERROR_TITLE = "Fehler";
 	public static final String WARNING_TITLE = "Warnung";
@@ -235,10 +235,11 @@ public class Strings
 	//------------------------Dialogerläuterungen-------------
 
 	public static final String ABOUT_DIALOG_TITLE = UE + "ber das Programm";
-	public static final String ABOUT_DIALOG_TEXT =  "Entstanden in Rahmen der Seminarfacharbeit 2014/15 von Leonhard Braun, Barbara Ueltzen und Jakob Mache"
-			+ " mit dem Thema \"Digitale Simulation analoger Synthesizer\"."
+	public static final String ABOUT_DIALOG_TEXT =  "Entstanden in Rahmen der Seminarfacharbeit 2014/15 von Leonhard Braun, Barbara Ueltzen und Jakob Mache. Weitergef" + ue + 
+			"hrt bei Jugend Forscht 2016"
+			+ " mit dem Thema \"Digitale Musik selbst entdecken - Frei konfigurierbare Simulation analoger Synthesizer\"."
 			+ " Herzlichen Dank an unseren Fachbetreuer Herr S" + ue + "pke!";
-	public static final String ABOUT_DIALOG_HEADER = "(c) 2015 by Leonhard Braun, Barbara Ueltzen, Jakob Mache";	
+	public static final String ABOUT_DIALOG_HEADER = "(c) 2014 - 2016 by Leonhard Braun, Barbara Ueltzen, Jakob Mache";	
 
 	public static final String LIBRARIES_DIALOG_TITLE = "Verwendete Ressourcen";
 	public static final String LIBRARIES_DIALOG_HEADER = "Folgende Bibliotheken und Grafiken wurden verwendet:";

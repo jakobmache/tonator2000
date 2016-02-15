@@ -206,8 +206,10 @@ public class MainApplication extends Application
 
 	public void showSynthesizer()
 	{
+		editor.close();
 		engine.setSynthesizerContainer(editor.buildSynthesizer());
 		synthesizerLayout.getChildren().clear();
+		moduleControllers.clear();
 
 		PlayableModuleContainer container = engine.getSynthesizerContainer();
 
@@ -252,6 +254,7 @@ public class MainApplication extends Application
 		// Lädt die Standardkonfiguration
 		engine.setSynthesizerContainer(new OscillatorContainer(engine, "OscillatorContainer"));
 		synthesizerLayout.getChildren().clear();
+		moduleControllers.clear();
 
 		VBox osciBox = new VBox();
 		osciBox.setSpacing(5);

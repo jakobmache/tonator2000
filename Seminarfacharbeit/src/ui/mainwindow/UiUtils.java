@@ -171,7 +171,8 @@ public class UiUtils
 		layout.getChildren().add(pane);
 		VBox.setVgrow(pane, Priority.ALWAYS);
 
-		application.initMouseHandler(pane, type);
+		if (type != ModuleType.CONSTANT)
+			application.initMouseHandler(pane, type);
 	
 		return (Node) layout;
 	}

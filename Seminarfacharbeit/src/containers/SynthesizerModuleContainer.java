@@ -16,7 +16,7 @@ public class SynthesizerModuleContainer extends PlayableModuleContainer
 {
 	private int zeroCounter = 0;
 	private int zeroMax = 100;
-	private float epsilon = 0.00000001F;
+	private float epsilon = 0.0001F;
 	
 	public SynthesizerModuleContainer(SynthesizerEngine parent, int numInputWires, int numOutputWires, int id,
 			String name, PlayableModuleContainer container) {
@@ -70,6 +70,7 @@ public class SynthesizerModuleContainer extends PlayableModuleContainer
 		
 		if (Math.abs(value) < epsilon)
 		{
+			System.out.println("0: " + zeroCounter);
 			zeroCounter++;
 		}
 		else
