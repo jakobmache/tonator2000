@@ -60,6 +60,15 @@ public class ConstantGui extends ModuleGuiBackend
 		input.setMaxWidth(width);
 		
 		input.setText(Float.toString(this.defaultValue));
+		
+		input.textProperty().addListener((observable, newValue, oldValue) -> {
+			System.out.println("New text: " + input.getText());
+			if (input.isValid())
+			{
+				setDefaultValue(Float.valueOf(input.getText()));
+				System.out.println("Set default value!");
+			}
+		});
 	}
 	
 	@Override

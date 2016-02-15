@@ -56,6 +56,25 @@ public class NumberInputField extends TextField
 			});
 		}
 	}
+	
+	public boolean isValid()
+	{
+		try
+		{
+			if (Float.valueOf(getText()) < this.minValue || Float.valueOf(getText()) > this.maxValue)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(NumberFormatException e)
+		{
+			return false;
+		}
+	}
 
 	@Override
 	public void replaceText(int start, int end, String text)

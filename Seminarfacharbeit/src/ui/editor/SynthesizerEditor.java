@@ -23,6 +23,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.tools.Borders;
@@ -50,6 +51,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -65,9 +67,6 @@ import ui.utils.NumberInputDialog;
 
 //TODO: Recording
 //TODO: Highpass fix (Synthesizer)
-//TODO: Help for editor modules
-//TODO: Fix scrolling 
-//TODO: Layout in main window
 
 public class SynthesizerEditor extends Stage
 {
@@ -83,6 +82,8 @@ public class SynthesizerEditor extends Stage
 
 	private Pane editorPane;
 	private VBox mainLayout;
+	private StackPane stackPane;
+	private MaskerPane maskerPane;
 
 	private Node selectedNode;
 
@@ -110,13 +111,22 @@ public class SynthesizerEditor extends Stage
 		initMenu();
 		initModules();
 
+		stackPane = new StackPane();
 		ScrollPane root = new ScrollPane(editorPane);
 		root.setPrefSize(WIDTH, HEIGHT);
+		
+		stackPane.getChildren().add(root);
+		
+		maskerPane = new MaskerPane();
+		stackPane.getChildren().add(maskerPane);
+		maskerPane.setVisible(false);
+		maskerPane.setText("Lade...");
+		maskerPane.setProgressVisible(true);
 
 		editorPane.setMinHeight(HEIGHT);
 		editorPane.setMinWidth(WIDTH);
 
-		mainLayout.getChildren().add(root);
+		mainLayout.getChildren().add(stackPane);
 		Scene scene = new Scene(mainLayout);
 		setScene(scene);
 
@@ -325,7 +335,7 @@ public class SynthesizerEditor extends Stage
 		for (Node gui:moduleGuis.keySet())
 		{
 			gui.setLayoutX(gui.getLayoutX() + offset);
-			//			gui.setLayoutX(gui.getLayoutX() - offset);
+			gui.setLayoutX(gui.getLayoutX() - offset);
 		}
 	}
 
@@ -469,6 +479,7 @@ public class SynthesizerEditor extends Stage
 	//TODO: Fix constant loading
 	public void loadSynthesizer(String path) throws ParserConfigurationException, SAXException, IOException
 	{
+		maskerPane.setVisible(true);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -609,6 +620,8 @@ public class SynthesizerEditor extends Stage
 
 			line.update();
 		}
+		
+		maskerPane.setVisible(false);
 	}
 
 	public void clear()
@@ -852,7 +865,10 @@ public class SynthesizerEditor extends Stage
 			System.out.println(setToZeroOnStop);
 			System.out.println(module);
 			if (module.getType() == ModuleType.CONSTANT)
+			{
 				((Constant) module).setToZeroOnStop(setToZeroOnStop.get(backend));
+				((Constant) module).setValue(((Constant) module).requestNextSample(Constant.VALUE_OUTPUT));
+			}
 		}
 
 		System.out.println("================Creating wires=====================");

@@ -5,8 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import com.goebl.simplify.Point;
-
 import containers.StandardModuleContainer;
 import engine.SynthesizerEngine;
 import javafx.animation.AnimationTimer;
@@ -172,27 +170,3 @@ public class Plotter extends VBox
 
 }
 
-class Point2D implements Point
-{
-
-	private double x;
-	private double y;
-
-	public Point2D(double x, double y)
-	{
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public double getX() 
-	{
-		return x;
-	}
-
-	@Override
-	public double getY() 
-	{
-		return y;
-	}
-}
